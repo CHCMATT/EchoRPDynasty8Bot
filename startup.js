@@ -18,27 +18,27 @@ module.exports.startUp = async (client) => {
 	countPropertiesQuoted = countPropertiesQuoted.toString();
 	countPropertiesRepod = countPropertiesRepod.toString();
 
-	// Color Palette: https://www.schemecolor.com/warpped.php
+	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
 
 	const housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
-		.setColor('#FF9AA2');
+		.setColor('#A67C00');
 
 	const warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
-		.setColor('#FFB7B2');
+		.setColor('#FFBF00');
 
 	const propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
-		.setColor('#FFDAC1');
+		.setColor('#FFD447');
 
 	const propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
-		.setColor('#E2F0CB');
+		.setColor('#FFE878');
 
 	const btnRow = addBtnRow();
 
@@ -80,6 +80,11 @@ function addBtnRow() {
 		new ButtonBuilder()
 			.setCustomId('addPropRepod')
 			.setLabel('Add a Property Repo')
+			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addTrainCheck')
+			.setLabel('Add a Train Check')
 			.setStyle(ButtonStyle.Success)
 	);
 	const rows = [row1];

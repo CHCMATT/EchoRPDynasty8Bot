@@ -9,95 +9,75 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 module.exports.editEmbed = async (client) => {
 
-	let countSearchWarrants = await dbCmds.readValue("countSearchWarrants");
-	let countSubpoenas = await dbCmds.readValue("countSubpoenas");
-	let countCallsAttended = await dbCmds.readValue("countCallsAttended");
-	let countMoneySeized = formatter.format(await dbCmds.readValue("countMoneySeized"));
-	let countGunsSeized = await dbCmds.readValue("countGunsSeized");
-	let countDrugsSeized = await dbCmds.readValue("countDrugsSeized");
+	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
+	let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
+	let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
+	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
 
-	countSearchWarrants = countSearchWarrants.toString();
-	countSubpoenas = countSubpoenas.toString();
-	countCallsAttended = countCallsAttended.toString();
-	countMoneySeized = countMoneySeized.toString();
-	countGunsSeized = countGunsSeized.toString();
-	countDrugsSeized = countDrugsSeized.toString();
+	countHousesSold = countHousesSold.toString();
+	countWarehousesSold = countWarehousesSold.toString();
+	countPropertiesQuoted = countPropertiesQuoted.toString();
+	countPropertiesRepod = countPropertiesRepod.toString();
 
-	// Color Palette: https://www.schemecolor.com/warpped.php
+	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
 
-	const searchWarrantsEmbed = new EmbedBuilder()
-		.setTitle('Amount of Search Warrants served:')
-		.setDescription(countSearchWarrants)
-		.setColor('#FF9AA2');
+	const housesSoldEmbed = new EmbedBuilder()
+		.setTitle('Amount of Houses Sold:')
+		.setDescription(countHousesSold)
+		.setColor('#A67C00');
 
-	const subpoenasEmbed = new EmbedBuilder()
-		.setTitle('Amount of Subpoenas served:')
-		.setDescription(countSubpoenas)
-		.setColor('#FFB7B2');
+	const warehousesSoldEmbed = new EmbedBuilder()
+		.setTitle('Amount of Warehouses Sold:')
+		.setDescription(countWarehousesSold)
+		.setColor('#FFBF00');
 
-	const callsAttendedEmbed = new EmbedBuilder()
-		.setTitle('Amount of Calls Attended:')
-		.setDescription(countCallsAttended)
-		.setColor('#FFDAC1');
+	const propertiesQuotedEmbed = new EmbedBuilder()
+		.setTitle('Amount of Properties Quoted:')
+		.setDescription(countPropertiesQuoted)
+		.setColor('#FFD447');
 
-	const moneySeizedEmbed = new EmbedBuilder()
-		.setTitle('Amount of Money seized:')
-		.setDescription(countMoneySeized)
-		.setColor('#E2F0CB');
+	const propertiesRepodEmbed = new EmbedBuilder()
+		.setTitle('Amount of Properties Repossessed:')
+		.setDescription(countPropertiesRepod)
+		.setColor('#FFE878');
 
-	const gunsSeizedEmbed = new EmbedBuilder()
-		.setTitle('Amount of Guns seized:')
-		.setDescription(countGunsSeized)
-		.setColor('#B5EAD7');
-
-	const drugsSeizedEmbed = new EmbedBuilder()
-		.setTitle('Amount of Drugs seized:')
-		.setDescription(countDrugsSeized)
-		.setColor('#C7CEEA');
+	const btnRow = addBtnRow();
 
 	const currEmbed = await dbCmds.readMsgId("embedMsg");
 
 	const channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
 	const currMsg = await channel.messages.fetch(currEmbed);
 
-	const btnRows = addBtnRows();
-
-	currMsg.edit({ embeds: [searchWarrantsEmbed, subpoenasEmbed, callsAttendedEmbed, moneySeizedEmbed, gunsSeizedEmbed, drugsSeizedEmbed], components: btnRows });
+	currMsg.edit({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed], components: btnRow });
 };
 
-function addBtnRows() {
+function addBtnRow() {
 	const row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId('addSW')
-			.setLabel('Add a Search Warrant')
+			.setCustomId('addHouseSold')
+			.setLabel('Add a House Sale')
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
-			.setCustomId('addSubpoenas')
-			.setLabel('Add a Subpoena')
+			.setCustomId('addWarehouseSold')
+			.setLabel('Add a Warehouse Sale')
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
-			.setCustomId('addCall')
-			.setLabel('Add a Call Attended')
+			.setCustomId('addPropQuoted')
+			.setLabel('Add a Property Quote')
+			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addPropRepod')
+			.setLabel('Add a Property Repo')
+			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addTrainCheck')
+			.setLabel('Add a Train Check')
 			.setStyle(ButtonStyle.Success)
 	);
-	const row2 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('addMoney')
-			.setLabel('Add Money Seized')
-			.setStyle(ButtonStyle.Success),
-
-		new ButtonBuilder()
-			.setCustomId('addGuns')
-			.setLabel('Add Guns Seized')
-			.setStyle(ButtonStyle.Success),
-
-		new ButtonBuilder()
-			.setCustomId('addDrugs')
-			.setLabel('Add Drugs Seized')
-			.setStyle(ButtonStyle.Success)
-	);
-	const rows = [row1, row2];
+	const rows = [row1];
 	return rows;
-}
+};
