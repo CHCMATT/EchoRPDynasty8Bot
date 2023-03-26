@@ -23,7 +23,7 @@ module.exports.editEmbed = async (client) => {
 	countGunsSeized = countGunsSeized.toString();
 	countDrugsSeized = countDrugsSeized.toString();
 
-	// Color Palette: https://www.schemecolor.com/rainbow-pastels-color-scheme.php
+	// Color Palette: https://www.schemecolor.com/warpped.php
 
 	const searchWarrantsEmbed = new EmbedBuilder()
 		.setTitle('Amount of Search Warrants served:')
