@@ -21,38 +21,12 @@ module.exports.modalSubmit = async (interaction) => {
 	try {
 		const modalID = interaction.customId;
 		switch (modalID) {
-			case 'moneySeizedModal':
-				const moneySeized = Math.abs(Number(interaction.fields.getTextInputValue('moneySeizedInput')));
-				const moneyCaseNum = interaction.fields.getTextInputValue('moneyCaseNumInput').trimEnd().trimStart();
-				const moneyCaseFileLink = interaction.fields.getTextInputValue('moneyCaseFileLinkInput').trimEnd().trimStart();
-				if (isNaN(moneySeized)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('moneySeizedInput')}\` is not a valid number, please be sure to only enter numbers (no $ or commas).`,
-						ephemeral: true
-					});
-				} else if (isNaN(moneyCaseNum)) { // validate case number
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('moneyCaseNumInput')}\` is not a valid number, please be sure to only enter numbers (no # or letters).`,
-						ephemeral: true
-					});
-				} else if (!isValidUrl(moneyCaseFileLink)) { // validate case file link
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('moneyCaseFileLinkInput')}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-						ephemeral: true
-					});
-				} else {
-					await dbCmds.addValue("countMoneySeized", moneySeized);
-					const newTotal = formatter.format(await dbCmds.readValue("countMoneySeized"));
-					const moneySeizedFormatted = formatter.format(moneySeized);
-					await editEmbed.editEmbed(interaction.client);
-					await interaction.reply({
-						content: `Successfully added \`${moneySeizedFormatted}\` to the \`Money Seized\` counter - the new total is \`${newTotal}\`.`,
-						ephemeral: true
-					});
-					await interaction.client.channels.cache.get(process.env.AUDIT_CHANNEL_ID).send({
-						content: `:white_check_mark: \`${interaction.member.nickname}\` (\`${interaction.member.user.username}\`) added \`${moneySeizedFormatted}\` to the \`Money Seized\` counter for a new total of \`${newTotal}\`. The associated Report # is \`${moneyCaseNum}\` with Case File \`${moneyCaseFileLink}\`.`
-					});
-				}
+			case 'houseSoldModal':
+				await dbCmds.addOneSumm("countHousesSold");
+				const newHousesSoldTotal = await dbCmds.readValue("countHousesSold");
+				await editEmbed.editEmbed(interaction.client);
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.`, ephemeral: true });
+				await interaction.client.channels.cache.get(process.env.AUDIT_CHANNEL_ID).send(`:white_check_mark: \`${interaction.member.nickname}\` (\`${interaction.member.user.username}\`) added \`1\` to the \`Search Warrants\` counter for a new total of \`${newSearchWarrantsTotal}\`.`)
 				break;
 			case 'gunsSeizedModal':
 				const gunsSeized = Math.abs(Number(interaction.fields.getTextInputValue('gunsSeizedInput')));

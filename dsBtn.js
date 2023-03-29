@@ -6,110 +6,79 @@ module.exports.btnPressed = async (interaction) => {
 	try {
 		const buttonID = interaction.customId;
 		switch (buttonID) {
-			case 'addSW':
-				await dbCmds.addOne("countSearchWarrants");
-				const newSearchWarrantsTotal = await dbCmds.readValue("countSearchWarrants");
-				await editEmbed.editEmbed(interaction.client);
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Search Warrants\` counter - the new total is \`${newSearchWarrantsTotal}\`.`, ephemeral: true });
-				await interaction.client.channels.cache.get(process.env.AUDIT_CHANNEL_ID).send(`:white_check_mark: \`${interaction.member.nickname}\` (\`${interaction.member.user.username}\`) added \`1\` to the \`Search Warrants\` counter for a new total of \`${newSearchWarrantsTotal}\`.`)
-				break;
-			case 'addSubpoenas':
-				await dbCmds.addOne("countSubpoenas");
-				const newSubpoenasTotal = await dbCmds.readValue("countSubpoenas");
-				await editEmbed.editEmbed(interaction.client);
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Subpoenas\` counter - the new total is \`${newSubpoenasTotal}\`.`, ephemeral: true });
-				await interaction.client.channels.cache.get(process.env.AUDIT_CHANNEL_ID).send(`:white_check_mark: \`${interaction.member.nickname}\` (\`${interaction.member.user.username}\`) added \`1\` to the \`Subpoenas\` counter for a new total of \`${newSubpoenasTotal}\`.`)
-				break;
-			case 'addCall':
-				const addCallsModal = new ModalBuilder()
-					.setCustomId('callsAttendedModal')
-					.setTitle('Add a call that you attended');
-				const callsAttendedReportNumInput = new TextInputBuilder()
-					.setCustomId('callsAttendedReportNumInput')
-					.setLabel("What is the MDT report #? (if applicable)")
+			case 'addHouseSold':
+				const addHouseSoldModal = new ModalBuilder()
+					.setCustomId('houseSoldModal')
+					.setTitle('Add a house that you sold');
+				const soldToInput = new TextInputBuilder()
+					.setCustomId('soldToInput')
+					.setLabel("Who did you sell the house to?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('12345')
-					.setRequired(false);
-				const callsAttendedNotesInput = new TextInputBuilder()
-					.setCustomId('callsAttendedNotesInput')
-					.setLabel("Is there anything to note? (if applicable)")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('There was a piece of pie found on scene.')
-					.setRequired(false);
-				const callsAttendedAddtlOffcInput = new TextInputBuilder()
-					.setCustomId('callsAttendedAddtlOffcInput')
-					.setLabel("Any attl. CID members on the call with you?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('501, 314, etc...')
-					.setRequired(false);
-				const callsAttendedReportNumInputRow = new ActionRowBuilder().addComponents(callsAttendedReportNumInput);
-				const callsAttendedNotesInputRow = new ActionRowBuilder().addComponents(callsAttendedNotesInput);
-				const callsAttendedAddtlOffcInputRow = new ActionRowBuilder().addComponents(callsAttendedAddtlOffcInput);
-				addCallsModal.addComponents(callsAttendedReportNumInputRow, callsAttendedNotesInputRow, callsAttendedAddtlOffcInputRow);
-				await interaction.showModal(addCallsModal);
-				break;
-			case 'addMoney':
-				const addMoneyModal = new ModalBuilder()
-					.setCustomId('moneySeizedModal')
-					.setTitle('Add a quantity of money seized');
-				const moneySeizedInput = new TextInputBuilder()
-					.setCustomId('moneySeizedInput')
-					.setLabel("How much money did you seize?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('100')
+					.setPlaceholder('Rick Grimes')
 					.setRequired(true);
-				const moneyCaseNumInput = new TextInputBuilder()
-					.setCustomId('moneyCaseNumInput')
-					.setLabel("What is the MDT report # attached to this?")
+				const locationInput = new TextInputBuilder()
+					.setCustomId('locationInput')
+					.setLabel("Where was the house located?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('12345')
+					.setPlaceholder('Baytree Canyon Road')
 					.setRequired(true);
-				const moneyCaseFileLinkInput = new TextInputBuilder()
-					.setCustomId('moneyCaseFileLinkInput')
-					.setLabel("What is the link to the case file on this?")
+				const priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
+					.setLabel("What was the final sale price?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://docs.google.com/')
+					.setPlaceholder('150000')
 					.setRequired(true);
-				const moneySeizedInputRow = new ActionRowBuilder().addComponents(moneySeizedInput);
-				const moneyCaseNumInputRow = new ActionRowBuilder().addComponents(moneyCaseNumInput);
-				const moneyCaseFileLinkInputRow = new ActionRowBuilder().addComponents(moneyCaseFileLinkInput);
-				addMoneyModal.addComponents(moneySeizedInputRow, moneyCaseNumInputRow, moneyCaseFileLinkInputRow);
-				await interaction.showModal(addMoneyModal);
-				break;
-			case 'addGuns':
-				const addGunsModal = new ModalBuilder()
-					.setCustomId('gunsSeizedModal')
-					.setTitle('Add a quantity of guns seized');
-				const gunsSeizedInput = new TextInputBuilder()
-					.setCustomId('gunsSeizedInput')
-					.setLabel("How many guns did you seize?")
+				const saleDateInput = new TextInputBuilder()
+					.setCustomId('saleDateInput')
+					.setLabel("What was date of sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('25')
+					.setPlaceholder('01/31/2023')
 					.setRequired(true);
-				const gunsLocationInput = new TextInputBuilder()
-					.setCustomId('gunsLocationInput')
-					.setLabel("Where did you seize these guns from?")
+				const photo1Input = new TextInputBuilder()
+					.setCustomId('photo1Input')
+					.setLabel("What is your first photo of the house?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Ava Lee search warrant')
+					.setPlaceholder('https://i.imgur.com/laI8KzQ.jpeg')
 					.setRequired(true);
-				const gunsSeizedInputRow = new ActionRowBuilder().addComponents(gunsSeizedInput);
-				const gunsLocationInputRow = new ActionRowBuilder().addComponents(gunsLocationInput);
-				addGunsModal.addComponents(gunsSeizedInputRow, gunsLocationInputRow);
-				await interaction.showModal(addGunsModal);
-				break;
-			case 'addDrugs':
-				const addDrugsModal = new ModalBuilder()
-					.setCustomId('drugsSeizedModal')
-					.setTitle('Add a quantity of drugs seized');
-				const drugsSeizedInput = new TextInputBuilder()
-					.setCustomId('drugsSeizedInput')
-					.setLabel("How many drugs did you seize?")
+				const photo2Input = new TextInputBuilder()
+					.setCustomId('photo2Input')
+					.setLabel("What is your second photo of the house?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('15')
+					.setPlaceholder('https://i.imgur.com/N0yFI2K.png')
 					.setRequired(true);
-				const drugsSeizedInputRow = new ActionRowBuilder().addComponents(drugsSeizedInput);
-				addDrugsModal.addComponents(drugsSeizedInputRow);
-				await interaction.showModal(addDrugsModal);
+				const photo3Input = new TextInputBuilder()
+					.setCustomId('photo3Input')
+					.setLabel("What is your third photo of the house?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('https://i.imgur.com/hv6jVYT.jpeg')
+					.setRequired(true);
+				const photo4Input = new TextInputBuilder()
+					.setCustomId('photo4Input')
+					.setLabel("What is your fourth photo of the house?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('https://i.imgur.com/wgJiq13.jpeg')
+					.setRequired(true);
+				const notesInput = new TextInputBuilder()
+					.setCustomId('notesInput')
+					.setLabel("Any notes to include?")
+					.setStyle(TextInputStyle.Paragraph);
+
+				const soldToInputRow = new ActionRowBuilder().addComponents(soldToInput);
+				const locationInputRow = new ActionRowBuilder().addComponents(locationInput);
+				const priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				const saleDateInputRow = new ActionRowBuilder().addComponents(saleDateInput);
+				const photo1InputRow = new ActionRowBuilder().addComponents(photo1Input);
+
+				/*const photo2InputRow = new ActionRowBuilder().addComponents(photo2Input);
+				const photo3InputRow = new ActionRowBuilder().addComponents(photo3Input);
+				const photo4InputRow = new ActionRowBuilder().addComponents(photo4Input);
+				const notesInputRow = new ActionRowBuilder().addComponents(notesInput);*/
+
+				addHouseSoldModal.addComponents(soldToInputRow, locationInputRow, priceInputRow, saleDateInputRow, photo1InputRow);
+
+				addHouseSoldModal.addComponents(soldToInputRow, locationInputRow, priceInputRow, saleDateInputRow, photo1InputRow, photo2InputRow, photo3InputRow, photo4InputRow, notesInputRow);
+
+				await interaction.showModal(addHouseSoldModal);
 				break;
 			default:
 				await interaction.reply({ content: `I\'m not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

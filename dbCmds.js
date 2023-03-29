@@ -15,6 +15,14 @@ module.exports.setSummValue = async (summaryName, newValue) => {
 	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { value: newValue }, { upsert: true })
 };
 
+module.exports.addOneSumm = async (summaryName) => {
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: 1 } })
+};
+
+module.exports.subtractOneSumm = async (summaryName) => {
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: -1 } })
+};
+
 module.exports.resetSummValue = async (summaryName) => {
 	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { value: 0 }, { upsert: true })
 };
