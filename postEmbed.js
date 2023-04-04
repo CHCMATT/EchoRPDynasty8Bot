@@ -1,24 +1,23 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const dbCmds = require('./dbCmds.js');
+const postEmbed = require('./postEmbed.js');
+const editEmbed = require('./editEmbed.js');
 
-const formatter = new Intl.NumberFormat('en-US', {
-	style: 'currency',
-	currency: 'USD',
-	maximumFractionDigits: 0
-});
+const fileParts = __filename.split(/[\\/]/);
+const fileName = fileParts[fileParts.length - 1];
 
-module.exports.editEmbed = async (client) => {
+module.exports.postEmbed = async (client) => {
 	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 	let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
 	let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
 	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
 
+	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
+
 	countHousesSold = countHousesSold.toString();
 	countWarehousesSold = countWarehousesSold.toString();
 	countPropertiesQuoted = countPropertiesQuoted.toString();
 	countPropertiesRepod = countPropertiesRepod.toString();
-
-	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
 
 	const housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
@@ -40,14 +39,11 @@ module.exports.editEmbed = async (client) => {
 		.setDescription(countPropertiesRepod)
 		.setColor('#FFE878');
 
-	const currEmbed = await dbCmds.readMsgId("embedMsg");
-
-	const channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-	const currMsg = await channel.messages.fetch(currEmbed);
-
 	const btnRows = addBtnRows();
 
-	currMsg.edit({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed], components: btnRows });
+	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed], components: btnRows });
+
+	await dbCmds.setMsgId("embedMsg", client.embedMsg.id);
 };
 
 function addBtnRows() {
