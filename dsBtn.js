@@ -81,7 +81,7 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(addHouseSoldModal);
 				break;
 			default:
-				await interaction.reply({ content: `I\'m not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
 		}
 	}
