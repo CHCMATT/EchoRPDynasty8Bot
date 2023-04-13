@@ -16,11 +16,11 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Rick Grimes')
 					.setRequired(true);
-				const locationInput = new TextInputBuilder()
-					.setCustomId('locationInput')
-					.setLabel("Where was the house located?")
+				const lotNumInput = new TextInputBuilder()
+					.setCustomId('lotNumInput')
+					.setLabel("What is the house lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Baytree Canyon Road')
+					.setPlaceholder('4567')
 					.setRequired(true);
 				const priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -28,55 +28,28 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('150000')
 					.setRequired(true);
-				const saleDateInput = new TextInputBuilder()
-					.setCustomId('saleDateInput')
-					.setLabel("What was date of sale?")
+				const locNotesInput = new TextInputBuilder()
+					.setCustomId('locNotesInput')
+					.setLabel("What is the locat. and notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('01/31/2023')
+					.setPlaceholder('Baytree Canyon Rd, provided smart locks')
 					.setRequired(true);
-				const photo1Input = new TextInputBuilder()
-					.setCustomId('photo1Input')
-					.setLabel("What is your first photo of the house?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://i.imgur.com/laI8KzQ.jpeg')
+				const photosInput = new TextInputBuilder()
+					.setCustomId('photosInput')
+					.setLabel("Include 1 photo of GPS & 1 of front of house")
+					.setStyle(TextInputStyle.Paragraph)
+					.setPlaceholder('https://i.imgur.com/wgJiq13.jpg, https://i.imgur.com/hv6jVYT.jpg')
 					.setRequired(true);
-				const photo2Input = new TextInputBuilder()
-					.setCustomId('photo2Input')
-					.setLabel("What is your second photo of the house?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://i.imgur.com/N0yFI2K.png')
-					.setRequired(true);
-				const photo3Input = new TextInputBuilder()
-					.setCustomId('photo3Input')
-					.setLabel("What is your third photo of the house?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://i.imgur.com/hv6jVYT.jpeg')
-					.setRequired(true);
-				const photo4Input = new TextInputBuilder()
-					.setCustomId('photo4Input')
-					.setLabel("What is your fourth photo of the house?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://i.imgur.com/wgJiq13.jpeg')
-					.setRequired(true);
-				const notesInput = new TextInputBuilder()
-					.setCustomId('notesInput')
-					.setLabel("Any notes to include?")
-					.setStyle(TextInputStyle.Paragraph);
+
+				// meme gallery: https://imgur.com/gallery/Et0Qm
 
 				const soldToInputRow = new ActionRowBuilder().addComponents(soldToInput);
-				const locationInputRow = new ActionRowBuilder().addComponents(locationInput);
+				const lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
 				const priceInputRow = new ActionRowBuilder().addComponents(priceInput);
-				const saleDateInputRow = new ActionRowBuilder().addComponents(saleDateInput);
-				const photo1InputRow = new ActionRowBuilder().addComponents(photo1Input);
+				const locNotesInputRow = new ActionRowBuilder().addComponents(locNotesInput);
+				const photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				/*const photo2InputRow = new ActionRowBuilder().addComponents(photo2Input);
-				const photo3InputRow = new ActionRowBuilder().addComponents(photo3Input);
-				const photo4InputRow = new ActionRowBuilder().addComponents(photo4Input);
-				const notesInputRow = new ActionRowBuilder().addComponents(notesInput);*/
-
-				addHouseSoldModal.addComponents(soldToInputRow, locationInputRow, priceInputRow, saleDateInputRow, photo1InputRow);
-
-				addHouseSoldModal.addComponents(soldToInputRow, locationInputRow, priceInputRow, saleDateInputRow, photo1InputRow, photo2InputRow, photo3InputRow, photo4InputRow, notesInputRow);
+				addHouseSoldModal.addComponents(soldToInputRow, lotNumInputRow, priceInputRow, locNotesInputRow, photosInputRow);
 
 				await interaction.showModal(addHouseSoldModal);
 				break;
