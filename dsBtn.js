@@ -108,8 +108,8 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Dex Bishop - 323-869-5309')
 					.setRequired(true);
-				var estPriceInput = new TextInputBuilder()
-					.setCustomId('estPriceInput')
+				var priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
 					.setLabel("What is the price you estimate it will be?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('850000')
@@ -136,12 +136,12 @@ module.exports.btnPressed = async (interaction) => {
 				// meme gallery: https://imgur.com/gallery/Et0Qm
 
 				var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
-				var estPriceInputRow = new ActionRowBuilder().addComponents(estPriceInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var intTypeInputRow = new ActionRowBuilder().addComponents(intTypeInput);
 				var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addPropertyQuoteModal.addComponents(clientInfoInputRow, estPriceInputRow, intTypeInputRow, notesInputRow, photosInputRow);
+				addPropertyQuoteModal.addComponents(clientInfoInputRow, priceInputRow, intTypeInputRow, notesInputRow, photosInputRow);
 
 				await interaction.showModal(addPropertyQuoteModal);
 				break;

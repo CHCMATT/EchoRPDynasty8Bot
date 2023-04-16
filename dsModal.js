@@ -50,8 +50,7 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 				else {
-
-					var photos;
+					var photos = [photosString];
 					if (photosString.includes(",")) {
 						photos = photosString.split(",")
 					} else if (photosString.includes(";")) {
@@ -60,8 +59,8 @@ module.exports.modalSubmit = async (interaction) => {
 						photos = photosString.split(" ")
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
-					} else {
-						photos = `default: ${photosString}`
+					} else if (photos.length > 1) {
+						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -154,7 +153,7 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 				else {
-					var photos;
+					var photos = [photosString];
 					if (photosString.includes(",")) {
 						photos = photosString.split(",")
 					} else if (photosString.includes(";")) {
@@ -163,8 +162,8 @@ module.exports.modalSubmit = async (interaction) => {
 						photos = photosString.split(" ")
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
-					} else {
-						photos = `default: ${photosString}`
+					} else if (photos.length > 1) {
+						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -258,7 +257,7 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 				else {
-					var photos;
+					var photos = [photosString];
 					if (photosString.includes(",")) {
 						photos = photosString.split(",")
 					} else if (photosString.includes(";")) {
@@ -267,8 +266,8 @@ module.exports.modalSubmit = async (interaction) => {
 						photos = photosString.split(" ")
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
-					} else {
-						photos = `default: ${photosString}`
+					} else if (photos.length > 1) {
+						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -352,7 +351,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
 
-				var photos;
+				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
 				} else if (photosString.includes(";")) {
@@ -361,8 +360,8 @@ module.exports.modalSubmit = async (interaction) => {
 					photos = photosString.split(" ")
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
-				} else {
-					photos = `default: ${photosString}`
+				} else if (photos.length > 1) {
+					console.log(photos.length);
 					await interaction.reply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
@@ -443,8 +442,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
 				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
-
-				var photos;
+				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
 				} else if (photosString.includes(";")) {
@@ -453,8 +451,8 @@ module.exports.modalSubmit = async (interaction) => {
 					photos = photosString.split(" ")
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
-				} else {
-					photos = `default: ${photosString}`
+				} else if (photos.length > 1) {
+					console.log(photos.length);
 					await interaction.reply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
