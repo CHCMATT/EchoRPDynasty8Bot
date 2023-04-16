@@ -512,9 +512,13 @@ module.exports.modalSubmit = async (interaction) => {
 				if (personnelStats == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
+
+				await dbCmds.addOneSumm("countTrainActivitiesChecked");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "activityChecks");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
-				await interaction.reply({ content: `Successfully requested a Train Activity check for \`${ownerInfo}\`.`, ephemeral: true });
+				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
 
 			default:
