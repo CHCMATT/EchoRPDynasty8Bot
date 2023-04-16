@@ -3,12 +3,6 @@ var dbCmds = require('./dbCmds.js');
 var postEmbed = require('./postEmbed.js');
 var editEmbed = require('./editEmbed.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
-	style: 'currency',
-	currency: 'USD',
-	maximumFractionDigits: 0
-});
-
 module.exports.startUp = async (client) => {
 	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
 	var oldEmbed = await dbCmds.readMsgId("embedMsg");
