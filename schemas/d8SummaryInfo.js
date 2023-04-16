@@ -1,16 +1,16 @@
-const { Schema, model, models } = require('mongoose');
+var { Schema, model, models } = require('mongoose');
 
-const reqString = {
+var reqString = {
 	type: String,
 	required: true,
 };
 
-const reqNum = {
+var reqNum = {
 	type: Number,
 	required: true,
 };
 
-const d8SummaryInfoSchema = new Schema({
+var d8SummaryInfoSchema = new Schema({
 	summaryName: reqString,
 	value: reqNum,
 	msgId: String

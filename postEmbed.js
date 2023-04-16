@@ -1,16 +1,13 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const dbCmds = require('./dbCmds.js');
-const postEmbed = require('./postEmbed.js');
-const editEmbed = require('./editEmbed.js');
-
-const fileParts = __filename.split(/[\\/]/);
-const fileName = fileParts[fileParts.length - 1];
+var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+var dbCmds = require('./dbCmds.js');
 
 module.exports.postEmbed = async (client) => {
 	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 	let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
 	let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
 	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
+	let countTrainActivitiesChecked = await dbCmds.readSummValue("countTrainActivitiesChecked");
+
 
 	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
 
@@ -18,36 +15,42 @@ module.exports.postEmbed = async (client) => {
 	countWarehousesSold = countWarehousesSold.toString();
 	countPropertiesQuoted = countPropertiesQuoted.toString();
 	countPropertiesRepod = countPropertiesRepod.toString();
+	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
 
-	const housesSoldEmbed = new EmbedBuilder()
+	var housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
 		.setColor('#A67C00');
 
-	const warehousesSoldEmbed = new EmbedBuilder()
+	var warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
-		.setColor('#FFBF00');
+		.setColor('#BF9B30');
 
-	const propertiesQuotedEmbed = new EmbedBuilder()
+	var propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
-		.setColor('#FFD447');
+		.setColor('#FFBF00');
 
-	const propertiesRepodEmbed = new EmbedBuilder()
+	var propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
+		.setColor('#FFD447');
+
+	var trainActivitiesCheckedEmbed = new EmbedBuilder()
+		.setTitle('Amount of Train Activities Checked:')
+		.setDescription(countTrainActivitiesChecked)
 		.setColor('#FFE878');
 
-	const btnRows = addBtnRows();
+	var btnRows = addBtnRows();
 
-	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed], components: btnRows });
+	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed], components: btnRows });
 
 	await dbCmds.setMsgId("embedMsg", client.embedMsg.id);
 };
 
 function addBtnRows() {
-	const row1 = new ActionRowBuilder().addComponents(
+	var row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addHouseSold')
 			.setLabel('Add a House Sale')
@@ -73,6 +76,6 @@ function addBtnRows() {
 			.setLabel('Add a Train Check')
 			.setStyle(ButtonStyle.Success)
 	);
-	const rows = [row1];
+	var rows = [row1];
 	return rows;
 };

@@ -1,20 +1,25 @@
-const { Schema, model, models } = require('mongoose');
+var { Schema, model, models } = require('mongoose');
 
-const reqString = {
+var reqString = {
 	type: String,
 	required: true,
 };
 
-const reqNum = {
+var reqNum = {
 	type: Number,
 	required: true,
 };
 
-const d8PersonnelInfoSchema = new Schema({
-	discordID: reqString,
+var d8PersonnelInfoSchema = new Schema({
+	discordId: reqString,
 	charName: reqString,
-	statName: reqString,
-	value: reqNum,
+	housesSold: reqNum,
+	warehousesSold: reqNum,
+	propertiesRepod: reqNum,
+	propertiesQuoted: reqNum,
+	activityChecks: reqNum,
+	embedColor: reqString,
+	embedMsgId: reqString,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);
