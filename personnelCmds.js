@@ -24,13 +24,11 @@ module.exports.sendOrUpdateEmbed = async (client, userId) => {
 		var activityChecks = personnelData.activityChecks;
 
 		var embedDesc =
-			`
-• **Houses Sold:** ${housesSold}
-• **Warehouses Sold:** ${warehousesSold}
-• **Properties Quoted:** ${propertiesQuoted}
-• **Properties Repossessed:** ${propertiesRepod}
-• **Train Activities Checked:** ${activityChecks}
-		`;
+			`• **Houses Sold:** ${housesSold}
+		• **Warehouses Sold:** ${warehousesSold}
+		• **Properties Quoted:** ${propertiesQuoted}
+		• **Properties Repossessed:** ${propertiesRepod}
+		• **Train Activities Checked:** ${activityChecks}`;
 
 		var personnelEmbed = new EmbedBuilder()
 			.setTitle(`Dynasty 8 statistics for ${charName}:`)
@@ -52,13 +50,11 @@ module.exports.sendOrUpdateEmbed = async (client, userId) => {
 		var activityChecks = personnelData.activityChecks;
 
 		var embedDesc =
-			`
-• **Houses Sold:** ${housesSold}
+			`• **Houses Sold:** ${housesSold}
 • **Warehouses Sold:** ${warehousesSold}
 • **Properties Quoted:** ${propertiesQuoted}
 • **Properties Repossessed:** ${propertiesRepod}
-• **Train Activities Checked:** ${activityChecks}
-		`
+• **Train Activities Checked:** ${activityChecks}`;
 
 		var personnelEmbed = new EmbedBuilder()
 			.setTitle(`Dynasty 8 statistics for ${charName}:`)
