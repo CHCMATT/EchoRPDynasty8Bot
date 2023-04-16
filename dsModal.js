@@ -305,17 +305,30 @@ module.exports.modalSubmit = async (interaction) => {
 						return;
 					}
 
-					var embeds = [new EmbedBuilder()
-						.setTitle('A new Property Quote request has been submitted!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${reqDate}` },
-							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Estimated Price:`, value: `${formattedPrice}` },
-							{ name: `Interior Type:`, value: `${interiorType}` },
-							{ name: `Notes:`, value: `${notes}` }
-						)
-						.setColor('FFBF00')];
+					if (notes) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('A new Property Quote request has been submitted!')
+							.addFields(
+								{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Estimated Price:`, value: `${formattedPrice}` },
+								{ name: `Interior Type:`, value: `${interiorType}` },
+								{ name: `Notes:`, value: `${notes}` }
+							)
+							.setColor('FFBF00')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('A new Property Quote request has been submitted!')
+							.addFields(
+								{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Estimated Price:`, value: `${formattedPrice}` },
+								{ name: `Interior Type:`, value: `${interiorType}` },
+							)
+							.setColor('FFBF00')];
+					}
 
 					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFBF00').setURL('https://echorp.net/').setImage(x));
 
@@ -399,17 +412,30 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var embeds = [new EmbedBuilder()
-					.setTitle('A new Property Repossession has been completed!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Repossession Date:`, value: `${repoDate}` },
-						{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-						{ name: `Lot Number:`, value: `${lotNum}` },
-						{ name: `Reason for Repossession:`, value: `${repoReason}` },
-						{ name: `Notes:`, value: `${notes}` }
-					)
-					.setColor('FFD447')];
+				if (notes) {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Property Repossession has been completed!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Repossession Date:`, value: `${repoDate}` },
+							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
+							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Reason for Repossession:`, value: `${repoReason}` },
+							{ name: `Notes:`, value: `${notes}` }
+						)
+						.setColor('FFD447')];
+				} else {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Property Repossession has been completed!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Repossession Date:`, value: `${repoDate}` },
+							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
+							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Reason for Repossession:`, value: `${repoReason}` },
+						)
+						.setColor('FFD447')];
+				}
 
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFD447').setURL('https://echorp.net/').setImage(x));
 
@@ -490,16 +516,28 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var embeds = [new EmbedBuilder()
-					.setTitle('A new Train Activity Check request has been submitted!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Request Date:`, value: `${reqDate}` },
-						{ name: `Owner Information:`, value: `${ownerInfo}` },
-						{ name: `Lot Number:`, value: `${lotNum}` },
-						{ name: `Notes:`, value: `${notes}` }
-					)
-					.setColor('FFE878')];
+				if (notes) {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Train Activity Check request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Owner Information:`, value: `${ownerInfo}` },
+							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Notes:`, value: `${notes}` }
+						)
+						.setColor('FFE878')];
+				} else {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Train Activity Check request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Owner Information:`, value: `${ownerInfo}` },
+							{ name: `Lot Number:`, value: `${lotNum}` },
+						)
+						.setColor('FFE878')];
+				}
 
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE878').setURL('https://echorp.net/').setImage(x));
 

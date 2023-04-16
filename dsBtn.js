@@ -125,7 +125,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setLabel("Any notes about the requested quote?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('House with a view on Rich Bitch Avenue, Vibes like Malibu')
-					.setRequired(true);
+					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of house")
@@ -172,7 +172,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setLabel("Any notes about the repossession?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Foreclosure, failure to pay')
-					.setRequired(true);
+					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of property")
@@ -212,7 +212,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('notesInput')
 					.setLabel("Any notes about the train activity check?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Neighbor stated the owner moved out of town')
+					.setPlaceholder('Neighbor stated saw the owner with a moving truck')
 					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
