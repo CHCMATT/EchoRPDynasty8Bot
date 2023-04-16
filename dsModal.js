@@ -37,7 +37,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
 				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart()));
+				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
 				var formattedPrice = formatter.format(price);
 				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
@@ -141,7 +141,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
 				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart()));
+				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
 				var formattedPrice = formatter.format(price);
 				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
@@ -243,7 +243,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var reqDate = `<t:${now}:d>`;
 
 				var clientInfo = interaction.fields.getTextInputValue('clientInfoInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('estPriceInput').trimEnd().trimStart()));
+				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
 				var formattedPrice = formatter.format(price);
 				var interiorType = interaction.fields.getTextInputValue('intTypeInput').trimEnd().trimStart();
 
@@ -520,7 +520,6 @@ module.exports.modalSubmit = async (interaction) => {
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
-
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,
