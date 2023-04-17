@@ -87,10 +87,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.svg', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i])) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.svg\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -132,8 +132,18 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+
+				var formattedCommission = formatter.format(realtorCommission);
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+				var reason = `House Sale to \`${soldTo}\` for \`${formattedPrice}\` on ${saleDate}`
+
+				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('#1EC276');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -201,10 +211,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.svg', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i])) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.svg\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -246,8 +256,18 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+
+				var formattedCommission = formatter.format(realtorCommission);
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+				var reason = `Warehouse Sale to \`${soldTo}\` for \`${formattedPrice}\` on ${saleDate}`
+
+				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('#1EC276');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Warehouses Sold\` counter - the new total is \`${newWarehousesSoldTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -308,10 +328,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.svg', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i])) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.svg\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -415,10 +435,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.svg', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i])) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.svg\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -519,10 +539,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.svg', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i])) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.svg\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -619,8 +639,18 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+
+				var formattedCommission = formatter.format(realtorCommission);
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+				var reason = `Miscellaneous Sale of \`${itemsSold}\` for \`${formattedPrice}\` on ${saleDate}`
+
+				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('#1EC276');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
