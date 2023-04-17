@@ -1,5 +1,5 @@
 var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField } = require('discord.js');
+var { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -35,6 +35,11 @@ module.exports = {
 				var personnelData = await dbCmds.readPersStats(user.id)
 				var newCommission = personnelData.currentCommission;
 				var formattedNewCommission = formatter.format(newCommission);
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified:')
+					.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`)
+					.setColor('#FFE169');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				await interaction.reply({ content: `Successfully added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
