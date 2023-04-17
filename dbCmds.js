@@ -31,7 +31,7 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname, embedColor, embedMsgId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, embedColor: embedColor, embedMsgId: embedMsgId, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, currentCommission: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, embedColor: embedColor, embedMsgId: embedMsgId, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, currentCommission: 0, bankAccount: 0 }, { upsert: true });
 };
 
 module.exports.resetPersStats = async (discordId) => {
@@ -39,7 +39,7 @@ module.exports.resetPersStats = async (discordId) => {
 };
 
 module.exports.readPersStats = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, currentCommission: 1, _id: 0 });
+	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
 	return result;
 };
 
@@ -53,6 +53,10 @@ module.exports.addOnePersStat = async (discordId, statName) => {
 
 module.exports.subtractOnePersStat = async (discordId, statName) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { [statName]: -1 } });
+};
+
+module.exports.setBankAccount = async (discordId, bankNum) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { bankAccount: bankNum }, { upsert: true });
 };
 
 
@@ -86,9 +90,10 @@ module.exports.readCommission = async (discordId) => {
 };
 
 module.exports.weeklyCommissionRep = async () => {
-	var result = await d8PersonnelInfo.find({ currentCommission: { $gt: 1 } }, { discordId: 1, charName: 1, currentCommission: 1, _id: 0 });
+	var result = await d8PersonnelInfo.find({ currentCommission: { $gt: 1 } }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, _id: 0 });
 	return result;
 };
+
 
 // for setting message ID of current Discord embed message
 module.exports.setMsgId = async (summaryName, newValue) => {
