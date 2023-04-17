@@ -12,11 +12,11 @@ module.exports.readSummValue = async (summaryName) => {
 };
 
 module.exports.addOneSumm = async (summaryName) => {
-	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: 1 } });
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: 1 } }, { upsert: true });
 };
 
 module.exports.subtractOneSumm = async (summaryName) => {
-	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: -1 } });
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: -1 } }, { upsert: true });
 };
 
 module.exports.setSummValue = async (summaryName, newValue) => {
@@ -31,7 +31,7 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname, embedColor, embedMsgId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, embedColor: embedColor, embedMsgId: embedMsgId, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, currentCommission: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, embedColor: embedColor, embedMsgId: embedMsgId, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, currentCommission: 0 }, { upsert: true });
 };
 
 module.exports.resetPersStats = async (discordId) => {
@@ -39,7 +39,7 @@ module.exports.resetPersStats = async (discordId) => {
 };
 
 module.exports.readPersStats = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, currentCommission: 1, _id: 0 });
+	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, currentCommission: 1, _id: 0 });
 	return result;
 };
 

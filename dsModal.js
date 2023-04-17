@@ -610,10 +610,19 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+				await dbCmds.addOneSumm("countMiscSales");
+				await editEmbed.editEmbed(interaction.client);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
+				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				await interaction.reply({ content: `Successfully added the Misc. Sale.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			default:
 				await interaction.reply({

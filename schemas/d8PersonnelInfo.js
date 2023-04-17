@@ -18,6 +18,7 @@ var d8PersonnelInfoSchema = new Schema({
 	propertiesRepod: reqNum,
 	propertiesQuoted: reqNum,
 	activityChecks: reqNum,
+	miscSales: reqNum,
 	embedColor: reqString,
 	embedMsgId: reqString,
 	currentCommission: reqNum,

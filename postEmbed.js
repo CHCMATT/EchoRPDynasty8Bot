@@ -7,6 +7,7 @@ module.exports.postEmbed = async (client) => {
 	let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
 	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
 	let countTrainActivitiesChecked = await dbCmds.readSummValue("countTrainActivitiesChecked");
+	let countMiscSales = await dbCmds.readSummValue("countMiscSales");
 
 	// Color Palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
@@ -15,6 +16,7 @@ module.exports.postEmbed = async (client) => {
 	countPropertiesQuoted = countPropertiesQuoted.toString();
 	countPropertiesRepod = countPropertiesRepod.toString();
 	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
+	countMiscSales = countMiscSales.toString();
 
 	var housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
@@ -41,9 +43,14 @@ module.exports.postEmbed = async (client) => {
 		.setDescription(countTrainActivitiesChecked)
 		.setColor('#C9A227');
 
+	var miscSalesEmbed = new EmbedBuilder()
+		.setTitle('Amount of Miscellaneous Sales Completed:')
+		.setDescription(countMiscSales)
+		.setColor('#C9A227');
+
 	var btnRows = addBtnRows();
 
-	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed], components: btnRows });
+	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed], components: btnRows });
 
 	await dbCmds.setMsgId("embedMsg", client.embedMsg.id);
 };
@@ -61,6 +68,13 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
+			.setCustomId('addMiscSale')
+			.setLabel('Add a Misc. Sale')
+			.setStyle(ButtonStyle.Success),
+	);
+
+	var row2 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
 			.setCustomId('addPropQuoted')
 			.setLabel('Add a Property Quote')
 			.setStyle(ButtonStyle.Primary),
@@ -76,13 +90,6 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Primary)
 	);
 
-	var row2 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('addMiscSale')
-			.setLabel('Add a Misc. Sale')
-			.setStyle(ButtonStyle.Success),
-
-	);
 	var rows = [row1, row2];
 	return rows;
 };

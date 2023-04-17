@@ -22,13 +22,15 @@ module.exports.sendOrUpdateEmbed = async (client, userId) => {
 		var propertiesQuoted = personnelData.propertiesQuoted;
 		var propertiesRepod = personnelData.propertiesRepod;
 		var activityChecks = personnelData.activityChecks;
+		var miscSales = personnelData.miscSales;
 
 		var embedDesc =
 			`• **Houses Sold:** ${housesSold}
 • **Warehouses Sold:** ${warehousesSold}
 • **Properties Quoted:** ${propertiesQuoted}
 • **Properties Repossessed:** ${propertiesRepod}
-• **Train Activities Checked:** ${activityChecks}`;
+• **Train Activities Checked:** ${activityChecks}
+• **Misc. Sales Completed:** ${miscSales}`;
 
 		var personnelEmbed = new EmbedBuilder()
 			.setTitle(`Dynasty 8 statistics for ${charName}:`)
@@ -48,13 +50,15 @@ module.exports.sendOrUpdateEmbed = async (client, userId) => {
 		var propertiesQuoted = personnelData.propertiesQuoted;
 		var propertiesRepod = personnelData.propertiesRepod;
 		var activityChecks = personnelData.activityChecks;
+		var miscSales = personnelData.miscSales;
 
 		var embedDesc =
 			`• **Houses Sold:** ${housesSold}
 • **Warehouses Sold:** ${warehousesSold}
 • **Properties Quoted:** ${propertiesQuoted}
 • **Properties Repossessed:** ${propertiesRepod}
-• **Train Activities Checked:** ${activityChecks}`;
+• **Train Activities Checked:** ${activityChecks}
+• **Misc. Sales Completed:** ${miscSales}`;
 
 		var personnelEmbed = new EmbedBuilder()
 			.setTitle(`Dynasty 8 statistics for ${charName}:`)
