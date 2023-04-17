@@ -3,7 +3,7 @@ var { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'checkstats',
-	description: 'Checks the statistics of the specific user',
+	description: 'Checks the statistics of the specified user',
 	options: [
 		{
 			name: 'user',

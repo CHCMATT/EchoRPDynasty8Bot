@@ -4,7 +4,7 @@ var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'resetstats',
-	description: 'Resets the statistics of the specific user back to 0',
+	description: 'Resets the statistics of the specified user back to 0',
 	options: [
 		{
 			name: 'user',

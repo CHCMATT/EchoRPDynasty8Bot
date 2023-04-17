@@ -4,7 +4,7 @@ var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'resetsummary',
-	description: 'Resets the specific summary statistic to 0',
+	description: 'Resets the specified summary statistic to 0',
 	options: [
 		{
 			name: 'summary',

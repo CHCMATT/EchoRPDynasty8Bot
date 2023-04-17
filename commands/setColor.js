@@ -4,7 +4,7 @@ var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'setcolor',
-	description: 'Sets the color of the Discord embed for the specific user',
+	description: 'Sets the color of the Discord embed for the specified user',
 	options: [
 		{
 			name: 'user',

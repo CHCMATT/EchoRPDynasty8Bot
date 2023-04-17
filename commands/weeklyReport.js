@@ -1,12 +1,6 @@
 var { PermissionsBitField } = require('discord.js');
 var commissionCmds = require('../commissionCmds.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
-	style: 'currency',
-	currency: 'USD',
-	maximumFractionDigits: 0
-});
-
 module.exports = {
 	name: 'weeklyreport',
 	description: 'Manually runs the weekly commission report for Management',
