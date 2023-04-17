@@ -17,7 +17,7 @@ client.login(process.env.TOKEN);
 var fileParts = __filename.split(/[\\/]/);
 var fileName = fileParts[fileParts.length - 1];
 
-cron.schedule('0 18 * * SUN', function () { commissionCmds.weeklyReport(client); }); // runs at 18:00 every Sunday (7/SUN)
+cron.schedule('0 18 * * SUN', function () { commissionCmds.weeklyReport(client); }); // runs at 18:00 every Sunday (SUN)
 
 client.once('ready', async () => {
 	console.log(`[${fileName}] The client is starting up!`);
