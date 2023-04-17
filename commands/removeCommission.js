@@ -34,21 +34,25 @@ module.exports = {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 			var user = interaction.options.getUser('user');
 			if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				var amount = interaction.options.getInteger('amount');
+				var amount = Math.abs(interaction.options.getInteger('amount'));
 				var reason = interaction.options.getString('reason');
 				var formattedAmt = formatter.format(amount);
 				var personnelData = await dbCmds.readPersStats(user.id)
-				await dbCmds.removeCommission(user.id, amount)
-				var personnelData = await dbCmds.readPersStats(user.id)
-				var newCommission = personnelData.currentCommission;
-				var formattedNewCommission = formatter.format(newCommission);
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Manually:')
-					.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-					.setColor('#FFA630');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
+				if (personnelData.currentCommission != null && personnelData.currentCommission > 0) {
+					await dbCmds.removeCommission(user.id, amount)
+					var personnelData = await dbCmds.readPersStats(user.id)
+					var newCommission = personnelData.currentCommission;
+					var formattedNewCommission = formatter.format(newCommission);
+					// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+						.setColor('#FFA630');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+					await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
+				}
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
