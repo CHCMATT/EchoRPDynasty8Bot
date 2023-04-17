@@ -8,8 +8,7 @@ module.exports.postEmbed = async (client) => {
 	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
 	let countTrainActivitiesChecked = await dbCmds.readSummValue("countTrainActivitiesChecked");
 
-
-	// Color Palette: https://www.schemecolor.com/24-karat-gold-color-palette.php
+	// Color Palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
 	countHousesSold = countHousesSold.toString();
 	countWarehousesSold = countWarehousesSold.toString();
@@ -20,27 +19,27 @@ module.exports.postEmbed = async (client) => {
 	var housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
-		.setColor('#A67C00');
+		.setColor('#805B10');
 
 	var warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
-		.setColor('#BF9B30');
+		.setColor('#926C15');
 
 	var propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
-		.setColor('#FFBF00');
+		.setColor('#A47E1B');
 
 	var propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
-		.setColor('#FFD447');
+		.setColor('#B69121');
 
 	var trainActivitiesCheckedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Train Activities Checked:')
 		.setDescription(countTrainActivitiesChecked)
-		.setColor('#FFE878');
+		.setColor('#C9A227');
 
 	var btnRows = addBtnRows();
 
@@ -64,18 +63,26 @@ function addBtnRows() {
 		new ButtonBuilder()
 			.setCustomId('addPropQuoted')
 			.setLabel('Add a Property Quote')
-			.setStyle(ButtonStyle.Success),
+			.setStyle(ButtonStyle.Primary),
 
 		new ButtonBuilder()
 			.setCustomId('addPropRepod')
 			.setLabel('Add a Property Repo')
-			.setStyle(ButtonStyle.Success),
+			.setStyle(ButtonStyle.Primary),
 
 		new ButtonBuilder()
 			.setCustomId('addTrainCheck')
 			.setLabel('Add a Train Check')
-			.setStyle(ButtonStyle.Success)
+			.setStyle(ButtonStyle.Primary)
 	);
-	var rows = [row1];
+
+	var row2 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('addMiscSale')
+			.setLabel('Add a Misc. Sale')
+			.setStyle(ButtonStyle.Success),
+
+	);
+	var rows = [row1, row2];
 	return rows;
 };

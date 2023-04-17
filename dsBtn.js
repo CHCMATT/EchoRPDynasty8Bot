@@ -227,12 +227,33 @@ module.exports.btnPressed = async (interaction) => {
 				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
 				var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
-
 				addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumInputRow, notesInputRow, photosInputRow);
-
 				await interaction.showModal(addTrainCheckModal);
 				break;
+			case 'addMiscSale':
+				var addMiscSaleModal = new ModalBuilder()
+					.setCustomId('addMiscSaleModal')
+					.setTitle('Add a Miscellaneous Sale');
+				var itemsSoldInput = new TextInputBuilder()
+					.setCustomId('itemsSoldInput')
+					.setLabel("What did you sell?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('3x Garage Slots')
+					.setRequired(true);
+				var priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
+					.setLabel("What was the total sale price?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('15000')
+					.setRequired(true);
 
+				// meme gallery: https://imgur.com/gallery/Et0Qm
+
+				var itemsSoldInputRow = new ActionRowBuilder().addComponents(itemsSoldInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				addMiscSaleModal.addComponents(itemsSoldInputRow, priceInputRow);
+				await interaction.showModal(addMiscSaleModal);
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

@@ -1,8 +1,7 @@
 var dbCmds = require('./dbCmds.js');
 var editEmbed = require('./editEmbed.js');
-var personnelCmds = require('./personnelCmds.js');
-
 var { EmbedBuilder } = require('discord.js');
+var personnelCmds = require('./personnelCmds.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -41,6 +40,14 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+
+				var costPrice = (price * 0.70);
+				var d8Profit = price - costPrice;
+				var realtorCommission = (d8Profit * 0.20);
+
+				var formattedCostPrice = formatter.format(costPrice);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -108,9 +115,9 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `House Sold To:`, value: `${soldTo}` },
 							{ name: `Location/Notes:`, value: `${locationNotes}` }
 						)
-						.setColor('A67C00')];
+						.setColor('805B10')];
 
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A67C00').setURL('https://echorp.net/').setImage(x));
+					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 
 					embeds = embeds.concat(photosEmbed);
 
@@ -124,8 +131,11 @@ module.exports.modalSubmit = async (interaction) => {
 				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.`, ephemeral: true });
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addWarehouseSoldModal':
 				var realtorName;
@@ -144,6 +154,14 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
 				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+
+				var costPrice = (price * 0.70);
+				var d8Profit = price - costPrice;
+				var realtorCommission = (d8Profit * 0.20);
+
+				var formattedCostPrice = formatter.format(costPrice);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -211,9 +229,9 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Warehouse Sold To:`, value: `${soldTo}` },
 							{ name: `Location/Notes:`, value: `${locationNotes}` }
 						)
-						.setColor('BF9B30')];
+						.setColor('926C15')];
 
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('BF9B30').setURL('https://echorp.net/').setImage(x));
+					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
 
 					embeds = embeds.concat(photosEmbed);
 
@@ -227,8 +245,11 @@ module.exports.modalSubmit = async (interaction) => {
 				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Warehouses Sold\` counter - the new total is \`${newWarehousesSoldTotal}\`.`, ephemeral: true });
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Warehouses Sold\` counter - the new total is \`${newWarehousesSoldTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;
@@ -316,7 +337,7 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Interior Type:`, value: `${interiorType}` },
 								{ name: `Notes:`, value: `${notes}` }
 							)
-							.setColor('FFBF00')];
+							.setColor('A47E1B')];
 					} else {
 						var embeds = [new EmbedBuilder()
 							.setTitle('A new Property Quote request has been submitted!')
@@ -327,10 +348,10 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Estimated Price:`, value: `${formattedPrice}` },
 								{ name: `Interior Type:`, value: `${interiorType}` },
 							)
-							.setColor('FFBF00')];
+							.setColor('A47E1B')];
 					}
 
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFBF00').setURL('https://echorp.net/').setImage(x));
+					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
 
 					embeds = embeds.concat(photosEmbed);
 
@@ -423,7 +444,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
-						.setColor('FFD447')];
+						.setColor('B69121')];
 				} else {
 					var embeds = [new EmbedBuilder()
 						.setTitle('A new Property Repossession has been completed!')
@@ -434,10 +455,10 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Lot Number:`, value: `${lotNum}` },
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 						)
-						.setColor('FFD447')];
+						.setColor('B69121')];
 				}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFD447').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('B69121').setURL('https://echorp.net/').setImage(x));
 
 				embeds = embeds.concat(photosEmbed);
 
@@ -526,7 +547,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Lot Number:`, value: `${lotNum}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
-						.setColor('FFE878')];
+						.setColor('C9A227')];
 				} else {
 					var embeds = [new EmbedBuilder()
 						.setTitle('A new Train Activity Check request has been submitted!')
@@ -536,10 +557,10 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Owner Information:`, value: `${ownerInfo}` },
 							{ name: `Lot Number:`, value: `${lotNum}` },
 						)
-						.setColor('FFE878')];
+						.setColor('C9A227')];
 				}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE878').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('C9A227').setURL('https://echorp.net/').setImage(x));
 
 				embeds = embeds.concat(photosEmbed);
 
@@ -555,6 +576,44 @@ module.exports.modalSubmit = async (interaction) => {
 				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
+				break;
+			case 'addMiscSaleModal':
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var saleDate = `<t:${now}:d>`;
+
+				var itemsSold = interaction.fields.getTextInputValue('itemsSoldInput').trimEnd().trimStart();
+				var price = interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart();
+				var formattedPrice = formatter.format(price);
+
+				var d8Profit = price;
+				var realtorCommission = (d8Profit * 0.20);
+
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new Misc. Sale has been submitted!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}` },
+						{ name: `Items Sold:`, value: `${itemsSold}` },
+						{ name: `Sale Price:`, value: `${formattedPrice}` },
+					)
+					.setColor('DBB42C')];
+
+				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
+
+				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+
+				await interaction.reply({ content: `Successfully added the Misc. Sale.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			default:
 				await interaction.reply({

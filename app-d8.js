@@ -1,8 +1,10 @@
-require("dotenv/config");
 var fs = require('fs');
+require("dotenv/config");
+const cron = require('node-cron');
 var mongoose = require("mongoose");
 var startup = require('./startup.js');
 var interact = require('./dsInteractions.js');
+var commissionCmds = require('./commissionCmds.js');
 var { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 var client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -15,14 +17,16 @@ client.login(process.env.TOKEN);
 var fileParts = __filename.split(/[\\/]/);
 var fileName = fileParts[fileParts.length - 1];
 
-client.once('ready', async () => {
+cron.schedule('0 18 * * SUN', function () { commissionCmds.weeklyReport(client); }); // runs at 18:00 every Sunday (7/SUN)
 
+client.once('ready', async () => {
 	console.log(`[${fileName}] The client is starting up!`);
 	mongoose.set("strictQuery", false);
 	mongoose.connect(process.env.MONGO_URI, {
 		keepAlive: true
 	});
 	console.log(`[${fileName}] Connected to mongo!`);
+
 
 	var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	var cmdList = []; // Create an empty array for pushing each command file to

@@ -20,6 +20,7 @@ var d8PersonnelInfoSchema = new Schema({
 	activityChecks: reqNum,
 	embedColor: reqString,
 	embedMsgId: reqString,
+	currentCommission: reqNum,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);
