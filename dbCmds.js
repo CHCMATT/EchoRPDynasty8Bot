@@ -72,7 +72,7 @@ module.exports.addCommission = async (discordId, commission) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentCommission: commission } }, { upsert: true });
 };
 
-module.exports.subtractCommission = async (discordId, commission) => {
+module.exports.removeCommission = async (discordId, commission) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentCommission: -commission } }, { upsert: true });
 };
 

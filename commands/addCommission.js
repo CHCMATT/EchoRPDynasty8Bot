@@ -8,8 +8,8 @@ var formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'removecommission',
-	description: 'Removes the specified amount from your current commission metrics',
+	name: 'addcommission',
+	description: 'Adds the specified amount from your current commission metrics',
 	options: [
 		{
 			name: 'user',
@@ -19,7 +19,7 @@ module.exports = {
 		},
 		{
 			name: 'amount',
-			description: 'The amount of commission you\'d like to remove',
+			description: 'The amount of commission you\'d like to add',
 			type: 4,
 			required: true,
 		},
@@ -31,11 +31,11 @@ module.exports = {
 				var amount = interaction.options.getInteger('amount');
 				var formattedAmt = formatter.format(amount);
 				var personnelData = await dbCmds.readPersStats(user.id)
-				await dbCmds.removeCommission(user.id, amount)
+				await dbCmds.addCommission(user.id, amount)
 				var personnelData = await dbCmds.readPersStats(user.id)
 				var newCommission = personnelData.currentCommission;
 				var formattedNewCommission = formatter.format(newCommission);
-				await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
