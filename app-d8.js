@@ -36,6 +36,7 @@ client.once('ready', async () => {
 		cmdList.push(command); // push that command to the array
 		client.commands[command.name] = command; // Save the command name and command information to the client
 	}
+	console.log(`[${fileName}] Getting commands for Server ID ${process.env.SERVER_ID}.`);
 	var allCommands = await client.guilds.cache.get(process.env.SERVER_ID).commands.set(cmdList) // Sets all the commands
 		.catch(console.error);
 	var cmdIDs = allCommands.keys();
