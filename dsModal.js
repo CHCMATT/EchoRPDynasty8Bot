@@ -51,7 +51,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers (no $ or commas or periods).`,
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
 					return;
@@ -175,7 +175,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers (no $ or commas or periods).`,
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
 					return;
@@ -292,7 +292,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers (no $ or commas or periods).`,
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
 					return;
@@ -610,6 +610,15 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var itemsSold = interaction.fields.getTextInputValue('itemsSoldInput').trimEnd().trimStart();
 				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));;
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
 				var formattedPrice = formatter.format(price);
 
 				var d8Profit = price;
