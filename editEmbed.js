@@ -74,6 +74,11 @@ function addBtnRows() {
 			.setCustomId('addMiscSale')
 			.setLabel('Add a Misc. Sale')
 			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addRemodelUpgrade')
+			.setLabel('Add a Remodel/Upgrade')
+			.setStyle(ButtonStyle.Success),
 	);
 
 	var row2 = new ActionRowBuilder().addComponents(

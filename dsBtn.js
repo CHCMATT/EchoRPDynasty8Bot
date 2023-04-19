@@ -254,6 +254,52 @@ module.exports.btnPressed = async (interaction) => {
 				addMiscSaleModal.addComponents(itemsSoldInputRow, priceInputRow);
 				await interaction.showModal(addMiscSaleModal);
 				break;
+			case 'addRemodelUpgrade':
+				var addRemodelUpgradeModal = new ModalBuilder()
+					.setCustomId('addRemodelUpgradeModal')
+					.setTitle('Log an upgrade/remodel that you completed');
+				var remodelForInput = new TextInputBuilder()
+					.setCustomId('remodelForInput')
+					.setLabel("Who did you remodel the house for?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('Zhang Chin')
+					.setRequired(true);
+				var oldLotNumInput = new TextInputBuilder()
+					.setCustomId('oldLotNumInput')
+					.setLabel("What is the old lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('3456')
+					.setRequired(true);
+				var newLotNumNotesInput = new TextInputBuilder()
+					.setCustomId('newLotNumNotesInput')
+					.setLabel("What is the new lot number, and any notes?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('6789, upgraded to HighEndV3')
+					.setRequired(true);
+				var priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
+					.setLabel("What was the remodel/upgrade price?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('35000')
+					.setRequired(true);
+				var photosInput = new TextInputBuilder()
+					.setCustomId('photosInput')
+					.setLabel("Include photos of GPS & front of house")
+					.setStyle(TextInputStyle.Paragraph)
+					.setPlaceholder('https://i.imgur.com/qTL6xiG.jpg, https://i.imgur.com/jMYxD9d.jpg')
+					.setRequired(true);
+
+				// meme gallery: https://imgur.com/gallery/Et0Qm
+
+				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+				addRemodelUpgradeModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				await interaction.showModal(addRemodelUpgradeModal);
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
