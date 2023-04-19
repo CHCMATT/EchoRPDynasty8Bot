@@ -609,7 +609,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var saleDate = `<t:${now}:d>`;
 
 				var itemsSold = interaction.fields.getTextInputValue('itemsSoldInput').trimEnd().trimStart();
-				var price = interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart();
+				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));;
 				var formattedPrice = formatter.format(price);
 
 				var d8Profit = price;
