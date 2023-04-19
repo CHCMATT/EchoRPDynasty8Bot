@@ -124,7 +124,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.HOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countHousesSold");
@@ -248,7 +248,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countWarehousesSold");
@@ -378,7 +378,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.PROPERTY_QUOTES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesQuoted");
@@ -484,7 +484,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.PROPERTY_REPOS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesRepod");
@@ -586,7 +586,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHECKS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
@@ -631,7 +631,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null) {
+				if (personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
