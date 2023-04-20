@@ -73,8 +73,13 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
-			.setCustomId('addRemodelUpgrade')
-			.setLabel('Add a Remodel/Upgrade')
+			.setCustomId('addHouseRemodel')
+			.setLabel('Add a House Remodel')
+			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addWarehouseUpgrade')
+			.setLabel('Add a Warehouse Upgrade')
 			.setStyle(ButtonStyle.Success),
 	);
 

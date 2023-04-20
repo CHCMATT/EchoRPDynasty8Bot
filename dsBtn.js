@@ -18,7 +18,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the house lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('4567')
+					.setPlaceholder('1234')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -65,7 +65,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the warehouse lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('5678')
+					.setPlaceholder('2345')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -159,7 +159,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the property lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('2345')
+					.setPlaceholder('3456')
 					.setRequired(true);
 				var repoReasonInput = new TextInputBuilder()
 					.setCustomId('repoReasonInput')
@@ -206,7 +206,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the property lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('7890')
+					.setPlaceholder('4567')
 					.setRequired(true);
 				var notesInput = new TextInputBuilder()
 					.setCustomId('notesInput')
@@ -254,10 +254,10 @@ module.exports.btnPressed = async (interaction) => {
 				addMiscSaleModal.addComponents(itemsSoldInputRow, priceInputRow);
 				await interaction.showModal(addMiscSaleModal);
 				break;
-			case 'addRemodelUpgrade':
-				var addRemodelUpgradeModal = new ModalBuilder()
-					.setCustomId('addRemodelUpgradeModal')
-					.setTitle('Log an upgrade/remodel that you completed');
+			case 'addHouseRemodel':
+				var addHouseRemodelModal = new ModalBuilder()
+					.setCustomId('addHouseRemodelModal')
+					.setTitle('Log a house remodel that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
 					.setLabel("Who did you remodel the house for?")
@@ -268,7 +268,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('oldLotNumInput')
 					.setLabel("What is the old lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('3456')
+					.setPlaceholder('5678')
 					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
@@ -278,7 +278,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the remodel/upgrade price?")
+					.setLabel("What was the remodel price?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('35000')
 					.setRequired(true);
@@ -297,8 +297,54 @@ module.exports.btnPressed = async (interaction) => {
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addRemodelUpgradeModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
-				await interaction.showModal(addRemodelUpgradeModal);
+				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				await interaction.showModal(addHouseRemodelModal);
+				break;
+			case 'addWarehouseUpgrade':
+				var addHouseRemodelModal = new ModalBuilder()
+					.setCustomId('addWarehouseUpgradeModal')
+					.setTitle('Log a warehouse upgrade that you completed');
+				var remodelForInput = new TextInputBuilder()
+					.setCustomId('remodelForInput')
+					.setLabel("Who did you upgrade the warehouse for?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('Nadia Strovavich')
+					.setRequired(true);
+				var oldLotNumInput = new TextInputBuilder()
+					.setCustomId('oldLotNumInput')
+					.setLabel("What is the old lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('7891')
+					.setRequired(true);
+				var newLotNumNotesInput = new TextInputBuilder()
+					.setCustomId('newLotNumNotesInput')
+					.setLabel("What is the new lot number, and any notes?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('8910, upgraded from XS to Small Warehouse')
+					.setRequired(true);
+				var priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
+					.setLabel("What was the upgrade price?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('45000')
+					.setRequired(true);
+				var photosInput = new TextInputBuilder()
+					.setCustomId('photosInput')
+					.setLabel("Include photos of GPS & front of warehouse")
+					.setStyle(TextInputStyle.Paragraph)
+					.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
+					.setRequired(true);
+
+				// meme gallery: https://imgur.com/gallery/Et0Qm
+
+				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				await interaction.showModal(addHouseRemodelModal);
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
