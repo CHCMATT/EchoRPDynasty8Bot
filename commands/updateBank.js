@@ -1,5 +1,4 @@
 var dbCmds = require('../dbCmds.js');
-var personnelCmds = require('../personnelCmds.js');
 var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
