@@ -3,7 +3,7 @@ var commissionCmds = require('../commissionCmds.js');
 
 module.exports = {
 	name: 'weeklyreport',
-	description: 'Manually runs the weekly commission report for Management',
+	description: 'Manually runs the commission report for the Management team',
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 			commissionCmds.weeklyReport(interaction.client);
