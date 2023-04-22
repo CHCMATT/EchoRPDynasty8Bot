@@ -18,22 +18,15 @@ module.exports = {
 			var personnelData = await dbCmds.readPersStats(user.id)
 			if (personnelData !== null) {
 
-				var charName = personnelData.charName;
-				var embedColor = personnelData.embedColor;
-				var housesSold = personnelData.housesSold;
-				var warehousesSold = personnelData.warehousesSold;
-				var propertiesQuoted = personnelData.propertiesQuoted;
-				var propertiesRepod = personnelData.propertiesRepod;
-				var activityChecks = personnelData.activityChecks;
+				var miscSales = personnelData.miscSales;
 
 				var embedDesc =
-					`
-		• **Houses Sold:** ${housesSold}
+					`• **Houses Sold:** ${housesSold}
 		• **Warehouses Sold:** ${warehousesSold}
 		• **Properties Quoted:** ${propertiesQuoted}
 		• **Properties Repossessed:** ${propertiesRepod}
 		• **Train Activities Checked:** ${activityChecks}
-		`
+		• **Misc. Sales Completed:** ${miscSales}`;
 
 				var personnelEmbed = new EmbedBuilder()
 					.setTitle(`Dynasty 8 statistics for ${charName}:`)
