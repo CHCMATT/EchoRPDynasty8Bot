@@ -13,7 +13,8 @@ var reqNum = {
 var d8SummaryInfoSchema = new Schema({
 	summaryName: reqString,
 	value: reqNum,
-	msgId: String
+	msgId: String,
+	repDate: String
 });
 
 module.exports = models['d8SummaryInfo'] || model('d8SummaryInfo', d8SummaryInfoSchema);

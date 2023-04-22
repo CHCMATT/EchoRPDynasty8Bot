@@ -109,3 +109,18 @@ module.exports.readMsgId = async (summaryName) => {
 		return `Value not found for ${summaryName}.`;
 	}
 };
+
+// for setting string of latest commission report date
+module.exports.setRepDate = async (summaryName, newValue) => {
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { repDate: newValue }, { upsert: true });
+};
+
+module.exports.readRepDate = async (summaryName) => {
+	var result = await d8SummaryInfo.findOne({ summaryName }, { repDate: 1, _id: 0 });
+	if (result !== null) {
+		return result.repDate;
+	}
+	else {
+		return `Value not found for ${summaryName}`;
+	}
+};

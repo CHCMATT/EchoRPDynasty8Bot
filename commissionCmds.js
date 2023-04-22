@@ -7,11 +7,9 @@ var formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
-module.exports.weeklyReport = async (client) => {
+module.exports.commissionReport = async (client) => {
 	var now = Math.floor(new Date().getTime() / 1000.0);
-	var nowMinus7 = now - 604800;
 	var today = `<t:${now}:d>`;
-	var lastweek = `<t:${nowMinus7}:d>`;
 
 	var peopleArray = await dbCmds.weeklyCommissionRep();
 	var commissionDescList = '';
@@ -25,8 +23,15 @@ module.exports.weeklyReport = async (client) => {
 		commissionDescList = "There is no commission to pay this week."
 	}
 
+	var lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
+
+	if (lastRep.includes("Value not found")) {
+		var nowMinus7 = now - 604800;
+		var lastRep = `<t:${nowMinus7}:d>`
+	}
+
 	var embed = new EmbedBuilder()
-		.setTitle(`Weekly commission report for ${lastweek} through ${today}:`)
+		.setTitle(`Weekly commission report for ${lastRep} through ${today}:`)
 		.setDescription(commissionDescList)
 		.setColor('EDC531');
 
