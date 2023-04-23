@@ -89,7 +89,7 @@ module.exports.readCommission = async (discordId) => {
 	return result.currentCommission;
 };
 
-module.exports.weeklyCommissionRep = async () => {
+module.exports.commissionRep = async () => {
 	var result = await d8PersonnelInfo.find({ currentCommission: { $gt: 1 } }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, _id: 0 });
 	return result;
 };
