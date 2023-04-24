@@ -9,7 +9,7 @@ var formatter = new Intl.NumberFormat('en-US', {
 
 module.exports = {
 	name: 'addcommission',
-	description: 'Adds the specified amount from your current commission metrics',
+	description: 'Adds the specified amount to the specified user\'s current commission metrics',
 	options: [
 		{
 			name: 'user',
