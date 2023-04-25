@@ -10,9 +10,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a house that you sold');
 				var soldToInput = new TextInputBuilder()
 					.setCustomId('soldToInput')
-					.setLabel("Who did you sell the house to?")
+					.setLabel("What is the name and info of the buyer?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Rick Grimes')
+					.setPlaceholder('Rick Grimes - 1001 - 04/15/1998')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -57,9 +57,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a warehouse that you sold');
 				var soldToInput = new TextInputBuilder()
 					.setCustomId('soldToInput')
-					.setLabel("Who did you sell the warehouse to?")
+					.setLabel("What is the name and info of the buyer?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Chi Chi Kinsley')
+					.setPlaceholder('Chi Chi Kinsley - 7 - 02/25/2001')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -151,9 +151,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a property that you repossessed');
 				var prevOwnerInput = new TextInputBuilder()
 					.setCustomId('prevOwnerInput')
-					.setLabel("What is the name & CID of the previous owner?")
+					.setLabel("What is the name and info of the prev. owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Jay Wild - 11870')
+					.setPlaceholder('Jay Wild - 11870 - 12/27/1994')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -260,9 +260,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a house remodel that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
-					.setLabel("Who did you remodel the house for?")
+					.setLabel("What is the name and info of the owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Zhang Chin')
+					.setPlaceholder('Sophia Sweet - 5173 - 08/24/1995')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
@@ -306,9 +306,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a warehouse upgrade that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
-					.setLabel("Who did you upgrade the warehouse for?")
+					.setLabel("What is the name and info of the owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Nadia Strovavich')
+					.setPlaceholder('Nadia Strovavich - 15697 - 06/14/1999')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
