@@ -51,7 +51,7 @@ module.exports = {
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 					await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
+					await interaction.reply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
 				}
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
