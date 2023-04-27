@@ -976,16 +976,19 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var downPayment = (price * 0.5);
 				var finalPayment = (downPayment + (downPayment * 0.12));
+				var amountOwed = finalPayment;
 
 				var formattedPrice = formatter.format(price);
 				var formattedDownPayment = formatter.format(downPayment);
 				var formattedFinalPayment = formatter.format(finalPayment);
+				var formattedAmountOwed = formatter.format(amountOwed);
 
 				var embeds = [new EmbedBuilder()
 					.setTitle('A new Financing Agreement has been submitted!')
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 						{ name: `Sale Date:`, value: `${saleDate}`, inline: true },
+						{ name: `Latest Payment Date:`, value: `${saleDate}`, inline: true },
 						{ name: `Repossession Date:`, value: `${repoDate} (${repoDateRelative})`, inline: true },
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
 						{ name: `Owner Info:`, value: `${ownerInfo}`, inline: true },
@@ -994,13 +997,114 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
 						{ name: `Final Payment:`, value: `${formattedFinalPayment}`, inline: true },
+						{ name: `Amount Owed:`, value: `${formattedAmountOwed}` },
 						{ name: `Financing Agreement:`, value: `${documentLink}` },
 					)
 					.setColor('FAD643')];
 
-				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENT_CHANNEL_ID).send({ embeds: embeds });
+				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-				await interaction.reply({ content: `Successfully added this sale to the to the \`Financing Agreement\` channel - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this financing agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Final Payment: \`${formattedFinalPayment}\``, ephemeral: true });
+				await interaction.reply({ content: `Successfully added this sale to the \`Financing Agreement\` channel.\n\n\Details about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Final Payment: \`${formattedFinalPayment}\``, ephemeral: true });
+				break;
+			case 'addFinancingPaymentModal':
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var paymentDate = `<t:${now}:d>`;
+
+				var payersName = interaction.fields.getTextInputValue('payersNameInput').trimEnd().trimStart();
+				var financingNum = interaction.fields.getTextInputValue('financingNumInput').trimEnd().trimStart().toUpperCase();
+				var paymentAmt = Math.abs(Number(interaction.fields.getTextInputValue('paymentInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
+
+				if (isNaN(paymentAmt)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('paymentInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var formattedPaymentAmt = formatter.format(paymentAmt);
+
+				var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
+				var messages = await channel.messages.fetch();
+
+				var formattedAfterPaymentAmt = '$0';
+
+				messages.forEach(async (message) => {
+					var msgId = message.id;
+					var msgRealtor = message.embeds[0].data.fields[0].value;
+					var msgSaleDate = message.embeds[0].data.fields[1].value;
+					var msgPaymentDate = message.embeds[0].data.fields[2].value;
+					var msgRepoDateString = message.embeds[0].data.fields[3].value;
+					var msgFinanceNum = message.embeds[0].data.fields[4].value;
+					var msgOwnerInfo = message.embeds[0].data.fields[5].value;
+					var msgOwnerEmail = message.embeds[0].data.fields[6].value;
+					var msgLotNumber = message.embeds[0].data.fields[7].value;
+					var msgSalePrice = message.embeds[0].data.fields[8].value;
+					var msgDownPayment = message.embeds[0].data.fields[9].value;
+					var msgFinalPayment = message.embeds[0].data.fields[10].value;
+					var msgAmtOwed = message.embeds[0].data.fields[11].value;
+					var msgFinancingAgreement = message.embeds[0].data.fields[12].value;
+
+					var amtOwed = msgAmtOwed.replaceAll('$', '').replaceAll(',', '');
+
+					if (msgFinanceNum === financingNum) {
+						var afterPaymentAmt = amtOwed - paymentAmt;
+						if (afterPaymentAmt < 0) {
+							await interaction.reply({
+								content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
+								ephemeral: true
+							});
+							return;
+						} else {
+							formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+
+							var agreementEmbed = [new EmbedBuilder()
+								.setTitle('A new Financing Agreement has been submitted!')
+								.addFields(
+									{ name: `Realtor Name:`, value: `${msgRealtor}` },
+									{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+									{ name: `Latest Payment Date:`, value: `${paymentDate}`, inline: true },
+									{ name: `Repossession Date:`, value: `${msgRepoDateString}`, inline: true },
+									{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+									{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
+									{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+									{ name: `Lot Number:`, value: `${msgLotNumber}` },
+									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+									{ name: `Final Payment:`, value: `${msgFinalPayment}`, inline: true },
+									{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}` },
+									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+								)
+								.setColor('FAD643')];
+
+							var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
+							var currMsg = await channel.messages.fetch(msgId);
+							currMsg.edit({ embeds: agreementEmbed });
+
+							var embeds = [new EmbedBuilder()
+								.setTitle('A new Financing Payment has been submitted!')
+								.addFields(
+									{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+									{ name: `Payment Date:`, value: `${paymentDate}` },
+									{ name: `Financing ID Number:`, value: `${financingNum}` },
+									{ name: `Payer's Name:`, value: `${payersName}` },
+									{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
+								)
+								.setColor('FFE169')];
+
+							await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+
+							await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+						}
+					}
+				});
 				break;
 			default:
 				await interaction.reply({

@@ -40,7 +40,7 @@ module.exports.commissionReport = async (client) => {
 			.setTitle(`Weekly Commission Report for ${lastRep} through ${today}:`)
 			.setDescription(commissionDescList)
 			.setColor('EDC531');
-		await client.channels.cache.get(process.env.COMMISSION_REPORT_CHANNEL_ID).send({ embeds: [embed] });
+		await client.channels.cache.get(process.env.COMMISSION_REPORTS_CHANNEL_ID).send({ embeds: [embed] });
 
 		// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 		var now = Math.floor(new Date().getTime() / 1000.0);

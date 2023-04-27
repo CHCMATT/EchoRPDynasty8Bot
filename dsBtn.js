@@ -372,7 +372,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('priceInput')
 					.setLabel("What was the final sale price?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('250000')
+					.setPlaceholder('275000')
 					.setRequired(true);
 				var documentLinkInput = new TextInputBuilder()
 					.setCustomId('documentLinkInput')
@@ -393,40 +393,31 @@ module.exports.btnPressed = async (interaction) => {
 			case 'addFinancingPayment':
 				var addFinancingPaymentModal = new ModalBuilder()
 					.setCustomId('addFinancingPaymentModal')
-					.setTitle('Log a warehouse upgrade that you completed');
-				var remodelForInput = new TextInputBuilder()
-					.setCustomId('remodelForInput')
-					.setLabel("What is the name and info of the owner?")
+					.setTitle('Log a financing payment that you received');
+				var payersNameInput = new TextInputBuilder()
+					.setCustomId('payersNameInput')
+					.setLabel("What is the name of the person paying?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Nadia Strovavich - 15697 - 06/14/1999')
+					.setPlaceholder('Millie Coleman')
 					.setRequired(true);
-				var oldLotNumInput = new TextInputBuilder()
-					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number?")
+				var financingNumInput = new TextInputBuilder()
+					.setCustomId('financingNumInput')
+					.setLabel("What is the financing agreement number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('7891')
-					.setRequired(true);
-				var newLotNumNotesInput = new TextInputBuilder()
-					.setCustomId('newLotNumNotesInput')
-					.setLabel("What is the new lot number, and any notes?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8910, upgraded from XS to Small Warehouse')
-					.setRequired(true);
+					.setPlaceholder('H12345')
 				var paymentInput = new TextInputBuilder()
 					.setCustomId('paymentInput')
-					.setLabel("What was the payment amount?")
+					.setLabel("What is the payment amount?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('150000')
+					.setPlaceholder('120000')
 					.setRequired(true);
 
-				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
-				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
-				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
-				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
-				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+				var payersNameInputRow = new ActionRowBuilder().addComponents(payersNameInput);
+				var financingNumInputRow = new ActionRowBuilder().addComponents(financingNumInput);
+				var paymentInputRow = new ActionRowBuilder().addComponents(paymentInput);
 
-				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
-				await interaction.showModal(addHouseRemodelModal);
+				addFinancingPaymentModal.addComponents(payersNameInputRow, financingNumInputRow, paymentInputRow);
+				await interaction.showModal(addFinancingPaymentModal);
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
