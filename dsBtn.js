@@ -346,6 +346,88 @@ module.exports.btnPressed = async (interaction) => {
 				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
 				await interaction.showModal(addHouseRemodelModal);
 				break;
+			case 'addFinancingAgreement':
+				var addFinancingAgreementModal = new ModalBuilder()
+					.setCustomId('addFinancingAgreementModal')
+					.setTitle('Log a financing agreement that you completed');
+				var ownerInfoInput = new TextInputBuilder()
+					.setCustomId('ownerInfoInput')
+					.setLabel("What is the name and info of the owner?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('Jimmy North - 1116 - 10/30/1995')
+					.setRequired(true);
+				var ownerEmailInput = new TextInputBuilder()
+					.setCustomId('ownerEmailInput')
+					.setLabel("What is the email of the owner?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('DudeItsMeFam#8049')
+					.setRequired(true);
+				var lotNumInput = new TextInputBuilder()
+					.setCustomId('lotNumInput')
+					.setLabel("What is the property lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('8912')
+					.setRequired(true);
+				var priceInput = new TextInputBuilder()
+					.setCustomId('priceInput')
+					.setLabel("What was the final sale price?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('250000')
+					.setRequired(true);
+				var documentLinkInput = new TextInputBuilder()
+					.setCustomId('documentLinkInput')
+					.setLabel("What is the link to the Financing Agreement?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('https://docs.google.com/document/d/1YT6YUMV1GYMySJJ2gjAu1qSrWMvbSRvg7CLi0aegYiI/')
+					.setRequired(true);
+
+				var ownerInfoInputRow = new ActionRowBuilder().addComponents(ownerInfoInput);
+				var ownerEmailInputRow = new ActionRowBuilder().addComponents(ownerEmailInput);
+				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				var documentLinkInputRow = new ActionRowBuilder().addComponents(documentLinkInput);
+
+				addFinancingAgreementModal.addComponents(ownerInfoInputRow, ownerEmailInputRow, lotNumInputRow, priceInputRow, documentLinkInputRow);
+				await interaction.showModal(addFinancingAgreementModal);
+				break;
+			case 'addFinancingPayment':
+				var addFinancingPaymentModal = new ModalBuilder()
+					.setCustomId('addFinancingPaymentModal')
+					.setTitle('Log a warehouse upgrade that you completed');
+				var remodelForInput = new TextInputBuilder()
+					.setCustomId('remodelForInput')
+					.setLabel("What is the name and info of the owner?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('Nadia Strovavich - 15697 - 06/14/1999')
+					.setRequired(true);
+				var oldLotNumInput = new TextInputBuilder()
+					.setCustomId('oldLotNumInput')
+					.setLabel("What is the old lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('7891')
+					.setRequired(true);
+				var newLotNumNotesInput = new TextInputBuilder()
+					.setCustomId('newLotNumNotesInput')
+					.setLabel("What is the new lot number, and any notes?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('8910, upgraded from XS to Small Warehouse')
+					.setRequired(true);
+				var paymentInput = new TextInputBuilder()
+					.setCustomId('paymentInput')
+					.setLabel("What was the payment amount?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('150000')
+					.setRequired(true);
+
+				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				await interaction.showModal(addHouseRemodelModal);
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

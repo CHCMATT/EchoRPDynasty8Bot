@@ -100,9 +100,21 @@ function addBtnRows() {
 		new ButtonBuilder()
 			.setCustomId('addTrainCheck')
 			.setLabel('Add a Train Check')
-			.setStyle(ButtonStyle.Primary)
+			.setStyle(ButtonStyle.Primary),
 	);
 
-	var rows = [row1, row2];
+	var row3 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('addFinancingAgreement')
+			.setLabel('Add a Financing Agreement')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('addFinancingPayment')
+			.setLabel('Add a Financing Payment')
+			.setStyle(ButtonStyle.Secondary),
+	);
+
+	var rows = [row1, row2, row3];
 	return rows;
 };

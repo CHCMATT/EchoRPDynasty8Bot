@@ -941,6 +941,67 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
+			case 'addFinancingAgreementModal':
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var saleDate = `<t:${now}:d>`;
+				var repoDateTime = now + (86400 * 25); // 86400 seconds in a day times 25 days
+				var repoDate = `<t:${repoDateTime}:d>`;
+				var repoDateRelative = `<t:${repoDateTime}:R>`;
+				var latestFinanceNum = await dbCmds.readFinanceNum('financeNum');
+				var currentFinanceNum = latestFinanceNum + 1;
+				await dbCmds.setFinanceNum('financeNum', currentFinanceNum);
+				var financeNum = `${currentFinanceNum}`.padStart(5, '0');
+				financeNum = `H${financeNum}`;
+
+				var ownerInfo = interaction.fields.getTextInputValue('ownerInfoInput').trimEnd().trimStart();
+				var ownerEmail = interaction.fields.getTextInputValue('ownerEmailInput').trimEnd().trimStart();
+				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
+				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
+				var documentLink = interaction.fields.getTextInputValue('documentLinkInput').trimEnd().trimStart();
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var downPayment = (price * 0.5);
+				var finalPayment = (downPayment + (downPayment * 0.12));
+
+				var formattedPrice = formatter.format(price);
+				var formattedDownPayment = formatter.format(downPayment);
+				var formattedFinalPayment = formatter.format(finalPayment);
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new Financing Agreement has been submitted!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}`, inline: true },
+						{ name: `Repossession Date:`, value: `${repoDate} (${repoDateRelative})`, inline: true },
+						{ name: `Financing ID Number:`, value: `${financeNum}` },
+						{ name: `Owner Info:`, value: `${ownerInfo}`, inline: true },
+						{ name: `Owner Email:`, value: `${ownerEmail}`, inline: true },
+						{ name: `Lot Number:`, value: `${lotNum}` },
+						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
+						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
+						{ name: `Final Payment:`, value: `${formattedFinalPayment}`, inline: true },
+						{ name: `Financing Agreement:`, value: `${documentLink}` },
+					)
+					.setColor('FAD643')];
+
+				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENT_CHANNEL_ID).send({ embeds: embeds });
+
+				await interaction.reply({ content: `Successfully added this sale to the to the \`Financing Agreement\` channel - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this financing agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Final Payment: \`${formattedFinalPayment}\``, ephemeral: true });
+				break;
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,
