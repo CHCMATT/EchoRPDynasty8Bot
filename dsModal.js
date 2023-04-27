@@ -1058,7 +1058,7 @@ module.exports.modalSubmit = async (interaction) => {
 						var afterPaymentAmt = amtOwed - paymentAmt;
 						if (afterPaymentAmt < 0) {
 							await interaction.reply({
-								content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
+								content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
 								ephemeral: true
 							});
 							return;
