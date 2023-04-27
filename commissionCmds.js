@@ -47,10 +47,10 @@ module.exports.commissionReport = async (client) => {
 		var repDate = `<t:${now}:d>`
 		await dbCmds.setRepDate("lastCommissionReportDate", repDate);
 
-		var reason = `Automatic Commission Report Triggered on ${repDate}`
+		var reason = `Commission Report triggered on ${repDate}`
 		var notificationEmbed = new EmbedBuilder()
 			.setTitle('Commission Modified Automatically:')
-			.setDescription(`All realtor's commissions have been reset to \`$0\`.\n\n**Reason:** ${reason}.`)
+			.setDescription(`\`System\` reset all realtor's commissions to \`$0\`.\n\n**Reason:** ${reason}.`)
 			.setColor('#1EC276');
 		await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 		return "success";
