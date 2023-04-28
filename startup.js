@@ -7,8 +7,6 @@ module.exports.startUp = async (client) => {
 	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
 	var oldEmbed = await dbCmds.readMsgId("embedMsg");
 
-	await dbCmds.setFinanceNum("financeNum", 0)
-
 	try {
 		await channel.messages.fetch(oldEmbed);
 		editEmbed.editEmbed(client);
