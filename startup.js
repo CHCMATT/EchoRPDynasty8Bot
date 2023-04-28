@@ -15,6 +15,5 @@ module.exports.startUp = async (client) => {
 	catch (error) {
 		postEmbed.postEmbed(client);
 		return "posted";
-
 	}
 };
