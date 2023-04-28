@@ -623,7 +623,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 
 				var embeds = [new EmbedBuilder()
-					.setTitle('A new misc. sale has been submitted!')
+					.setTitle('A new Misc. Sale has been submitted!')
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 						{ name: `Sale Date:`, value: `${saleDate}` },
