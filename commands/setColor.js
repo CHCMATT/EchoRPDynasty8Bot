@@ -1,5 +1,5 @@
 var dbCmds = require('../dbCmds.js');
-var personnelCmds = require('../personnelCmds.js');
+const editEmbed = require('../editEmbed.js');
 var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -29,7 +29,7 @@ module.exports = {
 
 				var charName = interaction.guild.members.cache.get(user.id).displayName;
 
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, user.id);
+				await editEmbed.editEmbed(interaction.client);
 
 				await interaction.reply({ content: `Successfully changed the Discord embed color for \`${charName}\` to \`${randomColor}\`.`, ephemeral: true });
 
@@ -41,7 +41,7 @@ module.exports = {
 				if (isHexColor(newHex)) {
 					await dbCmds.setPersColor(user.id, newHex);
 
-					await personnelCmds.sendOrUpdateEmbed(interaction.client, user.id);
+					await editEmbed.editEmbed(interaction.client);
 
 					var charName = interaction.guild.members.cache.get(user.id).displayName;
 					await interaction.reply({ content: `Successfully changed the Discord embed color for \`${charName}\` to \`${newHex}\`.`, ephemeral: true });

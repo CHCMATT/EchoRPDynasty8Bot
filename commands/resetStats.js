@@ -1,5 +1,5 @@
 var dbCmds = require('../dbCmds.js');
-var personnelCmds = require('../personnelCmds.js');
+const editEmbed = require('../editEmbed.js');
 var { PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
 			if (personnelData !== null) {
 				await dbCmds.resetPersStats(user.id);
 
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, user.id);
+				await editEmbed.editEmbed(interaction.client);
 
 				await interaction.reply({ content: `Successfully reset statistics for <@${user.id}>.`, ephemeral: true });
 			}
