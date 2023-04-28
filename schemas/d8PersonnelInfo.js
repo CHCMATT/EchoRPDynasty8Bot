@@ -23,6 +23,12 @@ var d8PersonnelInfoSchema = new Schema({
 	embedMsgId: reqString,
 	currentCommission: reqNum,
 	bankAccount: reqString,
+	monthlyHousesSold: reqNum,
+	monthlyWarehousesSold: reqNum,
+	monthlyPropertiesRepod: reqNum,
+	monthlyPropertiesQuoted: reqNum,
+	monthlyActivityChecks: reqNum,
+	monthlyMiscSales: reqNum,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);

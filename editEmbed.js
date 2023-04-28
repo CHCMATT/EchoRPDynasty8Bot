@@ -2,6 +2,54 @@ var dbCmds = require('./dbCmds.js');
 var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
 module.exports.editEmbed = async (client) => {
+
+	var employeeStats = await dbCmds.statsRep();
+
+	var embeds = [];
+
+	for (var i = 0; i < employeeStats.length; i++) {
+		var charName = employeeStats[i].charName;
+		var embedColor = employeeStats[i].embedColor;
+		var housesSold = employeeStats[i].housesSold;
+		var warehousesSold = employeeStats[i].warehousesSold;
+		var propertiesQuoted = employeeStats[i].propertiesQuoted;
+		var propertiesRepod = employeeStats[i].propertiesRepod;
+		var activityChecks = employeeStats[i].activityChecks;
+		var miscSales = employeeStats[i].miscSales;
+		var monthlyHousesSold = employeeStats[i].monthlyHousesSold;
+		var monthlyWarehousesSold = employeeStats[i].monthlyWarehousesSold;
+		var monthlyPropertiesQuoted = employeeStats[i].monthlyPropertiesQuoted;
+		var monthlyPropertiesRepod = employeeStats[i].monthlyPropertiesRepod;
+		var monthlyActivityChecks = employeeStats[i].monthlyActivityChecks;
+		var monthlyMiscSales = employeeStats[i].monthlyMiscSales;
+
+		var currEmbed = new EmbedBuilder().setTitle(`Dynasty 8 statistics for ${charName}:`).setColor(embedColor).setDescription(`**__Overall__**
+		• **Houses Sold:** ${housesSold}
+		• **Warehouses Sold:** ${warehousesSold}
+		• **Properties Quoted:** ${propertiesQuoted}
+		• **Properties Repossessed:** ${propertiesRepod}
+		• **Train Activities Checked:** ${activityChecks}
+		• **Misc. Sales Completed:** ${miscSales}
+		
+		**__Monthly__**
+		• **Houses Sold:** ${monthlyHousesSold}
+		• **Warehouses Sold:** ${monthlyWarehousesSold}
+		• **Properties Quoted:** ${monthlyPropertiesQuoted}
+		• **Properties Repossessed:** ${monthlyPropertiesRepod}
+		• **Train Activities Checked:** ${monthlyActivityChecks}
+		• **Misc. Sales Completed:** ${monthlyMiscSales}`);
+
+		embeds = embeds.concat(currEmbed);
+	}
+
+	var currEmbed = await dbCmds.readMsgId("statsMsg");
+
+	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
+	var currMsg = await channel.messages.fetch(currEmbed);
+
+	currMsg.edit({ embeds: embeds });
+
+
 	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 	let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
 	let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");

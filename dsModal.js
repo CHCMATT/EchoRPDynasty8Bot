@@ -67,7 +67,6 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -124,13 +123,13 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.HOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countHousesSold");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 
 				var formattedCommission = formatter.format(realtorCommission);
@@ -191,7 +190,6 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -248,13 +246,13 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countWarehousesSold");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyWarehousesSold");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 
 				var formattedCommission = formatter.format(realtorCommission);
@@ -308,7 +306,6 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -378,13 +375,13 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.channels.cache.get(process.env.PROPERTY_QUOTES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesQuoted");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesQuoted");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesQuoted");
+				await editEmbed.editEmbed(interaction.client);
 				var newPropertiesQuotedTotal = await dbCmds.readSummValue("countPropertiesQuoted");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
 				break;
@@ -415,7 +412,6 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					console.log(photos.length);
 					await interaction.reply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
@@ -484,13 +480,13 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.PROPERTY_REPOS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesRepod");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
+				await editEmbed.editEmbed(interaction.client);
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.`, ephemeral: true });
 				break;
@@ -519,7 +515,6 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					console.log(photos.length);
 					await interaction.reply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
@@ -586,14 +581,14 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHECKS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countTrainActivitiesChecked");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "activityChecks");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyActivityChecks");
+				await editEmbed.editEmbed(interaction.client);
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
@@ -640,13 +635,13 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 
 				var formattedCommission = formatter.format(realtorCommission);
@@ -706,7 +701,6 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -779,13 +773,13 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: miscSaleEmbed });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 
 				var formattedCommission = formatter.format(realtorCommission);
@@ -845,7 +839,6 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						console.log(photos.length);
 						await interaction.reply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
@@ -918,13 +911,13 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: miscSaleEmbed });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats.charName == null) {
+				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
-				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await personnelCmds.sendOrUpdateEmbed(interaction.client, interaction.member.user.id);
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+				await editEmbed.editEmbed(interaction.client);
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 
 				var formattedCommission = formatter.format(realtorCommission);
@@ -951,9 +944,9 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
-				var repoDateTime = now + (86400 * 25); // 86400 seconds in a day times 25 days
-				var repoDate = `<t:${repoDateTime}:d>`;
-				var repoDateRelative = `<t:${repoDateTime}:R>`;
+				var nextPaymentDateTime = now + (86400 * 14); // 86400 seconds in a day times 14 days
+				var nextPaymentDate = `<t:${nextPaymentDateTime}:d>`;
+				var nextPaymentDateRelative = `<t:${nextPaymentDateTime}:R>`;
 				var latestFinanceNum = await dbCmds.readFinanceNum('financeNum');
 				var currentFinanceNum = latestFinanceNum + 1;
 				await dbCmds.setFinanceNum('financeNum', currentFinanceNum);
@@ -974,13 +967,11 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var downPayment = (price * 0.5);
-				var finalPayment = (downPayment + (downPayment * 0.12));
-				var amountOwed = finalPayment;
+				var downPayment = (price * 0.3);
+				var amountOwed = (price - downPayment);
 
 				var formattedPrice = formatter.format(price);
 				var formattedDownPayment = formatter.format(downPayment);
-				var formattedFinalPayment = formatter.format(finalPayment);
 				var formattedAmountOwed = formatter.format(amountOwed);
 
 				var embeds = [new EmbedBuilder()
@@ -988,23 +979,22 @@ module.exports.modalSubmit = async (interaction) => {
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 						{ name: `Sale Date:`, value: `${saleDate}`, inline: true },
-						{ name: `Latest Payment Date:`, value: `${saleDate}`, inline: true },
-						{ name: `Repossession Date:`, value: `${repoDate} (${repoDateRelative})`, inline: true },
+						{ name: `Latest Payment:`, value: `${saleDate}`, inline: true },
+						{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
 						{ name: `Owner Info:`, value: `${ownerInfo}`, inline: true },
 						{ name: `Owner Email:`, value: `${ownerEmail}`, inline: true },
 						{ name: `Lot Number:`, value: `${lotNum}` },
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
-						{ name: `Final Payment:`, value: `${formattedFinalPayment}`, inline: true },
-						{ name: `Amount Owed:`, value: `${formattedAmountOwed}` },
+						{ name: `Amount Owed:`, value: `${formattedAmountOwed}`, inline: true },
 						{ name: `Financing Agreement:`, value: `${documentLink}` },
 					)
 					.setColor('FAD643')];
 
 				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-				await interaction.reply({ content: `Successfully added this sale to the \`Financing Agreement\` channel.\n\n\Details about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Final Payment: \`${formattedFinalPayment}\``, ephemeral: true });
+				await interaction.reply({ content: `Successfully added this sale to the \`Financing Agreement\` channel.\n\n\Details about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;
@@ -1015,7 +1005,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
-				var paymentDate = `<t:${now}:d>`;
+				var currPaymentDate = `<t:${now}:d>`;
 
 				var payersName = interaction.fields.getTextInputValue('payersNameInput').trimEnd().trimStart();
 				var financingNum = interaction.fields.getTextInputValue('financingNumInput').trimEnd().trimStart().toUpperCase();
@@ -1034,77 +1024,92 @@ module.exports.modalSubmit = async (interaction) => {
 				var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
 				var messages = await channel.messages.fetch();
 
-				var formattedAfterPaymentAmt = '$0';
+				var formattedAfterPaymentAmt = '';
+
+				var nextPaymentDateTime = now + (86400 * 14); // 86400 seconds in a day times 14 days
+				var nextPaymentDate = `<t:${nextPaymentDateTime}:d>`;
+				var nextPaymentDateRelative = `<t:${nextPaymentDateTime}:R>`;
+				var agreementFound = false;
 
 				messages.forEach(async (message) => {
 					var msgId = message.id;
-					var msgRealtor = message.embeds[0].data.fields[0].value;
-					var msgSaleDate = message.embeds[0].data.fields[1].value;
-					var msgPaymentDate = message.embeds[0].data.fields[2].value;
-					var msgRepoDateString = message.embeds[0].data.fields[3].value;
-					var msgFinanceNum = message.embeds[0].data.fields[4].value;
-					var msgOwnerInfo = message.embeds[0].data.fields[5].value;
-					var msgOwnerEmail = message.embeds[0].data.fields[6].value;
-					var msgLotNumber = message.embeds[0].data.fields[7].value;
-					var msgSalePrice = message.embeds[0].data.fields[8].value;
-					var msgDownPayment = message.embeds[0].data.fields[9].value;
-					var msgFinalPayment = message.embeds[0].data.fields[10].value;
-					var msgAmtOwed = message.embeds[0].data.fields[11].value;
-					var msgFinancingAgreement = message.embeds[0].data.fields[12].value;
+					if (message.embeds[0]) {
+						var embedTitle = message.embeds[0].data.title;
+						if (embedTitle === 'A new Financing Agreement has been submitted!') {
+							var msgRealtor = message.embeds[0].data.fields[0].value;
+							var msgSaleDate = message.embeds[0].data.fields[1].value;
+							// var msgPaymentDate = message.embeds[0].data.fields[2].value;
+							// var msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
+							var msgFinanceNum = message.embeds[0].data.fields[4].value;
+							var msgOwnerInfo = message.embeds[0].data.fields[5].value;
+							var msgOwnerEmail = message.embeds[0].data.fields[6].value;
+							var msgLotNumber = message.embeds[0].data.fields[7].value;
+							var msgSalePrice = message.embeds[0].data.fields[8].value;
+							var msgDownPayment = message.embeds[0].data.fields[9].value;
+							var msgAmtOwed = message.embeds[0].data.fields[10].value;
+							var msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
-					var amtOwed = msgAmtOwed.replaceAll('$', '').replaceAll(',', '');
+							var amtOwed = msgAmtOwed.replaceAll('$', '').replaceAll(',', '');
 
-					if (msgFinanceNum === financingNum) {
-						var afterPaymentAmt = amtOwed - paymentAmt;
-						if (afterPaymentAmt < 0) {
-							await interaction.reply({
-								content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
-								ephemeral: true
-							});
-							return;
-						} else {
-							formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+							if (msgFinanceNum === financingNum) {
+								var afterPaymentAmt = amtOwed - paymentAmt;
+								agreementFound = true;
+								if (afterPaymentAmt < 0) {
+									await interaction.reply({
+										content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
+										ephemeral: true
+									});
+									return;
+								} else {
+									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 
-							var agreementEmbed = [new EmbedBuilder()
-								.setTitle('A new Financing Agreement has been submitted!')
-								.addFields(
-									{ name: `Realtor Name:`, value: `${msgRealtor}` },
-									{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-									{ name: `Latest Payment Date:`, value: `${paymentDate}`, inline: true },
-									{ name: `Repossession Date:`, value: `${msgRepoDateString}`, inline: true },
-									{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-									{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
-									{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
-									{ name: `Lot Number:`, value: `${msgLotNumber}` },
-									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-									{ name: `Final Payment:`, value: `${msgFinalPayment}`, inline: true },
-									{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}` },
-									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-								)
-								.setColor('FAD643')];
+									var agreementEmbed = [new EmbedBuilder()
+										.setTitle('A new Financing Agreement has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${msgRealtor}` },
+											{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+											{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
+											{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
+											{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+											{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
+											{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+											{ name: `Lot Number:`, value: `${msgLotNumber}` },
+											{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+											{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
+											{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+										)
+										.setColor('FAD643')];
 
-							var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
-							var currMsg = await channel.messages.fetch(msgId);
-							currMsg.edit({ embeds: agreementEmbed });
+									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
+									var currMsg = await channel.messages.fetch(msgId);
+									currMsg.edit({ embeds: agreementEmbed });
 
-							var embeds = [new EmbedBuilder()
-								.setTitle('A new Financing Payment has been submitted!')
-								.addFields(
-									{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-									{ name: `Payment Date:`, value: `${paymentDate}` },
-									{ name: `Financing ID Number:`, value: `${financingNum}` },
-									{ name: `Payer's Name:`, value: `${payersName}` },
-									{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
-								)
-								.setColor('FFE169')];
+									var embeds = [new EmbedBuilder()
+										.setTitle('A new Financing Payment has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+											{ name: `Payment Date:`, value: `${currPaymentDate}` },
+											{ name: `Financing ID Number:`, value: `${financingNum}` },
+											{ name: `Payer's Name:`, value: `${payersName}` },
+											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
+										)
+										.setColor('FFE169')];
 
-							await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-							await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+								}
+							}
 						}
 					}
 				});
+				if (!agreementFound) {
+					await interaction.reply({
+						content: `:exclamation: Unable to locate any agreements with the ID number \`${financingNum}\`. Please try again!`,
+						ephemeral: true
+					});
+				};
 				break;
 			default:
 				await interaction.reply({
