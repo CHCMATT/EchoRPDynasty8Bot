@@ -11,9 +11,13 @@ module.exports.commissionReport = async (client) => {
 	var lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
 	var lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
 	var now = Math.floor(new Date().getTime() / 1000.0);
+	var dateTime = new Date().toString().slice(0, 24);
 	var lastRepDiff = (now - lastRepDt);
 
-	if (lastRepDiff >= 64800) {
+	if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 64800) {
+		console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff})`)
+		return "fail";
+	} else {
 		var now = Math.floor(new Date().getTime() / 1000.0);
 		var today = `<t:${now}:d>`;
 
@@ -54,7 +58,5 @@ module.exports.commissionReport = async (client) => {
 			.setColor('#1EC276');
 		await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 		return "success";
-	} else {
-		return "fail";
 	}
 };
