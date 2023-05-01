@@ -1,5 +1,5 @@
-var { EmbedBuilder } = require('discord.js');
 var dbCmds = require('./dbCmds.js');
+var { EmbedBuilder } = require('discord.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
