@@ -33,7 +33,7 @@ module.exports = {
 	async execute(interaction) {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 			var user = interaction.options.getUser('user');
-			if (interaction.user.id == user.id || interaction.member.id == 220286286064386048 || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.user.id == user.id || interaction.member.id == '220286286064386048' || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				var amount = Math.abs(interaction.options.getInteger('amount'));
 				var reason = interaction.options.getString('reason');
 				var formattedAmt = formatter.format(amount);
