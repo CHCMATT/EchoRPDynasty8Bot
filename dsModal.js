@@ -91,10 +91,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -214,10 +214,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -331,10 +331,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -437,10 +437,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -540,10 +540,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -726,10 +726,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -864,10 +864,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
