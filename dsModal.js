@@ -9,6 +9,11 @@ var formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
+function strCleanup(str) {
+	var cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
+	return cleaned;
+};
+
 function isValidUrl(string) {
 	let url;
 	try {
@@ -34,13 +39,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
@@ -157,13 +162,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
@@ -280,13 +285,14 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var reqDate = `<t:${now}:d>`;
 
-				var clientInfo = interaction.fields.getTextInputValue('clientInfoInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var interiorType = interaction.fields.getTextInputValue('intTypeInput').trimEnd().trimStart();
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var interiorType = strCleanup(interaction.fields.getTextInputValue('intTypeInput'));
 
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				var formattedPrice = formatter.format(price);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -396,11 +402,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var repoDate = `<t:${now}:d>`;
 
-				var prevOwner = interaction.fields.getTextInputValue('prevOwnerInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var repoReason = interaction.fields.getTextInputValue('repoReasonInput').trimEnd().trimStart();
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var prevOwner = strCleanup(interaction.fields.getTextInputValue('prevOwnerInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var repoReason = strCleanup(interaction.fields.getTextInputValue('repoReasonInput'));
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				var photos = [photosString];
 				if (photosString.includes(",")) {
@@ -501,10 +507,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var reqDate = `<t:${now}:d>`;
 
-				var ownerInfo = interaction.fields.getTextInputValue('currentOwnerInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('currentOwnerInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
@@ -603,8 +609,8 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var itemsSold = interaction.fields.getTextInputValue('itemsSoldInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));;
+				var itemsSold = strCleanup(interaction.fields.getTextInputValue('itemsSoldInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -669,11 +675,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var remodelDate = `<t:${now}:d>`;
 
-				var remodelFor = interaction.fields.getTextInputValue('remodelForInput').trimEnd().trimStart();
-				var oldLotNum = interaction.fields.getTextInputValue('oldLotNumInput').trimEnd().trimStart();
-				var newLotNumNotes = interaction.fields.getTextInputValue('newLotNumNotesInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var remodelFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
+				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
+				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				var formattedPrice = formatter.format(price);
 
@@ -807,11 +813,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var upgradeDate = `<t:${now}:d>`;
 
-				var upgradeFor = interaction.fields.getTextInputValue('remodelForInput').trimEnd().trimStart();
-				var oldLotNum = interaction.fields.getTextInputValue('oldLotNumInput').trimEnd().trimStart();
-				var newLotNumNotes = interaction.fields.getTextInputValue('newLotNumNotesInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var upgradeFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
+				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
+				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				var formattedPrice = formatter.format(price);
 
@@ -953,11 +959,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var financeNum = `${currentFinanceNum}`.padStart(5, '0');
 				financeNum = `H${financeNum}`;
 
-				var ownerInfo = interaction.fields.getTextInputValue('ownerInfoInput').trimEnd().trimStart();
-				var ownerEmail = interaction.fields.getTextInputValue('ownerEmailInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var documentLink = interaction.fields.getTextInputValue('documentLinkInput').trimEnd().trimStart();
+				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('ownerInfoInput'));
+				var ownerEmail = strCleanup(interaction.fields.getTextInputValue('ownerEmailInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var documentLink = strCleanup(interaction.fields.getTextInputValue('documentLinkInput'));
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -1007,9 +1013,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var currPaymentDate = `<t:${now}:d>`;
 
-				var payersName = interaction.fields.getTextInputValue('payersNameInput').trimEnd().trimStart();
-				var financingNum = interaction.fields.getTextInputValue('financingNumInput').trimEnd().trimStart().toUpperCase();
-				var paymentAmt = Math.abs(Number(interaction.fields.getTextInputValue('paymentInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
+				var payersName = strCleanup(interaction.fields.getTextInputValue('payersNameInput'));
+				var financingNum = strCleanup(interaction.fields.getTextInputValue('financingNumInput')).toUpperCase();
+				var paymentAmt = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('paymentInput')).replaceAll(',', '').replaceAll('$', '')));
+
 
 				if (isNaN(paymentAmt)) { // validate quantity of money
 					await interaction.reply({
