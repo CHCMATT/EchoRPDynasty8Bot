@@ -11,6 +11,7 @@ module.exports.commissionReport = async (client) => {
 	var lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
 	var lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
 	var now = Math.floor(new Date().getTime() / 1000.0);
+	var today = `<t:${now}:d>`;
 	var dateTime = new Date().toString().slice(0, 24);
 	var lastRepDiff = (now - lastRepDt);
 
@@ -18,8 +19,6 @@ module.exports.commissionReport = async (client) => {
 		console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff})`)
 		return "fail";
 	} else {
-		var now = Math.floor(new Date().getTime() / 1000.0);
-		var today = `<t:${now}:d>`;
 
 		var peopleArray = await dbCmds.commissionRep();
 		var commissionDescList = '';
