@@ -2,7 +2,7 @@ var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 var dbCmds = require('./dbCmds.js');
 
 module.exports.postEmbed = async (client) => {
-	var employeeStats = await dbCmds.statsRep();
+	var employeeStats = await dbCmds.currStats();
 
 	var embeds = [];
 

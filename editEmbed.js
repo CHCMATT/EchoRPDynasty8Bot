@@ -2,7 +2,7 @@ var dbCmds = require('./dbCmds.js');
 var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
 module.exports.editEmbed = async (client) => {
-	var employeeStats = await dbCmds.statsRep();
+	var employeeStats = await dbCmds.currStats();
 
 	var embeds = [];
 
