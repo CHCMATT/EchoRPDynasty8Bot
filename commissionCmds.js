@@ -33,8 +33,6 @@ module.exports.commissionReport = async (client) => {
 			commissionDescList = "There is no commission to pay this week."
 		}
 
-		var lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
-
 		if (lastRep == null || lastRep.includes("Value not found")) {
 			var nowMinus7 = now - 604800;
 			var lastRep = `<t:${nowMinus7}:d>`
