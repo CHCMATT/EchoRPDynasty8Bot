@@ -36,8 +36,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of house")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/wgJiq13.jpg, https://i.imgur.com/hv6jVYT.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -84,8 +83,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of warehouse")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/TBj8voN.jpg, https://i.imgur.com/gLGae7c.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -132,8 +130,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of house")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/9ZMbCsA.jpg, https://i.imgur.com/ztKYnMn.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -180,8 +177,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of property")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/tnLaQWD.jpg, https://i.imgur.com/EZ81DMA.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -222,8 +218,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include 1 photo of GPS & front of house")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -291,8 +286,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of house")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
-
+					.setPlaceholder('https://i.imgur.com/qTL6xiG.jpg, https://i.imgur.com/jMYxD9d.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
@@ -338,7 +332,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of warehouse")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('Use commas, spaces, semicolons, or pipes to separate links. Must have .png .jpg, .jpeg .gif or .webp')
+					.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
