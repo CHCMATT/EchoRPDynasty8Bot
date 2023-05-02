@@ -4,6 +4,7 @@ const cron = require('node-cron');
 var mongoose = require("mongoose");
 var startup = require('./startup.js');
 var interact = require('./dsInteractions.js');
+var statsReport = require('./statsReport.js');
 var commissionCmds = require('./commissionCmds.js');
 var { Client, Collection, GatewayIntentBits } = require('discord.js');
 
@@ -18,7 +19,7 @@ var fileParts = __filename.split(/[\\/]/);
 var fileName = fileParts[fileParts.length - 1];
 
 cron.schedule('0 6 * * SUN', function () { commissionCmds.commissionReport(client); }); // runs at 6:00am every Sunday (SUN)
-cron.schedule('0 0 1 * *', function () { commissionCmds.commissionReport(client); }); // runs at 12:00am on the first day of every month
+cron.schedule('0 0 1 * *', function () { statsReport.statsReport(client); }); // runs at 12:00am on the first day of every month
 
 
 client.once('ready', async () => {
