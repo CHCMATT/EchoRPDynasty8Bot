@@ -30,7 +30,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('locNotesInput')
 					.setLabel("What is the locat. and notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Baytree Canyon Rd, provided smart locks')
+					.setPlaceholder('Baytree Canyon Rd, provided smart locks, 956-252-1929')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -77,7 +77,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('locNotesInput')
 					.setLabel("What is the locat. and notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Capital Blvd, upgraded to 5 car garage')
+					.setPlaceholder('Capital Blvd, upgraded to 5 car garage, 956-252-1929')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -274,7 +274,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('6789, upgraded to HighEndV3')
+					.setPlaceholder('6789, upgraded to HighEndV3, 956-252-1929')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -320,7 +320,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8910, upgraded from XS to Small Warehouse')
+					.setPlaceholder('8910, upgraded from XS to Small Warehouse, 956-252-1929')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
