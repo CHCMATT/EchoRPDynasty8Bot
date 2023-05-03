@@ -974,7 +974,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				var downPayment = (price * 0.3);
-				var amountOwed = (price - downPayment);
+				var amountOwed = (price - downPayment + ((price - downPayment) * .14));
 
 				var formattedPrice = formatter.format(price);
 				var formattedDownPayment = formatter.format(downPayment);
@@ -1045,8 +1045,6 @@ module.exports.modalSubmit = async (interaction) => {
 						if (embedTitle === 'A new Financing Agreement has been submitted!') {
 							var msgRealtor = message.embeds[0].data.fields[0].value;
 							var msgSaleDate = message.embeds[0].data.fields[1].value;
-							// var msgPaymentDate = message.embeds[0].data.fields[2].value;
-							// var msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
 							var msgFinanceNum = message.embeds[0].data.fields[4].value;
 							var msgOwnerInfo = message.embeds[0].data.fields[5].value;
 							var msgOwnerEmail = message.embeds[0].data.fields[6].value;
@@ -1056,19 +1054,75 @@ module.exports.modalSubmit = async (interaction) => {
 							var msgAmtOwed = message.embeds[0].data.fields[10].value;
 							var msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
-							var amtOwed = msgAmtOwed.replaceAll('$', '').replaceAll(',', '');
+							var amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''));
 
 							if (msgFinanceNum === financingNum) {
 								var afterPaymentAmt = amtOwed - paymentAmt;
 								agreementFound = true;
 								if (afterPaymentAmt < 0) {
+									var afterPaymentAmt = amtOwed - paymentAmt;
+									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 									await interaction.reply({
 										content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
 										ephemeral: true
 									});
 									return;
-								} else {
+								} else if (afterPaymentAmt == 0) {
+									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+
+									try {
+										message.reactions.cache.get('⏰').remove()
+									} catch {
+										// if no reaction to remove, do nothing
+									}
+
+									var agreementEmbed = [new EmbedBuilder()
+										.setTitle('A new Financing Agreement has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${msgRealtor}` },
+											{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+											{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
+											{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+											{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+											{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
+											{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+											{ name: `Lot Number:`, value: `${msgLotNumber}` },
+											{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+											{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
+											{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+											{ name: `Notes:`, value: `Financing Payments Completed on ${currPaymentDate}.` }
+										)
+										.setColor('FAD643')];
+
+									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
+									var currMsg = await channel.messages.fetch(msgId);
+									currMsg.edit({ embeds: agreementEmbed });
+
+									var embeds = [new EmbedBuilder()
+										.setTitle('A new Financing Payment has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+											{ name: `Payment Date:`, value: `${currPaymentDate}` },
+											{ name: `Financing ID Number:`, value: `${financingNum}` },
+											{ name: `Payer's Name:`, value: `${payersName}` },
+											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
+										)
+										.setColor('FFE169')];
+
+									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+
+									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+								} else {
+									var afterPaymentAmt = amtOwed - paymentAmt;
+									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+
+									try {
+										message.reactions.cache.get('⏰').remove()
+									} catch {
+										// if no reaction to remove, do nothing
+									}
 
 									var agreementEmbed = [new EmbedBuilder()
 										.setTitle('A new Financing Agreement has been submitted!')
