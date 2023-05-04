@@ -45,6 +45,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "House Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+				});
+
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
 				var d8Profit = price - costPrice;
@@ -167,6 +171,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+				});
 
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
@@ -292,6 +300,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Quotes!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, clientInfo, price, interiorType, notes, photosString]] }
+				});
+
 				var formattedPrice = formatter.format(price);
 
 				if (isNaN(price)) { // validate quantity of money
@@ -408,6 +420,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Repos!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNum, repoReason, notes, photosString]] }
+				});
+
 				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
@@ -511,6 +527,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
 				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Train Checks!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNum, notes, photosString]] }
+				});
+
 				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
@@ -612,6 +633,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var itemsSold = strCleanup(interaction.fields.getTextInputValue('itemsSoldInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
+				});
+
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
@@ -680,6 +705,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "House Remodel!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
+				});
 
 				var formattedPrice = formatter.format(price);
 
@@ -818,6 +847,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Upgrade!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
+				});
 
 				var formattedPrice = formatter.format(price);
 
@@ -965,6 +998,10 @@ module.exports.modalSubmit = async (interaction) => {
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var documentLink = strCleanup(interaction.fields.getTextInputValue('documentLinkInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, ownerInfo, ownerEmail, lotNum, price, documentLink]] }
+				});
+
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
@@ -1017,6 +1054,9 @@ module.exports.modalSubmit = async (interaction) => {
 				var financingNum = strCleanup(interaction.fields.getTextInputValue('financingNumInput')).toUpperCase();
 				var paymentAmt = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('paymentInput')).replaceAll(',', '').replaceAll('$', '')));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Payments!A:E", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, currPaymentDate, payersName, financingNum, paymentAmt]] }
+				});
 
 				if (isNaN(paymentAmt)) { // validate quantity of money
 					await interaction.reply({

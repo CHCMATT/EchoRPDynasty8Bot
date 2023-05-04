@@ -3,6 +3,7 @@ require("dotenv/config");
 const cron = require('node-cron');
 var mongoose = require("mongoose");
 var startup = require('./startup.js');
+var { google } = require('googleapis');
 var interact = require('./dsInteractions.js');
 var statsReport = require('./statsReport.js');
 var checkPayments = require('./checkPayments.js');
@@ -30,6 +31,21 @@ client.once('ready', async () => {
 		keepAlive: true
 	});
 	console.log(`[${fileName}] Connected to Mongo!`);
+
+
+	// Google Sheets Authorization Stuff
+	var auth = new google.auth.GoogleAuth({
+		keyFile: "./sheets-creds.json",
+		scopes: "https://www.googleapis.com/auth/spreadsheets"
+	})
+	var sheetClient = auth.getClient();
+	var googleSheets = google.sheets({ version: "v4", auth: sheetClient });
+
+	// Stuff that will be very useful in our project
+	client.auth = auth;
+	client.sheetId = process.env.SPREADSHEET_ID;
+	client.googleSheets = googleSheets.spreadsheets;
+	console.log(`[${fileName}] Connected to Google Sheets!`);
 
 	var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	var cmdList = []; // Create an empty array for pushing each command file to
