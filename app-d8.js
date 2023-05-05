@@ -32,7 +32,6 @@ client.once('ready', async () => {
 	});
 	console.log(`[${fileName}] Connected to Mongo!`);
 
-
 	// Google Sheets Authorization Stuff
 	var auth = new google.auth.GoogleAuth({
 		keyFile: "./sheets-creds.json",
