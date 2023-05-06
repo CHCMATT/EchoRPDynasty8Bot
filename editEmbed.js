@@ -22,7 +22,7 @@ module.exports.editEmbed = async (client) => {
 		var monthlyActivityChecks = employeeStats[i].monthlyActivityChecks;
 		var monthlyMiscSales = employeeStats[i].monthlyMiscSales;
 
-		var currEmbed = new EmbedBuilder().setTitle(`Dynasty 8 statistics for ${charName}:`).setColor(embedColor).setDescription(`**__Overall__**
+		var currEmbed = new EmbedBuilder().setTitle(`Dynasty 8 statistics for ${charName}:`).setColor(embedColor).setDescription(`__Overall__
 		• **Houses Sold:** ${housesSold}
 		• **Warehouses Sold:** ${warehousesSold}
 		• **Properties Quoted:** ${propertiesQuoted}
@@ -30,7 +30,7 @@ module.exports.editEmbed = async (client) => {
 		• **Train Activities Checked:** ${activityChecks}
 		• **Misc. Sales Completed:** ${miscSales}
 		
-		**__Monthly__**
+		__Monthly__
 		• **Houses Sold:** ${monthlyHousesSold}
 		• **Warehouses Sold:** ${monthlyWarehousesSold}
 		• **Properties Quoted:** ${monthlyPropertiesQuoted}

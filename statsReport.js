@@ -11,7 +11,7 @@ module.exports.statsReport = async (client) => {
 	var statsDescList = '';
 
 	for (i = 0; i < statsArray.length; i++) {
-		statsDescList = statsDescList.concat(`**__${statsArray[i].charName}__**:
+		statsDescList = statsDescList.concat(`__${statsArray[i].charName}__:
 • **Houses Sold:** ${statsArray[i].monthlyHousesSold}
 • **Warehouses Sold:** ${statsArray[i].monthlyWarehousesSold}
 • **Properties Quoted:** ${statsArray[i].monthlyPropertiesQuoted}
