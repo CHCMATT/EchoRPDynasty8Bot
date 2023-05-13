@@ -831,7 +831,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\n\Details about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
-			case 'addWarehouseUpgradeModal':
+			case 'addWarehouseRemodelModal':
 				var realtorName;
 				if (interaction.member.nickname) {
 					realtorName = interaction.member.nickname;
@@ -849,7 +849,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Upgrade!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Remodel!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -915,8 +915,8 @@ module.exports.modalSubmit = async (interaction) => {
 						return;
 					}
 
-					var warehouseUpgradeEmbed = [new EmbedBuilder()
-						.setTitle('A new Warehouse Upgrade has been completed!')
+					var warehouseRemodelEmbed = [new EmbedBuilder()
+						.setTitle('A new Warehouse Remodel has been completed!')
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Upgrade Date:`, value: `${upgradeDate}` },
@@ -928,13 +928,13 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('DBB42C')];
 
 
-					var itemsSold = `Warehouse Upgrade of \`${oldLotNum}\` for \`${upgradeFor}\``;
+					var itemsSold = `Warehouse Remodel of \`${oldLotNum}\` for \`${upgradeFor}\``;
 
 					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
 
-					warehouseUpgradeEmbed = warehouseUpgradeEmbed.concat(photosEmbed);
+					warehouseRemodelEmbed = warehouseRemodelEmbed.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: warehouseUpgradeEmbed });
+					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
 				}
 
 				var miscSaleEmbed = [new EmbedBuilder()
@@ -962,7 +962,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedCommission = formatter.format(realtorCommission);
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `Warehouse Upgrade of \`${oldLotNum}\` for \`${remodelFor}\``;
+				var reason = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
 
 				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()

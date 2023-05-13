@@ -128,8 +128,8 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
-			.setCustomId('addWarehouseUpgrade')
-			.setLabel('Add a Warehouse Upgrade')
+			.setCustomId('addWarehouseRemodel')
+			.setLabel('Add a Warehouse Remodel')
 			.setStyle(ButtonStyle.Success),
 	);
 
