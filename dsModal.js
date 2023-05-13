@@ -9,6 +9,11 @@ var formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
+function strCleanup(str) {
+	var cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
+	return cleaned;
+};
+
 function isValidUrl(string) {
 	let url;
 	try {
@@ -34,13 +39,17 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "House Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+				});
+
+				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
@@ -86,10 +95,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -157,13 +166,17 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var soldTo = interaction.fields.getTextInputValue('soldToInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var locationNotes = interaction.fields.getTextInputValue('locNotesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+				});
+
+				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.70);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
@@ -209,10 +222,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -280,13 +293,18 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var reqDate = `<t:${now}:d>`;
 
-				var clientInfo = interaction.fields.getTextInputValue('clientInfoInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var formattedPrice = formatter.format(price);
-				var interiorType = interaction.fields.getTextInputValue('intTypeInput').trimEnd().trimStart();
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var interiorType = strCleanup(interaction.fields.getTextInputValue('intTypeInput'));
 
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Quotes!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, clientInfo, price, interiorType, notes, photosString]] }
+				});
+
+				var formattedPrice = formatter.format(price);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -325,10 +343,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -396,11 +414,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var repoDate = `<t:${now}:d>`;
 
-				var prevOwner = interaction.fields.getTextInputValue('prevOwnerInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var repoReason = interaction.fields.getTextInputValue('repoReasonInput').trimEnd().trimStart();
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var prevOwner = strCleanup(interaction.fields.getTextInputValue('prevOwnerInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var repoReason = strCleanup(interaction.fields.getTextInputValue('repoReasonInput'));
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Repos!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNum, repoReason, notes, photosString]] }
+				});
 
 				var photos = [photosString];
 				if (photosString.includes(",")) {
@@ -431,10 +453,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -501,10 +523,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var reqDate = `<t:${now}:d>`;
 
-				var ownerInfo = interaction.fields.getTextInputValue('currentOwnerInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var notes = interaction.fields.getTextInputValue('notesInput').trimEnd().trimStart();
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('currentOwnerInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Train Checks!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNum, notes, photosString]] }
+				});
+
 				var photos = [photosString];
 				if (photosString.includes(",")) {
 					photos = photosString.split(",")
@@ -534,10 +561,10 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
 						return;
@@ -603,8 +630,12 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var itemsSold = interaction.fields.getTextInputValue('itemsSoldInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));;
+				var itemsSold = strCleanup(interaction.fields.getTextInputValue('itemsSoldInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
+				});
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -669,11 +700,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var remodelDate = `<t:${now}:d>`;
 
-				var remodelFor = interaction.fields.getTextInputValue('remodelForInput').trimEnd().trimStart();
-				var oldLotNum = interaction.fields.getTextInputValue('oldLotNumInput').trimEnd().trimStart();
-				var newLotNumNotes = interaction.fields.getTextInputValue('newLotNumNotesInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var remodelFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
+				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
+				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "House Remodel!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
+				});
 
 				var formattedPrice = formatter.format(price);
 
@@ -720,10 +755,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -807,11 +842,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var upgradeDate = `<t:${now}:d>`;
 
-				var upgradeFor = interaction.fields.getTextInputValue('remodelForInput').trimEnd().trimStart();
-				var oldLotNum = interaction.fields.getTextInputValue('oldLotNumInput').trimEnd().trimStart();
-				var newLotNumNotes = interaction.fields.getTextInputValue('newLotNumNotesInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var photosString = interaction.fields.getTextInputValue('photosInput').trimEnd().trimStart();
+				var upgradeFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
+				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
+				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Upgrade!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
+				});
 
 				var formattedPrice = formatter.format(price);
 
@@ -858,10 +897,10 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.apng', '.avif', '.webp'];
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
 							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.apng\`, \`.avif\`, \`.webp\`.`,
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
 							return;
@@ -953,11 +992,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var financeNum = `${currentFinanceNum}`.padStart(5, '0');
 				financeNum = `H${financeNum}`;
 
-				var ownerInfo = interaction.fields.getTextInputValue('ownerInfoInput').trimEnd().trimStart();
-				var ownerEmail = interaction.fields.getTextInputValue('ownerEmailInput').trimEnd().trimStart();
-				var lotNum = interaction.fields.getTextInputValue('lotNumInput').trimEnd().trimStart();
-				var price = Math.abs(Number(interaction.fields.getTextInputValue('priceInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
-				var documentLink = interaction.fields.getTextInputValue('documentLinkInput').trimEnd().trimStart();
+				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('ownerInfoInput'));
+				var ownerEmail = strCleanup(interaction.fields.getTextInputValue('ownerEmailInput'));
+				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var documentLink = strCleanup(interaction.fields.getTextInputValue('documentLinkInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, ownerInfo, ownerEmail, lotNum, price, documentLink]] }
+				});
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -968,7 +1011,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				var downPayment = (price * 0.3);
-				var amountOwed = (price - downPayment);
+				var amountOwed = (price - downPayment + ((price - downPayment) * .14));
 
 				var formattedPrice = formatter.format(price);
 				var formattedDownPayment = formatter.format(downPayment);
@@ -1007,9 +1050,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var currPaymentDate = `<t:${now}:d>`;
 
-				var payersName = interaction.fields.getTextInputValue('payersNameInput').trimEnd().trimStart();
-				var financingNum = interaction.fields.getTextInputValue('financingNumInput').trimEnd().trimStart().toUpperCase();
-				var paymentAmt = Math.abs(Number(interaction.fields.getTextInputValue('paymentInput').trimEnd().trimStart().replaceAll(',', '').replaceAll('$', '')));
+				var payersName = strCleanup(interaction.fields.getTextInputValue('payersNameInput'));
+				var financingNum = strCleanup(interaction.fields.getTextInputValue('financingNumInput')).toUpperCase();
+				var paymentAmt = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('paymentInput')).replaceAll(',', '').replaceAll('$', '')));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Payments!A:E", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, currPaymentDate, payersName, financingNum, paymentAmt]] }
+				});
 
 				if (isNaN(paymentAmt)) { // validate quantity of money
 					await interaction.reply({
@@ -1038,8 +1085,6 @@ module.exports.modalSubmit = async (interaction) => {
 						if (embedTitle === 'A new Financing Agreement has been submitted!') {
 							var msgRealtor = message.embeds[0].data.fields[0].value;
 							var msgSaleDate = message.embeds[0].data.fields[1].value;
-							// var msgPaymentDate = message.embeds[0].data.fields[2].value;
-							// var msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
 							var msgFinanceNum = message.embeds[0].data.fields[4].value;
 							var msgOwnerInfo = message.embeds[0].data.fields[5].value;
 							var msgOwnerEmail = message.embeds[0].data.fields[6].value;
@@ -1049,19 +1094,75 @@ module.exports.modalSubmit = async (interaction) => {
 							var msgAmtOwed = message.embeds[0].data.fields[10].value;
 							var msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
-							var amtOwed = msgAmtOwed.replaceAll('$', '').replaceAll(',', '');
+							var amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''));
 
 							if (msgFinanceNum === financingNum) {
 								var afterPaymentAmt = amtOwed - paymentAmt;
 								agreementFound = true;
 								if (afterPaymentAmt < 0) {
+									var afterPaymentAmt = amtOwed - paymentAmt;
+									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 									await interaction.reply({
 										content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
 										ephemeral: true
 									});
 									return;
-								} else {
+								} else if (afterPaymentAmt == 0) {
+									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+
+									try {
+										message.reactions.cache.get('⏰').remove()
+									} catch {
+										// if no reaction to remove, do nothing
+									}
+
+									var agreementEmbed = [new EmbedBuilder()
+										.setTitle('A new Financing Agreement has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${msgRealtor}` },
+											{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+											{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
+											{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+											{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+											{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
+											{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+											{ name: `Lot Number:`, value: `${msgLotNumber}` },
+											{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+											{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
+											{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+											{ name: `Notes:`, value: `Financing payments completed on ${currPaymentDate}.` }
+										)
+										.setColor('FAD643')];
+
+									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
+									var currMsg = await channel.messages.fetch(msgId);
+									currMsg.edit({ embeds: agreementEmbed });
+
+									var embeds = [new EmbedBuilder()
+										.setTitle('A new Financing Payment has been submitted!')
+										.addFields(
+											{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+											{ name: `Payment Date:`, value: `${currPaymentDate}` },
+											{ name: `Financing ID Number:`, value: `${financingNum}` },
+											{ name: `Payer's Name:`, value: `${payersName}` },
+											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
+										)
+										.setColor('FFE169')];
+
+									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+
+									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+								} else {
+									var afterPaymentAmt = amtOwed - paymentAmt;
+									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
+
+									try {
+										message.reactions.cache.get('⏰').remove()
+									} catch {
+										// if no reaction to remove, do nothing
+									}
 
 									var agreementEmbed = [new EmbedBuilder()
 										.setTitle('A new Financing Agreement has been submitted!')

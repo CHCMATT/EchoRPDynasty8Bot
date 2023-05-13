@@ -38,10 +38,6 @@ module.exports.resetPersStats = async (discordId) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, currentCommission: 0 }, { upsert: true });
 };
 
-module.exports.resetMonthlyPersStats = async (discordId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0 }, { upsert: true });
-};
-
 module.exports.readPersStats = async (discordId) => {
 	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
 	return result;
@@ -63,6 +59,16 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { bankAccount: bankNum }, { upsert: true });
 };
 
+
+//monthly statistics report stuff
+module.exports.monthlyStatsRep = async () => {
+	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, _id: 0 });
+	return result;
+};
+
+module.exports.resetMonthlyStats = async (discordId) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0 }, { upsert: true });
+};
 
 //personnel message id stuff
 module.exports.setPersonnelMsgId = async (discordId, embedId) => {
@@ -144,7 +150,7 @@ module.exports.readFinanceNum = async (summaryName) => {
 	}
 };
 
-module.exports.statsRep = async () => {
+module.exports.currStats = async () => {
 	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, embedColor: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, _id: 0 });
 	return result;
 };

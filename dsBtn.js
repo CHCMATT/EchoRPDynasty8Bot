@@ -12,7 +12,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('soldToInput')
 					.setLabel("What is the name and info of the buyer?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Rick Grimes - 1001 - 04/15/1998')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -30,7 +30,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('locNotesInput')
 					.setLabel("What is the locat. and notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Baytree Canyon Rd, provided smart locks')
+					.setPlaceholder('Baytree Canyon Rd, provided smart locks, 956-252-1929')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -59,7 +59,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('soldToInput')
 					.setLabel("What is the name and info of the buyer?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Chi Chi Kinsley - 7 - 02/25/2001')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -77,7 +77,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('locNotesInput')
 					.setLabel("What is the locat. and notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Capital Blvd, upgraded to 5 car garage')
+					.setPlaceholder('Capital Blvd, upgraded to 5 car garage, 956-252-1929')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -106,7 +106,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('clientInfoInput')
 					.setLabel("What is the name and phone # of the client?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Dex Bishop - 323-869-5309')
+					.setPlaceholder('FirstName LastName - Phone Number')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -153,7 +153,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('prevOwnerInput')
 					.setLabel("What is the name and info of the prev. owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Jay Wild - 11870 - 12/27/1994')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -200,7 +200,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('currentOwnerInput')
 					.setLabel("What is the name & CID of the current owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Astrid Dangle - 1007')
+					.setPlaceholder('FirstName LastName - CID')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
@@ -262,7 +262,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('remodelForInput')
 					.setLabel("What is the name and info of the owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Sophia Sweet - 5173 - 08/24/1995')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
@@ -274,7 +274,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('6789, upgraded to HighEndV3')
+					.setPlaceholder('6789, upgraded to HighEndV3, 956-252-1929')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -308,7 +308,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('remodelForInput')
 					.setLabel("What is the name and info of the owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Nadia Strovavich - 15697 - 06/14/1999')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
@@ -320,7 +320,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8910, upgraded from XS to Small Warehouse')
+					.setPlaceholder('8910, upgraded from XS to Small Warehouse, 956-252-1929')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -354,7 +354,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('ownerInfoInput')
 					.setLabel("What is the name and info of the owner?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Jimmy North - 1116 - 10/30/1995')
+					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var ownerEmailInput = new TextInputBuilder()
 					.setCustomId('ownerEmailInput')
@@ -398,7 +398,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('payersNameInput')
 					.setLabel("What is the name of the person paying?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Millie Coleman')
+					.setPlaceholder('FirstName LastName')
 					.setRequired(true);
 				var financingNumInput = new TextInputBuilder()
 					.setCustomId('financingNumInput')

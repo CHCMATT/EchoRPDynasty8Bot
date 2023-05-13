@@ -3,7 +3,10 @@ require("dotenv/config");
 const cron = require('node-cron');
 var mongoose = require("mongoose");
 var startup = require('./startup.js');
+var { google } = require('googleapis');
 var interact = require('./dsInteractions.js');
+var statsReport = require('./statsReport.js');
+var checkPayments = require('./checkPayments.js');
 var commissionCmds = require('./commissionCmds.js');
 var { Client, Collection, GatewayIntentBits } = require('discord.js');
 
@@ -18,15 +21,28 @@ var fileParts = __filename.split(/[\\/]/);
 var fileName = fileParts[fileParts.length - 1];
 
 cron.schedule('0 6 * * SUN', function () { commissionCmds.commissionReport(client); }); // runs at 6:00am every Sunday (SUN)
+cron.schedule('0 0 2 * *', function () { statsReport.statsReport(client); }); // runs at 12:00am on the first day of every month
+cron.schedule('0 16 * * *', function () { checkPayments.checkPayments(client); }); // runs at 4:00pm every day
 
 client.once('ready', async () => {
 	console.log(`[${fileName}] The client is starting up!`);
 	mongoose.set("strictQuery", false);
-	mongoose.connect(process.env.MONGO_URI, {
-		keepAlive: true
-	});
+	mongoose.connect(process.env.MONGO_URI);
 	console.log(`[${fileName}] Connected to Mongo!`);
 
+	// Google Sheets Authorization Stuff
+	var auth = new google.auth.GoogleAuth({
+		keyFile: "./sheets-creds.json",
+		scopes: "https://www.googleapis.com/auth/spreadsheets"
+	})
+	var sheetClient = auth.getClient();
+	var googleSheets = google.sheets({ version: "v4", auth: sheetClient });
+
+	// Stuff that will be very useful in our project
+	client.auth = auth;
+	client.sheetId = process.env.SPREADSHEET_ID;
+	client.googleSheets = googleSheets.spreadsheets;
+	console.log(`[${fileName}] Connected to Google Sheets!`);
 
 	var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	var cmdList = []; // Create an empty array for pushing each command file to

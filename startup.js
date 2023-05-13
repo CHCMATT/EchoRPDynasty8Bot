@@ -9,11 +9,11 @@ module.exports.startUp = async (client) => {
 
 	try {
 		await channel.messages.fetch(oldEmbed);
-		editEmbed.editEmbed(client);
+		await editEmbed.editEmbed(client);
 		return "edited";
 	}
 	catch (error) {
-		postEmbed.postEmbed(client);
+		await postEmbed.postEmbed(client);
 		return "posted";
 	}
 };
