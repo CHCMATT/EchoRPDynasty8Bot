@@ -146,7 +146,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `House Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
@@ -273,7 +273,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `Warehouse Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
@@ -680,7 +680,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
@@ -822,7 +822,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `House Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
 
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${itemsSold}.`)
@@ -964,7 +964,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
 
-				// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${itemsSold}.`)

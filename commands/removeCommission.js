@@ -43,7 +43,7 @@ module.exports = {
 					var personnelData = await dbCmds.readPersStats(user.id)
 					var newCommission = personnelData.currentCommission;
 					var formattedNewCommission = formatter.format(newCommission);
-					// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
 						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
