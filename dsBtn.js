@@ -300,9 +300,9 @@ module.exports.btnPressed = async (interaction) => {
 				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
 				await interaction.showModal(addHouseRemodelModal);
 				break;
-			case 'addWarehouseUpgrade':
+			case 'addWarehouseRemodel':
 				var addHouseRemodelModal = new ModalBuilder()
-					.setCustomId('addWarehouseUpgradeModal')
+					.setCustomId('addWarehouseRemodelModal')
 					.setTitle('Log a warehouse upgrade that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
