@@ -173,7 +173,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Warehouse Sales!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -301,7 +301,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Quotes!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, clientInfo, price, interiorType, notes, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Quotes!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, clientInfo, price, interiorType, notes, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -421,7 +421,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Property Repos!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNum, repoReason, notes, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Repos!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNum, repoReason, notes, photosString]] }
 				});
 
 				var photos = [photosString];
@@ -529,7 +529,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Train Checks!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNum, notes, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Train Checks!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNum, notes, photosString]] }
 				});
 
 				var photos = [photosString];
@@ -634,7 +634,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
 				});
 
 				if (isNaN(price)) { // validate quantity of money
@@ -707,7 +707,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "House Remodel!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "House Remodel!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -849,7 +849,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Warehouse Upgrade!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Warehouse Upgrade!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, upgradeDate, upgradeFor, oldLotNum, newLotNumNotes, price, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -999,7 +999,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var documentLink = strCleanup(interaction.fields.getTextInputValue('documentLinkInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, ownerInfo, ownerEmail, lotNum, price, documentLink]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, ownerInfo, ownerEmail, lotNum, price, documentLink]] }
 				});
 
 				var copyRequest = {
@@ -1075,7 +1075,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var paymentAmt = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('paymentInput')).replaceAll(',', '').replaceAll('$', '')));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.auth, spreadsheetId: interaction.client.sheetId, range: "Finance Payments!A:E", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, currPaymentDate, payersName, financingNum, paymentAmt]] }
+					auth: interaction.client.auth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Payments!A:E", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, currPaymentDate, payersName, financingNum, paymentAmt]] }
 				});
 
 				if (isNaN(paymentAmt)) { // validate quantity of money
