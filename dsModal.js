@@ -1152,7 +1152,7 @@ module.exports.modalSubmit = async (interaction) => {
 											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 											{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
 											{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-											{ name: `Notes:`, value: `Financing payments completed on ${currPaymentDate}.` }
+											{ name: `Notes:`, value: `Financing Payments completed on ${currPaymentDate}.` }
 										)
 										.setColor('FAD643')];
 
