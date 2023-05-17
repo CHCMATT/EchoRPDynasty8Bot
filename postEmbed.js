@@ -3,7 +3,6 @@ var dbCmds = require('./dbCmds.js');
 
 module.exports.postEmbed = async (client) => {
 	var employeeStats = await dbCmds.currStats();
-
 	var embeds = [];
 
 	for (var i = 0; i < employeeStats.length; i++) {

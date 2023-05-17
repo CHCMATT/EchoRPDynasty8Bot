@@ -3,7 +3,6 @@ var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 
 module.exports.editEmbed = async (client) => {
 	var employeeStats = await dbCmds.currStats();
-
 	var embeds = [];
 
 	for (var i = 0; i < employeeStats.length; i++) {

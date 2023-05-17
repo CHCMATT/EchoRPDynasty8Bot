@@ -30,17 +30,42 @@ client.once('ready', async () => {
 	mongoose.connect(process.env.MONGO_URI);
 	console.log(`[${fileName}] Connected to Mongo!`);
 
+	// Google Docs Authorization Stuff
+	var docsAuth = new google.auth.GoogleAuth({
+		keyFile: "./docs-creds.json",
+		scopes: "https://www.googleapis.com/auth/docs"
+	})
+	var docsClient = docsAuth.getClient();
+	var googleDocs = google.docs({ version: "v1", auth: docsClient });
+
+	client.docsAuth = docsAuth;
+	client.googleDocs = googleDocs.documents;
+	console.log(`[${fileName}] Connected to Google Docs!`);
+
+
+	// Google Drive Authorization Stuff
+	var driveAuth = new google.auth.GoogleAuth({
+		keyFile: "./drive-creds.json",
+		scopes: "https://www.googleapis.com/auth/drive"
+	})
+	var driveClient = driveAuth.getClient();
+	var googleDrive = google.drive({ version: "v3", auth: driveClient });
+
+	client.driveAuth = driveAuth;
+	client.financingTemplateId = process.env.FINANCE_TEMPLATE_DOC_ID;
+	client.driveFiles = googleDrive.files;
+	console.log(`[${fileName}] Connected to Google Drive!`);
+
+
 	// Google Sheets Authorization Stuff
-	var auth = new google.auth.GoogleAuth({
+	var sheetsAuth = new google.auth.GoogleAuth({
 		keyFile: "./sheets-creds.json",
 		scopes: "https://www.googleapis.com/auth/spreadsheets"
 	})
-	var sheetClient = auth.getClient();
+	var sheetClient = sheetsAuth.getClient();
 	var googleSheets = google.sheets({ version: "v4", auth: sheetClient });
 
-	// Stuff that will be very useful in our project
-	client.auth = auth;
-	client.sheetId = process.env.SPREADSHEET_ID;
+	client.sheetsAuth = sheetsAuth;
 	client.googleSheets = googleSheets.spreadsheets;
 	console.log(`[${fileName}] Connected to Google Sheets!`);
 

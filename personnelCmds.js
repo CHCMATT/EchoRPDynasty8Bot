@@ -1,5 +1,4 @@
 require('discord.js');
-var { EmbedBuilder } = require('discord.js');
 var dbCmds = require('./dbCmds.js');
 
 module.exports.initPersonnel = async (client, userId) => {
