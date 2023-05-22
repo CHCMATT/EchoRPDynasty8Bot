@@ -1,49 +1,52 @@
-var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-var dbCmds = require('./dbCmds.js');
+let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+let dbCmds = require('./dbCmds.js');
 
 module.exports.postEmbed = async (client) => {
-	var employeeStats = await dbCmds.currStats();
-	var embeds = [];
+	let employeeStats = await dbCmds.currStats();
+	let overallDescList = '';
 
-	for (var i = 0; i < employeeStats.length; i++) {
-		var charName = employeeStats[i].charName;
-		var embedColor = employeeStats[i].embedColor;
-		var housesSold = employeeStats[i].housesSold;
-		var warehousesSold = employeeStats[i].warehousesSold;
-		var propertiesQuoted = employeeStats[i].propertiesQuoted;
-		var propertiesRepod = employeeStats[i].propertiesRepod;
-		var activityChecks = employeeStats[i].activityChecks;
-		var miscSales = employeeStats[i].miscSales;
-		var monthlyHousesSold = employeeStats[i].monthlyHousesSold;
-		var monthlyWarehousesSold = employeeStats[i].monthlyWarehousesSold;
-		var monthlyPropertiesQuoted = employeeStats[i].monthlyPropertiesQuoted;
-		var monthlyPropertiesRepod = employeeStats[i].monthlyPropertiesRepod;
-		var monthlyActivityChecks = employeeStats[i].monthlyActivityChecks;
-		var monthlyMiscSales = employeeStats[i].monthlyMiscSales;
+	let now = Math.floor(new Date().getTime() / 1000.0);
+	let today = `<t:${now}:d>`;
 
-		var currEmbed = new EmbedBuilder().setTitle(`Dynasty 8 statistics for ${charName}:`).setColor(embedColor).setDescription(`__Overall__
-		• **Houses Sold:** ${housesSold}
-		• **Warehouses Sold:** ${warehousesSold}
-		• **Properties Quoted:** ${propertiesQuoted}
-		• **Properties Repossessed:** ${propertiesRepod}
-		• **Train Activities Checked:** ${activityChecks}
-		• **Misc. Sales Completed:** ${miscSales}
-		
-		__Monthly__
-		• **Houses Sold:** ${monthlyHousesSold}
-		• **Warehouses Sold:** ${monthlyWarehousesSold}
-		• **Properties Quoted:** ${monthlyPropertiesQuoted}
-		• **Properties Repossessed:** ${monthlyPropertiesRepod}
-		• **Train Activities Checked:** ${monthlyActivityChecks}
-		• **Misc. Sales Completed:** ${monthlyMiscSales}`);
-
-		embeds = embeds.concat(currEmbed);
+	for (let i = 0; i < employeeStats.length; i++) {
+		if (employeeStats[i].housesSold > 0 || employeeStats[i].warehousesSold > 0 || employeeStats[i].propertiesQuoted > 0 || employeeStats[i].propertiesRepod > 0 || employeeStats[i].activityChecks > 0 || employeeStats[i].miscSales > 0) {
+			overallDescList = overallDescList.concat(`__${employeeStats[i].charName}__:
+		• **Houses Sold:** ${employeeStats[i].housesSold}
+		• **Warehouses Sold:** ${employeeStats[i].warehousesSold}
+		• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}
+		• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
+		• **Train Activities Checked:** ${employeeStats[i].activityChecks}
+		• **Misc. Sales Completed:** ${employeeStats[i].miscSales}\n\n`);
+		}
 	}
 
-	client.statsMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: embeds });
+	let overallStatsEmbed = new EmbedBuilder()
+		.setTitle(`Overall Realtor Statistics as of ${today}:`)
+		.setDescription(overallDescList)
+		.setColor('A47E1B');
+
+	let monthlyDescList = '';
+
+	for (let i = 0; i < employeeStats.length; i++) {
+		if (employeeStats[i].monthlyHousesSold > 0 || employeeStats[i].monthlyWarehousesSold > 0 || employeeStats[i].monthlyPropertiesQuoted > 0 || employeeStats[i].monthlyPropertiesRepod > 0 || employeeStats[i].monthlyActivityChecks > 0 || employeeStats[i].monthlyMiscSales > 0) {
+			monthlyDescList = monthlyDescList.concat(`__${employeeStats[i].charName}__:
+		• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}
+		• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}
+		• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}
+		• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
+		• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
+		• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}\n\n`);
+		}
+	}
+
+	let monthlyStatsEmbed = new EmbedBuilder()
+		.setTitle(`Monthly Realtor Statistics as of ${today}:`)
+		.setDescription(monthlyDescList)
+		.setColor('926C15');
+
+	client.statsMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [overallStatsEmbed, monthlyStatsEmbed] });
 
 	await dbCmds.setMsgId("statsMsg", client.statsMsg.id);
-
 
 	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 	let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
@@ -61,37 +64,37 @@ module.exports.postEmbed = async (client) => {
 	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
 	countMiscSales = countMiscSales.toString();
 
-	var housesSoldEmbed = new EmbedBuilder()
+	let housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
 		.setColor('#805B10');
 
-	var warehousesSoldEmbed = new EmbedBuilder()
+	let warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
 		.setColor('#926C15');
 
-	var propertiesQuotedEmbed = new EmbedBuilder()
+	let propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
 		.setColor('#A47E1B');
 
-	var propertiesRepodEmbed = new EmbedBuilder()
+	let propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
 		.setColor('#B69121');
 
-	var trainActivitiesCheckedEmbed = new EmbedBuilder()
+	let trainActivitiesCheckedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Train Activities Checked:')
 		.setDescription(countTrainActivitiesChecked)
 		.setColor('#C9A227');
 
-	var miscSalesEmbed = new EmbedBuilder()
+	let miscSalesEmbed = new EmbedBuilder()
 		.setTitle('Amount of Miscellaneous Sales Completed:')
 		.setDescription(countMiscSales)
 		.setColor('#C9A227');
 
-	var btnRows = addBtnRows();
+	let btnRows = addBtnRows();
 
 	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed], components: btnRows });
 
@@ -99,7 +102,7 @@ module.exports.postEmbed = async (client) => {
 };
 
 function addBtnRows() {
-	var row1 = new ActionRowBuilder().addComponents(
+	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addHouseSold')
 			.setLabel('Add a House Sale')
@@ -126,7 +129,7 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 	);
 
-	var row2 = new ActionRowBuilder().addComponents(
+	let row2 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addPropQuoted')
 			.setLabel('Add a Property Quote')
@@ -143,7 +146,7 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Primary),
 	);
 
-	var row3 = new ActionRowBuilder().addComponents(
+	let row3 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addFinancingAgreement')
 			.setLabel('Add a Financing Agreement')
@@ -155,6 +158,6 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Secondary),
 	);
 
-	var rows = [row1, row2, row3];
+	let rows = [row1, row2, row3];
 	return rows;
 };

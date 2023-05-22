@@ -2,50 +2,55 @@ var dbCmds = require('./dbCmds.js');
 var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
 module.exports.editEmbed = async (client) => {
-	var employeeStats = await dbCmds.currStats();
-	var embeds = [];
+	let employeeStats = await dbCmds.currStats();
+	let overallDescList = '';
 
-	for (var i = 0; i < employeeStats.length; i++) {
-		var charName = employeeStats[i].charName;
-		var embedColor = employeeStats[i].embedColor;
-		var housesSold = employeeStats[i].housesSold;
-		var warehousesSold = employeeStats[i].warehousesSold;
-		var propertiesQuoted = employeeStats[i].propertiesQuoted;
-		var propertiesRepod = employeeStats[i].propertiesRepod;
-		var activityChecks = employeeStats[i].activityChecks;
-		var miscSales = employeeStats[i].miscSales;
-		var monthlyHousesSold = employeeStats[i].monthlyHousesSold;
-		var monthlyWarehousesSold = employeeStats[i].monthlyWarehousesSold;
-		var monthlyPropertiesQuoted = employeeStats[i].monthlyPropertiesQuoted;
-		var monthlyPropertiesRepod = employeeStats[i].monthlyPropertiesRepod;
-		var monthlyActivityChecks = employeeStats[i].monthlyActivityChecks;
-		var monthlyMiscSales = employeeStats[i].monthlyMiscSales;
+	let now = Math.floor(new Date().getTime() / 1000.0);
+	let today = `<t:${now}:d>`;
 
-		var currEmbed = new EmbedBuilder().setTitle(`Dynasty 8 statistics for ${charName}:`).setColor(embedColor).setDescription(`__Overall__
-		• **Houses Sold:** ${housesSold}
-		• **Warehouses Sold:** ${warehousesSold}
-		• **Properties Quoted:** ${propertiesQuoted}
-		• **Properties Repossessed:** ${propertiesRepod}
-		• **Train Activities Checked:** ${activityChecks}
-		• **Misc. Sales Completed:** ${miscSales}
-		
-		__Monthly__
-		• **Houses Sold:** ${monthlyHousesSold}
-		• **Warehouses Sold:** ${monthlyWarehousesSold}
-		• **Properties Quoted:** ${monthlyPropertiesQuoted}
-		• **Properties Repossessed:** ${monthlyPropertiesRepod}
-		• **Train Activities Checked:** ${monthlyActivityChecks}
-		• **Misc. Sales Completed:** ${monthlyMiscSales}`);
-
-		embeds = embeds.concat(currEmbed);
+	for (let i = 0; i < employeeStats.length; i++) {
+		if (employeeStats[i].housesSold > 0 || employeeStats[i].warehousesSold > 0 || employeeStats[i].propertiesQuoted > 0 || employeeStats[i].propertiesRepod > 0 || employeeStats[i].activityChecks > 0 || employeeStats[i].miscSales > 0) {
+			overallDescList = overallDescList.concat(`__${employeeStats[i].charName}__:
+		• **Houses Sold:** ${employeeStats[i].housesSold}
+		• **Warehouses Sold:** ${employeeStats[i].warehousesSold}
+		• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}
+		• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
+		• **Train Activities Checked:** ${employeeStats[i].activityChecks}
+		• **Misc. Sales Completed:** ${employeeStats[i].miscSales}\n\n`);
+		}
 	}
 
-	var currEmbed = await dbCmds.readMsgId("statsMsg");
+	let overallStatsEmbed = new EmbedBuilder()
+		.setTitle(`Overall Realtor Statistics as of ${today}:`)
+		.setDescription(overallDescList)
+		.setColor('A47E1B');
+
+	let monthlyDescList = '';
+
+	for (let i = 0; i < employeeStats.length; i++) {
+		if (employeeStats[i].monthlyHousesSold > 0 || employeeStats[i].monthlyWarehousesSold > 0 || employeeStats[i].monthlyPropertiesQuoted > 0 || employeeStats[i].monthlyPropertiesRepod > 0 || employeeStats[i].monthlyActivityChecks > 0 || employeeStats[i].monthlyMiscSales > 0) {
+			monthlyDescList = monthlyDescList.concat(`__${employeeStats[i].charName}__:
+		• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}
+		• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}
+		• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}
+		• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
+		• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
+		• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}\n\n`);
+		}
+	}
+
+	let monthlyStatsEmbed = new EmbedBuilder()
+		.setTitle(`Monthly Realtor Statistics as of ${today}:`)
+		.setDescription(monthlyDescList)
+		.setColor('926C15');
 
 	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-	var currMsg = await channel.messages.fetch(currEmbed);
 
-	currMsg.edit({ embeds: embeds });
+	var statsMsgId = await dbCmds.readMsgId("statsMsg");
+
+	var statsMsg = await channel.messages.fetch(statsMsgId);
+
+	statsMsg.edit({ embeds: [overallStatsEmbed, monthlyStatsEmbed] });
 
 
 	let countHousesSold = await dbCmds.readSummValue("countHousesSold");
