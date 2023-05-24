@@ -350,15 +350,21 @@ module.exports.btnPressed = async (interaction) => {
 				var addFinancingAgreementModal = new ModalBuilder()
 					.setCustomId('addFinancingAgreementModal')
 					.setTitle('Log a financing agreement that you completed');
-				var ownerInfoInput = new TextInputBuilder()
-					.setCustomId('ownerInfoInput')
-					.setLabel("What is the name and info of the owner?")
+				var clientNameInput = new TextInputBuilder()
+					.setCustomId('clientNameInput')
+					.setLabel("What is the name of the client?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('FirstName LastName - CID - DOB')
+					.setPlaceholder('FirstName LastName')
 					.setRequired(true);
-				var ownerEmailInput = new TextInputBuilder()
-					.setCustomId('ownerEmailInput')
-					.setLabel("What is the email of the owner?")
+				var clientInfoInput = new TextInputBuilder()
+					.setCustomId('clientInfoInput')
+					.setLabel("What is the CID and DOB of the client?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('CID | DOB')
+					.setRequired(true);
+				var clientEmailInput = new TextInputBuilder()
+					.setCustomId('clientEmailInput')
+					.setLabel("What is the email of the client?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('DudeItsMeFam#8049')
 					.setRequired(true);
@@ -374,20 +380,14 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('275000')
 					.setRequired(true);
-				var documentLinkInput = new TextInputBuilder()
-					.setCustomId('documentLinkInput')
-					.setLabel("What is the link to the Financing Agreement?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('https://docs.google.com/document/d/1YT6YUMV1GYMySJJ2gjAu1qSrWMvbSRvg7CLi0aegYiI/')
-					.setRequired(true);
 
-				var ownerInfoInputRow = new ActionRowBuilder().addComponents(ownerInfoInput);
-				var ownerEmailInputRow = new ActionRowBuilder().addComponents(ownerEmailInput);
+				var clientNameInputRow = new ActionRowBuilder().addComponents(clientNameInput);
+				var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
+				var clientEmailInputRow = new ActionRowBuilder().addComponents(clientEmailInput);
 				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
-				var documentLinkInputRow = new ActionRowBuilder().addComponents(documentLinkInput);
 
-				addFinancingAgreementModal.addComponents(ownerInfoInputRow, ownerEmailInputRow, lotNumInputRow, priceInputRow, documentLinkInputRow);
+				addFinancingAgreementModal.addComponents(clientNameInputRow, clientInfoInputRow, clientEmailInputRow, lotNumInputRow, priceInputRow);
 				await interaction.showModal(addFinancingAgreementModal);
 				break;
 			case 'addFinancingPayment':

@@ -1,3 +1,4 @@
+var moment = require('moment');
 var dbCmds = require('./dbCmds.js');
 var editEmbed = require('./editEmbed.js');
 var { EmbedBuilder } = require('discord.js');
@@ -974,6 +975,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addFinancingAgreementModal':
+				await interaction.deferReply({ ephemeral: true });
 				var realtorName;
 				if (interaction.member.nickname) {
 					realtorName = interaction.member.nickname;
@@ -992,38 +994,14 @@ module.exports.modalSubmit = async (interaction) => {
 				var financeNum = `${currentFinanceNum}`.padStart(5, '0');
 				financeNum = `H${financeNum}`;
 
-				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('ownerInfoInput'));
-				var ownerEmail = strCleanup(interaction.fields.getTextInputValue('ownerEmailInput'));
+				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
+				var clientEmail = strCleanup(interaction.fields.getTextInputValue('clientEmailInput'));
 				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
-				var documentLink = strCleanup(interaction.fields.getTextInputValue('documentLinkInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, ownerInfo, ownerEmail, lotNum, price, documentLink]] }
-				});
-
-				/*var copyRequest = {
-					name: "Test Copy | Financing & Sales Agreement",
-					parents: [process.env.FINANCING_DOCS_FOLDER_ID]
-				};
-
-				interaction.client.driveFiles.copy(
-					{  // Modified
-						fileId: process.env.FINANCE_TEMPLATE_DOC_ID,
-						requestBody: copyRequest  // or resource: copyRequest
-					},
-					function (err, response) {
-						if (err) {
-							console.log(err);
-							res.send("error");
-							return;
-						}
-						res.send(response);
-					}
-				);*/
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -1031,11 +1009,113 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				var downPayment = (price * 0.3);
-				var amountOwed = (price - downPayment + ((price - downPayment) * .14));
+				var interest = ((price - downPayment) * .14);
+				var amountOwed = (price - downPayment + interest);
+				var totalOwed = (price + interest);
 
 				var formattedPrice = formatter.format(price);
 				var formattedDownPayment = formatter.format(downPayment);
 				var formattedAmountOwed = formatter.format(amountOwed);
+				var formattedTotalOwed = formatter.format(totalOwed);
+				var formattedInterest = formatter.format(interest);
+
+				let newFile = await interaction.client.driveFiles.copy({
+					auth: interaction.client.driveAuth, fileId: process.env.FINANCE_TEMPLATE_DOC_ID, resource: { name: `${clientName} | Dynasty 8 Financing & Sales Agreement` }
+				});
+
+				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientEmail, lotNum, price, documentLink]] }
+				});
+
+				let todayDate = moment().format('MMMM DD, YYYY');
+
+				await interaction.client.googleDocs.batchUpdate({
+					auth: interaction.client.driveAuth, documentId: newFile.data.id, resource: {
+						requests: [{
+							replaceAllText: {
+								replaceText: clientName,
+								containsText: {
+									"text": "{client_name}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: clientInfo,
+								containsText: {
+									"text": "{client_info}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: clientEmail,
+								containsText: {
+									"text": "{client_email}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: todayDate,
+								containsText: {
+									"text": "{today_date}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: lotNum,
+								containsText: {
+									"text": "{property_number}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedPrice,
+								containsText: {
+									"text": "{purchase_price}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedDownPayment,
+								containsText: {
+									"text": "{down_payment}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedTotalOwed,
+								containsText: {
+									"text": "{total_owed}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: financeNum,
+								containsText: {
+									"text": "{financing_number}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: realtorName,
+								containsText: {
+									"text": "{realtor_name}",
+									"matchCase": true
+								}
+							},
+						}]
+					}
+				});
 
 				var embeds = [new EmbedBuilder()
 					.setTitle('A new Financing Agreement has been submitted!')
@@ -1045,8 +1125,8 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Latest Payment:`, value: `${saleDate}`, inline: true },
 						{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
-						{ name: `Owner Info:`, value: `${ownerInfo}`, inline: true },
-						{ name: `Owner Email:`, value: `${ownerEmail}`, inline: true },
+						{ name: `Client Info:`, value: `${clientName} | ${clientInfo}`, inline: true },
+						{ name: `Client Email:`, value: `${clientEmail}`, inline: true },
 						{ name: `Lot Number:`, value: `${lotNum}` },
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
@@ -1057,7 +1137,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-				await interaction.reply({ content: `Successfully added this agreement to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added this agreement to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: <${documentLink}>`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;

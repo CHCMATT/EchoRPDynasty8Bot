@@ -52,7 +52,6 @@ client.once('ready', async () => {
 	var googleDrive = google.drive({ version: "v3", auth: driveClient });
 
 	client.driveAuth = driveAuth;
-	client.financingTemplateId = process.env.FINANCE_TEMPLATE_DOC_ID;
 	client.driveFiles = googleDrive.files;
 	console.log(`[${fileName}] Connected to Google Drive!`);
 
