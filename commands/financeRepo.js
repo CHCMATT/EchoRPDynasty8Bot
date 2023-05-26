@@ -20,7 +20,7 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) || interaction.member.id == '220286286064386048') {
-			var financingNum = interaction.options.getString('financingnumber');
+			var financingNum = interaction.options.getString('financingnumber').toUpperCase();
 
 			var now = Math.floor(new Date().getTime() / 1000.0);
 			var today = `<t:${now}:d>`
