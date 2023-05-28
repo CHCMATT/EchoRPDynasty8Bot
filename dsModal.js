@@ -1023,7 +1023,7 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.driveAuth, fileId: process.env.FINANCE_TEMPLATE_DOC_ID, resource: { name: `${clientName} | Dynasty 8 Financing & Sales Agreement` }
 				});
 
-				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`
+				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`;
 
 				await interaction.client.googleSheets.values.append({
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientEmail, lotNum, price, documentLink]] }
@@ -1125,7 +1125,8 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Latest Payment:`, value: `${saleDate}`, inline: true },
 						{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
-						{ name: `Client Info:`, value: `${clientName} | ${clientInfo}`, inline: true },
+						{ name: `Client Name:`, value: `${clientName}`, inline: true },
+						{ name: `Client Info:`, value: `${clientInfo}`, inline: true },
 						{ name: `Client Email:`, value: `${clientEmail}`, inline: true },
 						{ name: `Lot Number:`, value: `${lotNum}` },
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },

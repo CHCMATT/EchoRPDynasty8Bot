@@ -1,5 +1,5 @@
-let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 let dbCmds = require('./dbCmds.js');
+let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
 module.exports.postEmbed = async (client) => {
 	let employeeStats = await dbCmds.currStats();
