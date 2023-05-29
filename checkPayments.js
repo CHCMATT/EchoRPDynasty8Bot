@@ -73,7 +73,7 @@ module.exports.checkPayments = async (client) => {
 		var channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
 		var messagesAfter = await channelAfter.messages.fetch();
 
-		var paymentOverdueDate = (now - (86400 * 0)); // 86400 seconds in a day times 14 days
+		var paymentOverdueDate = (now - (86400 * 14)); // 86400 seconds in a day times 14 days
 
 		messagesAfter.forEach(async (messageAfter) => {
 			if (messageAfter.embeds[0]) {
