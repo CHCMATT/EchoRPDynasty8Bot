@@ -369,11 +369,11 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('DudeItsMeFam#8049')
 					.setRequired(true);
-				var lotNumInput = new TextInputBuilder()
-					.setCustomId('lotNumInput')
-					.setLabel("What is the property lot number?")
+				var lotNumStreetNameInput = new TextInputBuilder()
+					.setCustomId('lotNumStreetNameInput')
+					.setLabel("What is the lot number and nearest street?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8912')
+					.setPlaceholder('8912 Paleto Blvd')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -385,10 +385,10 @@ module.exports.btnPressed = async (interaction) => {
 				var clientNameInputRow = new ActionRowBuilder().addComponents(clientNameInput);
 				var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
 				var clientEmailInputRow = new ActionRowBuilder().addComponents(clientEmailInput);
-				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 
-				addFinancingAgreementModal.addComponents(clientNameInputRow, clientInfoInputRow, clientEmailInputRow, lotNumInputRow, priceInputRow);
+				addFinancingAgreementModal.addComponents(clientNameInputRow, clientInfoInputRow, clientEmailInputRow, lotNumStreetNameInputRow, priceInputRow);
 				await interaction.showModal(addFinancingAgreementModal);
 				break;
 			case 'addFinancingPayment':
@@ -439,7 +439,7 @@ module.exports.btnPressed = async (interaction) => {
 				var msgClientName = currentMsg.embeds[0].data.fields[5].value;
 				var msgClientInfo = currentMsg.embeds[0].data.fields[6].value;
 				var msgClientEmail = currentMsg.embeds[0].data.fields[7].value;
-				var msgLotNumber = currentMsg.embeds[0].data.fields[8].value;
+				var msgStreetAddress = currentMsg.embeds[0].data.fields[8].value;
 				var msgSalePrice = currentMsg.embeds[0].data.fields[9].value;
 				var msgDownPayment = currentMsg.embeds[0].data.fields[10].value;
 				var msgAmtOwed = currentMsg.embeds[0].data.fields[11].value;
@@ -478,9 +478,9 @@ module.exports.btnPressed = async (interaction) => {
 							},
 						}, {
 							replaceAllText: {
-								replaceText: msgLotNumber,
+								replaceText: msgStreetAddress,
 								containsText: {
-									"text": "{address}",
+									"text": "{street_address}",
 									"matchCase": true
 								}
 							},
@@ -537,7 +537,7 @@ module.exports.btnPressed = async (interaction) => {
 							{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
 							{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
 							{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
-							{ name: `Lot Number:`, value: `${msgLotNumber}` },
+							{ name: `Street Address:`, value: `${msgStreetAddress}` },
 							{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 							{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 							{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
@@ -557,7 +557,7 @@ module.exports.btnPressed = async (interaction) => {
 							{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
 							{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
 							{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
-							{ name: `Lot Number:`, value: `${msgLotNumber}` },
+							{ name: `Street Address:`, value: `${msgStreetAddress}` },
 							{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 							{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 							{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },

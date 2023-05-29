@@ -92,7 +92,7 @@ module.exports.checkPayments = async (client) => {
 						var msgClientName = messageAfter.embeds[0].data.fields[5].value;
 						var msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
 						var msgClientEmail = messageAfter.embeds[0].data.fields[7].value;
-						var msgLotNumber = messageAfter.embeds[0].data.fields[8].value;
+						var msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
 						var msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
 						var msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
 						var msgAmtOwed = messageAfter.embeds[0].data.fields[11].value;
@@ -116,7 +116,7 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
 									{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
 									{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
-									{ name: `Lot Number:`, value: `${msgLotNumber}` },
+									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
@@ -136,7 +136,7 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
 									{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
 									{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
-									{ name: `Lot Number:`, value: `${msgLotNumber}` },
+									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },

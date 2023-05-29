@@ -997,7 +997,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
 				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
 				var clientEmail = strCleanup(interaction.fields.getTextInputValue('clientEmailInput'));
-				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 
 				if (isNaN(price)) { // validate quantity of money
@@ -1026,7 +1026,7 @@ module.exports.modalSubmit = async (interaction) => {
 				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`;
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientEmail, lotNum, price, documentLink]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientEmail, lotNumStreetName, price, documentLink]] }
 				});
 
 				let todayDate = moment().format('MMMM DD, YYYY');
@@ -1067,9 +1067,9 @@ module.exports.modalSubmit = async (interaction) => {
 							},
 						}, {
 							replaceAllText: {
-								replaceText: lotNum,
+								replaceText: lotNumStreetName,
 								containsText: {
-									"text": "{property_number}",
+									"text": "{street_address}",
 									"matchCase": true
 								}
 							},
@@ -1128,7 +1128,7 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Client Name:`, value: `${clientName}`, inline: true },
 						{ name: `Client Info:`, value: `${clientInfo}`, inline: true },
 						{ name: `Client Email:`, value: `${clientEmail}`, inline: true },
-						{ name: `Lot Number:`, value: `${lotNum}` },
+						{ name: `Street Address:`, value: `${lotNumStreetName}` },
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
 						{ name: `Amount Owed:`, value: `${formattedAmountOwed}`, inline: true },
