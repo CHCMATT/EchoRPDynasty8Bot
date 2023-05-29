@@ -363,11 +363,11 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('CID | DOB')
 					.setRequired(true);
-				var clientEmailInput = new TextInputBuilder()
-					.setCustomId('clientEmailInput')
-					.setLabel("What is the email of the client?")
+				var clientContactInput = new TextInputBuilder()
+					.setCustomId('clientContactInput')
+					.setLabel("What is the contact info for the client?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('DudeItsMeFam#8049')
+					.setPlaceholder('123-456-7890 | DudeItsMeFam#8049')
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
@@ -384,11 +384,11 @@ module.exports.btnPressed = async (interaction) => {
 
 				var clientNameInputRow = new ActionRowBuilder().addComponents(clientNameInput);
 				var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
-				var clientEmailInputRow = new ActionRowBuilder().addComponents(clientEmailInput);
+				var clientContactInputRow = new ActionRowBuilder().addComponents(clientContactInput);
 				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 
-				addFinancingAgreementModal.addComponents(clientNameInputRow, clientInfoInputRow, clientEmailInputRow, lotNumStreetNameInputRow, priceInputRow);
+				addFinancingAgreementModal.addComponents(clientNameInputRow, clientInfoInputRow, clientContactInputRow, lotNumStreetNameInputRow, priceInputRow);
 				await interaction.showModal(addFinancingAgreementModal);
 				break;
 			case 'addFinancingPayment':
@@ -438,7 +438,7 @@ module.exports.btnPressed = async (interaction) => {
 				var msgFinanceNum = currentMsg.embeds[0].data.fields[4].value;
 				var msgClientName = currentMsg.embeds[0].data.fields[5].value;
 				var msgClientInfo = currentMsg.embeds[0].data.fields[6].value;
-				var msgClientEmail = currentMsg.embeds[0].data.fields[7].value;
+				var msgclientContact = currentMsg.embeds[0].data.fields[7].value;
 				var msgStreetAddress = currentMsg.embeds[0].data.fields[8].value;
 				var msgSalePrice = currentMsg.embeds[0].data.fields[9].value;
 				var msgDownPayment = currentMsg.embeds[0].data.fields[10].value;
@@ -534,9 +534,9 @@ module.exports.btnPressed = async (interaction) => {
 							{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 							{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 							{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-							{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-							{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-							{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+							{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+							{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+							{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 							{ name: `Street Address:`, value: `${msgStreetAddress}` },
 							{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 							{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -554,9 +554,9 @@ module.exports.btnPressed = async (interaction) => {
 							{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 							{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 							{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-							{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-							{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-							{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+							{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+							{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+							{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 							{ name: `Street Address:`, value: `${msgStreetAddress}` },
 							{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 							{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },

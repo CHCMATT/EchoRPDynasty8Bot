@@ -38,8 +38,8 @@ module.exports = {
 						var msgPaymentDate = message.embeds[0].data.fields[2].value;
 						var msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
 						var msgFinanceNum = message.embeds[0].data.fields[4].value;
-						var msgOwnerInfo = message.embeds[0].data.fields[5].value;
-						var msgOwnerEmail = message.embeds[0].data.fields[6].value;
+						var msgClientInfo = message.embeds[0].data.fields[5].value;
+						var msgClientEmail = message.embeds[0].data.fields[6].value;
 						var msgStreetAddress = message.embeds[0].data.fields[7].value;
 						var msgSalePrice = message.embeds[0].data.fields[8].value;
 						var msgDownPayment = message.embeds[0].data.fields[9].value;
@@ -56,8 +56,8 @@ module.exports = {
 									{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 									{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 									{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-									{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
-									{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+									{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+									{ name: `Client Contact:`, value: `${msgClientEmail}`, inline: true },
 									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },

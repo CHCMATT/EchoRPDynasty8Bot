@@ -22,7 +22,7 @@ module.exports.checkPayments = async (client) => {
 				var msgFinanceNum = message.embeds[0].data.fields[4].value;
 				var msgClientName = message.embeds[0].data.fields[5].value;
 				var msgClientInfo = message.embeds[0].data.fields[6].value;
-				var msgClientEmail = message.embeds[0].data.fields[7].value;
+				var msgclientContact = message.embeds[0].data.fields[7].value;
 				var msgStreetAddress = message.embeds[0].data.fields[8].value;
 				var msgSalePrice = message.embeds[0].data.fields[9].value;
 				var msgDownPayment = message.embeds[0].data.fields[10].value;
@@ -45,9 +45,9 @@ module.exports.checkPayments = async (client) => {
 							{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 							{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 							{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-							{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-							{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-							{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+							{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+							{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+							{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 							{ name: `Street Address:`, value: `${msgStreetAddress}` },
 							{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 							{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -91,7 +91,7 @@ module.exports.checkPayments = async (client) => {
 						var msgFinanceNum = messageAfter.embeds[0].data.fields[4].value;
 						var msgClientName = messageAfter.embeds[0].data.fields[5].value;
 						var msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
-						var msgClientEmail = messageAfter.embeds[0].data.fields[7].value;
+						var msgclientContact = messageAfter.embeds[0].data.fields[7].value;
 						var msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
 						var msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
 						var msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
@@ -113,9 +113,9 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 									{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 									{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-									{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-									{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-									{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+									{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+									{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+									{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -133,9 +133,9 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
 									{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
 									{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-									{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-									{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-									{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+									{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+									{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+									{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -152,9 +152,9 @@ module.exports.checkPayments = async (client) => {
 						var overdueEmbed = new EmbedBuilder()
 							.setTitle('A Financing Agreement has overdue payments!')
 							.addFields(
-								{ name: `Owner Name:`, value: `${msgClientName}`, inline: true },
-								{ name: `Owner Info:`, value: `${msgClientInfo}`, inline: true },
-								{ name: `Owner Email:`, value: `${msgClientEmail}`, inline: true },
+								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+								{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+								{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 								{ name: `Last Payment Date:`, value: `${msgPaymentDate} (<t:${lastPaymentDate}:R>)` },
 								{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
 								{ name: `Amount Still Owed:`, value: `${msgAmtOwed}`, inline: true },

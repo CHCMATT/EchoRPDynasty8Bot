@@ -996,7 +996,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
 				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
-				var clientEmail = strCleanup(interaction.fields.getTextInputValue('clientEmailInput'));
+				var clientContact = strCleanup(interaction.fields.getTextInputValue('clientContactInput'));
 				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 
@@ -1026,7 +1026,7 @@ module.exports.modalSubmit = async (interaction) => {
 				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`;
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientEmail, lotNumStreetName, price, documentLink]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientContact, lotNumStreetName, price, documentLink]] }
 				});
 
 				let todayDate = moment().format('MMMM DD, YYYY');
@@ -1051,9 +1051,9 @@ module.exports.modalSubmit = async (interaction) => {
 							},
 						}, {
 							replaceAllText: {
-								replaceText: clientEmail,
+								replaceText: clientContact,
 								containsText: {
-									"text": "{client_email}",
+									"text": "{client_contact}",
 									"matchCase": true
 								}
 							},
@@ -1127,7 +1127,7 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
 						{ name: `Client Name:`, value: `${clientName}`, inline: true },
 						{ name: `Client Info:`, value: `${clientInfo}`, inline: true },
-						{ name: `Client Email:`, value: `${clientEmail}`, inline: true },
+						{ name: `Client Contact:`, value: `${clientContact}`, inline: true },
 						{ name: `Street Address:`, value: `${lotNumStreetName}` },
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
@@ -1187,9 +1187,9 @@ module.exports.modalSubmit = async (interaction) => {
 							var msgRealtor = message.embeds[0].data.fields[0].value;
 							var msgSaleDate = message.embeds[0].data.fields[1].value;
 							var msgFinanceNum = message.embeds[0].data.fields[4].value;
-							var msgOwnerName = message.embeds[0].data.fields[5].value;
-							var msgOwnerInfo = message.embeds[0].data.fields[6].value;
-							var msgOwnerEmail = message.embeds[0].data.fields[7].value;
+							var msgClientName = message.embeds[0].data.fields[5].value;
+							var msgClientInfo = message.embeds[0].data.fields[6].value;
+							var msgClientEmail = message.embeds[0].data.fields[7].value;
 							var msgStreetAddress = message.embeds[0].data.fields[8].value;
 							var msgSalePrice = message.embeds[0].data.fields[9].value;
 							var msgDownPayment = message.embeds[0].data.fields[10].value;
@@ -1225,9 +1225,9 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
 												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
 												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Owner Name:`, value: `${msgOwnerName}`, inline: true },
-												{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
-												{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+												{ name: `Client Contact:`, value: `${msgClientEmail}`, inline: true },
 												{ name: `Street Address:`, value: `${msgStreetAddress}` },
 												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -1245,9 +1245,9 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
 												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
 												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Owner Name:`, value: `${msgOwnerName}`, inline: true },
-												{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
-												{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+												{ name: `Client Contact:`, value: `${msgClientEmail}`, inline: true },
 												{ name: `Street Address:`, value: `${msgStreetAddress}` },
 												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
@@ -1288,9 +1288,9 @@ module.exports.modalSubmit = async (interaction) => {
 											{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
 											{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 											{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-											{ name: `Owner Name:`, value: `${msgOwnerName}`, inline: true },
-											{ name: `Owner Info:`, value: `${msgOwnerInfo}`, inline: true },
-											{ name: `Owner Email:`, value: `${msgOwnerEmail}`, inline: true },
+											{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+											{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+											{ name: `Client Contact:`, value: `${msgClientEmail}`, inline: true },
 											{ name: `Street Address:`, value: `${msgStreetAddress}` },
 											{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
