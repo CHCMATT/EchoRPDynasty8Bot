@@ -1233,7 +1233,7 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
 												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `${msgNotes}\n- Financing Payments completed on ${currPaymentDate}.` }
+												{ name: `Notes:`, value: `${msgNotes}\n- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
 											)
 											.setColor('FAD643')];
 									} else {
@@ -1253,14 +1253,14 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
 												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `- Financing Payments completed on ${currPaymentDate}.` }
+												{ name: `Notes:`, value: `- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
 											)
 											.setColor('FAD643')];
 									}
 
 									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
 									var currMsg = await channel.messages.fetch(msgId);
-									currMsg.edit({ embeds: agreementEmbed });
+									currMsg.edit({ embeds: agreementEmbed, components: [] });
 
 									var embeds = [new EmbedBuilder()
 										.setTitle('A new Financing Payment has been submitted!')
@@ -1280,28 +1280,51 @@ module.exports.modalSubmit = async (interaction) => {
 									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 
-									var agreementEmbed = [new EmbedBuilder()
-										.setTitle('A new Financing Agreement has been submitted!')
-										.addFields(
-											{ name: `Realtor Name:`, value: `${msgRealtor}` },
-											{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-											{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-											{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
-											{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-											{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-											{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-											{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-											{ name: `Street Address:`, value: `${msgStreetAddress}` },
-											{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-											{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-											{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
-											{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										)
-										.setColor('FAD643')];
+									if (message.embeds[0].data.fields[13]) {
+										var agreementEmbed = [new EmbedBuilder()
+											.setTitle('A new Financing Agreement has been submitted!')
+											.addFields(
+												{ name: `Realtor Name:`, value: `${msgRealtor}` },
+												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
+												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
+												{ name: `Street Address:`, value: `${msgStreetAddress}` },
+												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
+												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+												{ name: `Notes:`, value: `${msgNotes}\n- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.` }
+											)
+											.setColor('FAD643')];
+									} else {
+										var agreementEmbed = [new EmbedBuilder()
+											.setTitle('A new Financing Agreement has been submitted!')
+											.addFields(
+												{ name: `Realtor Name:`, value: `${msgRealtor}` },
+												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
+												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
+												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
+												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
+												{ name: `Street Address:`, value: `${msgStreetAddress}` },
+												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
+												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
+												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
+												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+												{ name: `Notes:`, value: `- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.` }
+											)
+											.setColor('FAD643')];
+									}
 
 									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
 									var currMsg = await channel.messages.fetch(msgId);
-									currMsg.edit({ embeds: agreementEmbed });
+									currMsg.edit({ embeds: agreementEmbed, components: [] });
 
 									var embeds = [new EmbedBuilder()
 										.setTitle('A new Financing Payment has been submitted!')
