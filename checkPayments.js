@@ -4,7 +4,7 @@ let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 module.exports.checkPayments = async (client) => {
 	// check for $0 due payments
 	let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
-	console.log(`Checking for $0 due payments at ${logTime}`);
+	console.log(`Checking for $0 due payments on ${logTime}`);
 
 	var now = Math.floor(new Date().getTime() / 1000.0);
 
@@ -68,12 +68,12 @@ module.exports.checkPayments = async (client) => {
 	setTimeout(async () => {
 		// check for overdue payments
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
-		console.log(`Checking for overdue payments at ${logTime}`);
+		console.log(`Checking for overdue payments on ${logTime}`);
 
 		var channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
 		var messagesAfter = await channelAfter.messages.fetch();
 
-		var paymentOverdueDate = (now - (86400 * 14)); // 86400 seconds in a day times 14 days
+		var paymentOverdueDate = (now - (86400 * 0)); // 86400 seconds in a day times 14 days
 
 		messagesAfter.forEach(async (messageAfter) => {
 			if (messageAfter.embeds[0]) {
