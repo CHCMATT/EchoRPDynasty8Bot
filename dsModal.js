@@ -1204,7 +1204,7 @@ module.exports.modalSubmit = async (interaction) => {
 							if (msgFinanceNum === financingNum) {
 								var afterPaymentAmt = amtOwed - paymentAmt;
 								agreementFound = true;
-								if (afterPaymentAmt < 0) {
+								if (afterPaymentAmt < 0) { // if attempting to pay more than they owe
 									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 									await interaction.reply({
@@ -1212,7 +1212,7 @@ module.exports.modalSubmit = async (interaction) => {
 										ephemeral: true
 									});
 									return;
-								} else if (afterPaymentAmt == 0) {
+								} else if (afterPaymentAmt == 0) { // if payments are no longer due ($0 balance)
 									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 
@@ -1276,7 +1276,7 @@ module.exports.modalSubmit = async (interaction) => {
 									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
 
 									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
-								} else {
+								} else { // if payments are still due
 									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
 
@@ -1287,7 +1287,7 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Realtor Name:`, value: `${msgRealtor}` },
 												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
 												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+												{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
 												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
 												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
@@ -1307,7 +1307,7 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Realtor Name:`, value: `${msgRealtor}` },
 												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
 												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
+												{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
 												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
 												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
 												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
