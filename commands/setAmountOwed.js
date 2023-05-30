@@ -36,6 +36,9 @@ module.exports = {
 			let channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
 			let messages = await channel.messages.fetch();
 
+			let now = Math.floor(new Date().getTime() / 1000.0);
+			let adjustmentDate = `<t:${now}:d>`;
+
 			messages.forEach(async (message) => {
 				if (message.embeds[0]) {
 					let embedTitle = message.embeds[0].data.title;
@@ -57,6 +60,7 @@ module.exports = {
 						if (msgFinanceNum == financingNum) {
 							countFound++;
 							if (message.embeds[0].data.fields[13]) {
+								let msgNotes = message.embeds[0].data.fields[13].value;
 								let agreementEmbed = [new EmbedBuilder()
 									.setTitle('A new Financing Agreement has been submitted!')
 									.addFields(
@@ -73,7 +77,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${newAmount}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `${msgNotes}` }
+										{ name: `Notes:`, value: `${msgNotes}\n- Amount Owed adjusted by <@${interaction.user.id}> on ${adjustmentDate}.` }
 									)
 									.setColor('FAD643')];
 
@@ -96,6 +100,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${newAmount}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+										{ name: `Notes:`, value: `- Amount Owed adjusted by <@${interaction.user.id}> on ${adjustmentDate}.` }
 									)
 									.setColor('FAD643')];
 
