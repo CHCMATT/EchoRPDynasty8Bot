@@ -1,6 +1,12 @@
 let moment = require('moment');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
+var formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports.checkPayments = async (client) => {
 	// check for $0 due payments
 	let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
@@ -78,8 +84,7 @@ module.exports.checkPayments = async (client) => {
 		messagesAfter.forEach(async (messageAfter) => {
 			if (messageAfter.embeds[0]) {
 				var embedTitle = messageAfter.embeds[0].data.title;
-				if (embedTitle === 'A new Financing Agreement has been submitted!') {
-
+				if (embedTitle === 'A new Financing Agreement has been submitted!' && messageAfter.components.length == 0) {
 					var msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
 					var lastPaymentDate = Number(msgPaymentDate.replaceAll('<t:', '').replaceAll(':d>', ''));
 
@@ -101,6 +106,11 @@ module.exports.checkPayments = async (client) => {
 							var msgNotes = messageAfter.embeds[0].data.fields[13].value;
 						}
 
+						let amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''))
+						amtOwed = amtOwed + 10000;
+
+						let newAmtOwed = formatter.format(amtOwed);
+
 						var now = Math.floor(new Date().getTime() / 1000.0);
 						var evictionAvailDate = `<t:${now}:d>`;
 
@@ -119,9 +129,9 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
+									{ name: `Amount Owed:`, value: `${newAmtOwed}`, inline: true },
 									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-									{ name: `Notes:`, value: `${msgNotes}\n- Eviction Notice available on ${evictionAvailDate}.` },
+									{ name: `Notes:`, value: `${msgNotes}\n- $10,000 Late Fee added on ${evictionAvailDate}.\n- Eviction Notice available on ${evictionAvailDate}.` },
 								)
 								.setColor('FAD643');
 						} else {
@@ -139,9 +149,9 @@ module.exports.checkPayments = async (client) => {
 									{ name: `Street Address:`, value: `${msgStreetAddress}` },
 									{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 									{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
+									{ name: `Amount Owed:`, value: `${newAmtOwed}`, inline: true },
 									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-									{ name: `Notes:`, value: `- Eviction Notice Available on ${evictionAvailDate}.` },
+									{ name: `Notes:`, value: `- $10,000 Late Fee added on ${evictionAvailDate}.\n- Eviction Notice available on ${evictionAvailDate}.` },
 								)
 								.setColor('FAD643');
 						}
@@ -159,6 +169,7 @@ module.exports.checkPayments = async (client) => {
 								{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
 								{ name: `Amount Still Owed:`, value: `${msgAmtOwed}`, inline: true },
 								{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+								{ name: `Message Link:`, value: `https://discord.com/channels/${messageAfter.guildId}/${messageAfter.channelId}/${messageAfter.id}` },
 							)
 							.setColor('B80600');
 
@@ -167,8 +178,8 @@ module.exports.checkPayments = async (client) => {
 				}
 			}
 		})
-	}, (0.5 * 60000))
-}; // 0.5 minute times 60000ms
+	}, (0.25 * 60000))
+}; // 0.25 minute times 60000ms
 
 
 function addBtnRows() {
