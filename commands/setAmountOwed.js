@@ -81,7 +81,7 @@ module.exports = {
 									)
 									.setColor('FAD643')];
 
-								message.edit({ embeds: agreementEmbed });
+								await message.edit({ embeds: agreementEmbed });
 
 							} else {
 								let agreementEmbed = [new EmbedBuilder()
@@ -104,7 +104,7 @@ module.exports = {
 									)
 									.setColor('FAD643')];
 
-								message.edit({ embeds: agreementEmbed });
+								await message.edit({ embeds: agreementEmbed });
 							}
 
 
