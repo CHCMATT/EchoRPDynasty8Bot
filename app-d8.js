@@ -68,7 +68,7 @@ client.once('ready', async () => {
 	client.googleSheets = googleSheets.spreadsheets;
 	console.log(`[${fileName}] Connected to Google Sheets!`);
 
-	var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
+	/*var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	var cmdList = []; // Create an empty array for pushing each command file to
 	for (var file of commandFiles) { // For each file in command files group
 		var command = require(`./commands/${file}`); // Get the information that is in the file
@@ -91,7 +91,7 @@ client.once('ready', async () => {
 			client.guilds.cache.get(process.env.DISCORD_SERVER_ID).commands.permissions.set({ command: cmdID, permissions: permission })
 				.catch(console.error);
 		}
-	}
+	}*/
 
 	interact(client); // Fire whenever an interaction is created
 	console.log(`[${fileName}] Connected to ${client.guilds.cache.size} guild(s).`); // Lists the number of guilds that the client is connected to
