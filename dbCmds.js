@@ -31,15 +31,15 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, financialPayments: 1, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 1 }, { upsert: true });
 };
 
 module.exports.resetPersStats = async (discordId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, currentCommission: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, financialAgreements: 0, financialPayments: 0, currentCommission: 0 }, { upsert: true });
 };
 
 module.exports.readPersStats = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
+	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
 	return result;
 };
 
@@ -62,12 +62,12 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 
 //monthly statistics report stuff
 module.exports.monthlyStatsRep = async () => {
-	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, _id: 0 });
+	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
 
 module.exports.resetMonthlyStats = async (discordId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0 }, { upsert: true });
 };
 
 //personnel message id stuff
@@ -151,7 +151,7 @@ module.exports.readFinanceNum = async (summaryName) => {
 };
 
 module.exports.currStats = async () => {
-	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, _id: 0 });
+	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
 

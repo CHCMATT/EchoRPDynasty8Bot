@@ -9,14 +9,16 @@ module.exports.postEmbed = async (client) => {
 	let today = `<t:${now}:d>`;
 
 	for (let i = 0; i < employeeStats.length; i++) {
-		if (employeeStats[i].housesSold > 0 || employeeStats[i].warehousesSold > 0 || employeeStats[i].propertiesQuoted > 0 || employeeStats[i].propertiesRepod > 0 || employeeStats[i].activityChecks > 0 || employeeStats[i].miscSales > 0) {
-			overallDescList = overallDescList.concat(`__${employeeStats[i].charName}__:
-		• **Houses Sold:** ${employeeStats[i].housesSold}
-		• **Warehouses Sold:** ${employeeStats[i].warehousesSold}
-		• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}
-		• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
-		• **Train Activities Checked:** ${employeeStats[i].activityChecks}
-		• **Misc. Sales Completed:** ${employeeStats[i].miscSales}\n\n`);
+		if (employeeStats[i].housesSold > 0 || employeeStats[i].warehousesSold > 0 || employeeStats[i].propertiesQuoted > 0 || employeeStats[i].propertiesRepod > 0 || employeeStats[i].activityChecks > 0 || employeeStats[i].miscSales > 0 || employeeStats[i].financialAgreements > 0 || employeeStats[i].financialPayments > 0) {
+			overallDescList = overallDescList.concat(`__${employeeStats[i].charName}__: 
+• **Houses Sold:** ${employeeStats[i].housesSold}
+• **Warehouses Sold:** ${employeeStats[i].warehousesSold}
+• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}
+• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
+• **Train Activities Checked:** ${employeeStats[i].activityChecks}
+• **Misc. Sales Completed:** ${employeeStats[i].miscSales}
+• **Financial Agreements Completed:** ${employeeStats[i].financialAgreements}
+• **Financial Payments Accepted:** ${employeeStats[i].financialPayments}\n\n`);
 		}
 	}
 
@@ -32,14 +34,16 @@ module.exports.postEmbed = async (client) => {
 	let monthlyDescList = '';
 
 	for (let i = 0; i < employeeStats.length; i++) {
-		if (employeeStats[i].monthlyHousesSold > 0 || employeeStats[i].monthlyWarehousesSold > 0 || employeeStats[i].monthlyPropertiesQuoted > 0 || employeeStats[i].monthlyPropertiesRepod > 0 || employeeStats[i].monthlyActivityChecks > 0 || employeeStats[i].monthlyMiscSales > 0) {
+		if (employeeStats[i].monthlyHousesSold > 0 || employeeStats[i].monthlyWarehousesSold > 0 || employeeStats[i].monthlyPropertiesQuoted > 0 || employeeStats[i].monthlyPropertiesRepod > 0 || employeeStats[i].monthlyActivityChecks > 0 || employeeStats[i].monthlyMiscSales > 0 || employeeStats[i].monthlyFinancialAgreements > 0 || employeeStats[i].monthlyFinancialPayments > 0) {
 			monthlyDescList = monthlyDescList.concat(`__${employeeStats[i].charName}__:
-		• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}
-		• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}
-		• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}
-		• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
-		• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
-		• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}\n\n`);
+• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}
+• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}
+• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}
+• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
+• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
+• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}
+• **Financial Agreements Completed:** ${employeeStats[i].monthlyFinancialAgreements}
+• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}\n\n`);
 		}
 	}
 
@@ -62,6 +66,8 @@ module.exports.postEmbed = async (client) => {
 	let countPropertiesRepod = await dbCmds.readSummValue("countPropertiesRepod");
 	let countTrainActivitiesChecked = await dbCmds.readSummValue("countTrainActivitiesChecked");
 	let countMiscSales = await dbCmds.readSummValue("countMiscSales");
+	let countFinancialAgreements = await dbCmds.readSummValue("countFinancialAgreements");
+	let countFinancialPayments = await dbCmds.readSummValue("countFinancialPayments");
 
 	// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
@@ -71,6 +77,8 @@ module.exports.postEmbed = async (client) => {
 	countPropertiesRepod = countPropertiesRepod.toString();
 	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
 	countMiscSales = countMiscSales.toString();
+	countFinancialAgreements = countFinancialAgreements.toString();
+	countFinancialPayments = countFinancialPayments.toString();
 
 	let housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
@@ -102,9 +110,19 @@ module.exports.postEmbed = async (client) => {
 		.setDescription(countMiscSales)
 		.setColor('#C9A227');
 
+	var finanAgreeEmbed = new EmbedBuilder()
+		.setTitle('Amount of Financial Agreements Completed:')
+		.setDescription(countFinancialAgreements)
+		.setColor('#DBB42C');
+
+	var finanPaymentsEmbed = new EmbedBuilder()
+		.setTitle('Amount of Financial Payments Accepted:')
+		.setDescription(countFinancialPayments)
+		.setColor('#EDC531');
+
 	let btnRows = addBtnRows();
 
-	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed], components: btnRows });
+	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed, finanAgreeEmbed, finanPaymentsEmbed], components: btnRows });
 
 	await dbCmds.setMsgId("embedMsg", client.embedMsg.id);
 };

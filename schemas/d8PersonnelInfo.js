@@ -19,6 +19,7 @@ var d8PersonnelInfoSchema = new Schema({
 	propertiesQuoted: reqNum,
 	activityChecks: reqNum,
 	miscSales: reqNum,
+	financialAgreements: reqNum,
 	embedColor: reqString,
 	embedMsgId: reqString,
 	currentCommission: reqNum,
@@ -29,6 +30,9 @@ var d8PersonnelInfoSchema = new Schema({
 	monthlyPropertiesQuoted: reqNum,
 	monthlyActivityChecks: reqNum,
 	monthlyMiscSales: reqNum,
+	monthlyFinancialAgreements: reqNum,
+	financialPayments: reqNum,
+	monthlyFinancialPayments: reqNum,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);

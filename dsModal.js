@@ -1138,7 +1138,14 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-				await interaction.editReply({ content: `Successfully added this agreement to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: <${documentLink}>`, ephemeral: true });
+				await dbCmds.addOneSumm("countFinancialAgreements");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
+				await editEmbed.editEmbed(interaction.client);
+
+				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
+
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: <${documentLink}>`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;
@@ -1336,6 +1343,11 @@ module.exports.modalSubmit = async (interaction) => {
 											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
 										)
 										.setColor('FFE169')];
+
+									await dbCmds.addOneSumm("countFinancialPayments");
+									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
+									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
+									await editEmbed.editEmbed(interaction.client);
 
 									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
 
