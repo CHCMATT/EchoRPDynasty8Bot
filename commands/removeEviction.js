@@ -71,7 +71,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${formattedNewAmtOwed}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `${msgNotes}\n- Eviction Notice removed by <@${interaction.user.id}> on ${today}.` }
+										{ name: `Notes:`, value: `${msgNotes}\n- $10,000 Late Fee removed by <@${interaction.user.id}> on ${today}.\n- Eviction Notice removed by <@${interaction.user.id}> on ${today}.` }
 									)
 									.setColor('FAD643')];
 
@@ -94,7 +94,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${formattedNewAmtOwed}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `- Eviction Notice removed by <@${interaction.user.id}> on ${today}.` }
+										{ name: `Notes:`, value: `- $10,000 Late Fee removed by <@${interaction.user.id}> on ${today}.\n- Eviction Notice removed by <@${interaction.user.id}> on ${today}.` }
 									)
 									.setColor('FAD643')];
 
