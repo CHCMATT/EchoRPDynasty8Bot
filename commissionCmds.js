@@ -1,27 +1,27 @@
-var dbCmds = require('./dbCmds.js');
-var { EmbedBuilder } = require('discord.js');
+let dbCmds = require('./dbCmds.js');
+let { EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0
 });
 
 module.exports.commissionReport = async (client) => {
-	var lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
-	var lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
-	var now = Math.floor(new Date().getTime() / 1000.0);
-	var today = `<t:${now}:d>`;
-	var dateTime = new Date().toString().slice(0, 24);
-	var lastRepDiff = (now - lastRepDt);
+	let lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
+	let lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
+	let now = Math.floor(new Date().getTime() / 1000.0);
+	let today = `<t:${now}:d>`;
+	let dateTime = new Date().toString().slice(0, 24);
+	let lastRepDiff = (now - lastRepDt);
 
 	if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 64800) {
 		console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff})`)
 		return "fail";
 	} else {
 
-		var peopleArray = await dbCmds.commissionRep();
-		var commissionDescList = '';
+		let peopleArray = await dbCmds.commissionRep();
+		let commissionDescList = '';
 
 		for (i = 0; i < peopleArray.length; i++) {
 			commissionDescList = commissionDescList.concat(`• **${peopleArray[i].charName}** (\`${peopleArray[i].bankAccount}\`): ${formatter.format(peopleArray[i].currentCommission)}\n`);
@@ -33,11 +33,11 @@ module.exports.commissionReport = async (client) => {
 		}
 
 		if (lastRep == null || lastRep.includes("Value not found")) {
-			var nowMinus7 = now - 604800;
-			var lastRep = `<t:${nowMinus7}:d>`
+			let nowMinus7 = now - 604800;
+			let lastRep = `<t:${nowMinus7}:d>`
 		}
 
-		var embed = new EmbedBuilder()
+		let embed = new EmbedBuilder()
 			.setTitle(`Weekly Commission Report for ${lastRep} through ${today}:`)
 			.setDescription(commissionDescList)
 			.setColor('EDC531');
@@ -46,8 +46,8 @@ module.exports.commissionReport = async (client) => {
 		// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 		await dbCmds.setRepDate("lastCommissionReportDate", today);
 
-		var reason = `Commission Report triggered on ${today}`
-		var notificationEmbed = new EmbedBuilder()
+		let reason = `Commission Report triggered on ${today}`
+		let notificationEmbed = new EmbedBuilder()
 			.setTitle('Commission Modified Automatically:')
 			.setDescription(`\`System\` reset all realtor's commissions to \`$0\`.\n\n**Reason:** ${reason}.`)
 			.setColor('#1EC276');

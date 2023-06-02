@@ -1,14 +1,14 @@
-var dbCmds = require('./dbCmds.js');
-var editEmbed = require('./editEmbed.js');
-var { EmbedBuilder } = require('discord.js');
+let dbCmds = require('./dbCmds.js');
+let editEmbed = require('./editEmbed.js');
+let { EmbedBuilder } = require('discord.js');
 
 module.exports.statsReport = async (client) => {
-	var lastRep = await dbCmds.readRepDate("lastRealtorStatsReportDate");
-	var now = Math.floor(new Date().getTime() / 1000.0);
-	var today = `<t:${now}:d>`;
+	let lastRep = await dbCmds.readRepDate("lastRealtorStatsReportDate");
+	let now = Math.floor(new Date().getTime() / 1000.0);
+	let today = `<t:${now}:d>`;
 
-	var statsArray = await dbCmds.monthlyStatsRep();
-	var statsDescList = '';
+	let statsArray = await dbCmds.monthlyStatsRep();
+	let statsDescList = '';
 
 	for (i = 0; i < statsArray.length; i++) {
 		statsDescList = statsDescList.concat(`__${statsArray[i].charName}__:
@@ -24,15 +24,15 @@ module.exports.statsReport = async (client) => {
 	await editEmbed.editEmbed(client);
 
 	if (lastRep == null || lastRep.includes("Value not found")) {
-		var nowMinus7 = now - 604800;
-		var lastRep = `<t:${nowMinus7}:d>`
+		let nowMinus7 = now - 604800;
+		let lastRep = `<t:${nowMinus7}:d>`
 	}
 
 	if (statsDescList == '') {
 		statsDescList = "There is no realtor data to display for this time period."
 	}
 
-	var embed = new EmbedBuilder()
+	let embed = new EmbedBuilder()
 		.setTitle(`Monthly Realtor Stats Report for ${lastRep} through ${today}:`)
 		.setDescription(statsDescList)
 		.setColor('EDC531');

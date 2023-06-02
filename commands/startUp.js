@@ -1,5 +1,5 @@
-var startup = require('../startup.js');
-var { PermissionsBitField } = require('discord.js');
+let startup = require('../startup.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'startup',

@@ -53,7 +53,7 @@ module.exports = {
 						if (msgFinanceNum == financingNum) {
 							countFound++;
 							if (message.embeds[0].data.fields[13]) {
-								var msgNotes = message.embeds[0].data.fields[13].value;
+								let msgNotes = message.embeds[0].data.fields[13].value;
 
 								let embeds = new EmbedBuilder()
 									.setTitle('A Financing Agreement has been repossessed!')

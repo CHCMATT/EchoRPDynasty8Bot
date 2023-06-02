@@ -1,12 +1,12 @@
-var { PermissionsBitField } = require('discord.js');
-var commissionCmds = require('../commissionCmds.js');
+let { PermissionsBitField } = require('discord.js');
+let commissionCmds = require('../commissionCmds.js');
 
 module.exports = {
 	name: 'commissionreport',
 	description: 'Manually runs the commission report for the Management team',
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var result = await commissionCmds.commissionReport(interaction.client);
+			let result = await commissionCmds.commissionReport(interaction.client);
 			if (result === "success") {
 				await interaction.reply({ content: `Successfully ran the commission report.`, ephemeral: true });
 			} else {

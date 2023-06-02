@@ -1,5 +1,5 @@
-var dsBtn = require('./dsBtn');
-var dsModal = require('./dsModal');
+let dsBtn = require('./dsBtn');
+let dsModal = require('./dsModal');
 
 module.exports = (client) => {
 	client.on('interactionCreate', async interaction => {

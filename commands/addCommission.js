@@ -1,7 +1,7 @@
-var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField, EmbedBuilder } = require('discord.js');
+let dbCmds = require('../dbCmds.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0
@@ -32,18 +32,17 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
+			let user = interaction.options.getUser('user');
 			if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				var amount = Math.abs(interaction.options.getInteger('amount'));
-				var reason = interaction.options.getString('reason');
-				var formattedAmt = formatter.format(amount);
-				var personnelData = await dbCmds.readPersStats(user.id)
+				let amount = Math.abs(interaction.options.getInteger('amount'));
+				let reason = interaction.options.getString('reason');
+				let formattedAmt = formatter.format(amount);
 				await dbCmds.addCommission(user.id, amount)
-				var personnelData = await dbCmds.readPersStats(user.id)
-				var newCommission = personnelData.currentCommission;
-				var formattedNewCommission = formatter.format(newCommission);
+				let personnelData = await dbCmds.readPersStats(user.id)
+				let newCommission = personnelData.currentCommission;
+				let formattedNewCommission = formatter.format(newCommission);
 				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
+				let notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Manually:')
 					.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 					.setColor('#FFA630');

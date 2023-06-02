@@ -1,7 +1,7 @@
 let moment = require('moment');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0
@@ -12,38 +12,38 @@ module.exports.checkPayments = async (client) => {
 	let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 	console.log(`Checking for $0 due payments on ${logTime}`);
 
-	var now = Math.floor(new Date().getTime() / 1000.0);
+	let now = Math.floor(new Date().getTime() / 1000.0);
 
-	var channel = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
-	var messages = await channel.messages.fetch();
+	let channel = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
+	let messages = await channel.messages.fetch();
 
 	messages.forEach(async (message) => {
 		if (message.embeds[0]) {
-			var embedTitle = message.embeds[0].data.title;
+			let embedTitle = message.embeds[0].data.title;
 			if (embedTitle === 'A new Financing Agreement has been submitted!') {
-				var msgRealtor = message.embeds[0].data.fields[0].value;
-				var msgSaleDate = message.embeds[0].data.fields[1].value;
-				var msgPaymentDate = message.embeds[0].data.fields[2].value;
-				var msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
-				var msgFinanceNum = message.embeds[0].data.fields[4].value;
-				var msgClientName = message.embeds[0].data.fields[5].value;
-				var msgClientInfo = message.embeds[0].data.fields[6].value;
-				var msgclientContact = message.embeds[0].data.fields[7].value;
-				var msgStreetAddress = message.embeds[0].data.fields[8].value;
-				var msgSalePrice = message.embeds[0].data.fields[9].value;
-				var msgDownPayment = message.embeds[0].data.fields[10].value;
-				var msgAmtOwed = message.embeds[0].data.fields[11].value;
-				var msgFinancingAgreement = message.embeds[0].data.fields[12].value;
+				let msgRealtor = message.embeds[0].data.fields[0].value;
+				let msgSaleDate = message.embeds[0].data.fields[1].value;
+				let msgPaymentDate = message.embeds[0].data.fields[2].value;
+				let msgNextPaymentDateString = message.embeds[0].data.fields[3].value;
+				let msgFinanceNum = message.embeds[0].data.fields[4].value;
+				let msgClientName = message.embeds[0].data.fields[5].value;
+				let msgClientInfo = message.embeds[0].data.fields[6].value;
+				let msgclientContact = message.embeds[0].data.fields[7].value;
+				let msgStreetAddress = message.embeds[0].data.fields[8].value;
+				let msgSalePrice = message.embeds[0].data.fields[9].value;
+				let msgDownPayment = message.embeds[0].data.fields[10].value;
+				let msgAmtOwed = message.embeds[0].data.fields[11].value;
+				let msgFinancingAgreement = message.embeds[0].data.fields[12].value;
 				if (message.embeds[0].data.fields[13]) {
-					var msgNotes = message.embeds[0].data.fields[13].value;
+					let msgNotes = message.embeds[0].data.fields[13].value;
 				} else {
-					var msgNotes = 'N/A'
+					let msgNotes = 'N/A'
 				}
 
-				var amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''));
+				let amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''));
 
 				if (amtOwed <= 0) {
-					var embeds = new EmbedBuilder()
+					let embeds = new EmbedBuilder()
 						.setTitle('A Financing Agreement has been completed!')
 						.addFields(
 							{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -76,34 +76,34 @@ module.exports.checkPayments = async (client) => {
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 		console.log(`Checking for overdue payments on ${logTime}`);
 
-		var channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
-		var messagesAfter = await channelAfter.messages.fetch();
+		let channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
+		let messagesAfter = await channelAfter.messages.fetch();
 
-		var paymentOverdueDate = (now - (86400 * 14)); // 86400 seconds in a day times 14 days
+		let paymentOverdueDate = (now - (86400 * 14)); // 86400 seconds in a day times 14 days
 
 		messagesAfter.forEach(async (messageAfter) => {
 			if (messageAfter.embeds[0]) {
-				var embedTitle = messageAfter.embeds[0].data.title;
+				let embedTitle = messageAfter.embeds[0].data.title;
 				if (embedTitle === 'A new Financing Agreement has been submitted!' && messageAfter.components.length == 0) {
-					var msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
-					var lastPaymentDate = Number(msgPaymentDate.replaceAll('<t:', '').replaceAll(':d>', ''));
+					let msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
+					let lastPaymentDate = Number(msgPaymentDate.replaceAll('<t:', '').replaceAll(':d>', ''));
 
 					if (lastPaymentDate <= paymentOverdueDate) {
-						var msgRealtor = messageAfter.embeds[0].data.fields[0].value;
-						var msgSaleDate = messageAfter.embeds[0].data.fields[1].value;
-						var msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
-						var msgNextPaymentDateString = messageAfter.embeds[0].data.fields[3].value;
-						var msgFinanceNum = messageAfter.embeds[0].data.fields[4].value;
-						var msgClientName = messageAfter.embeds[0].data.fields[5].value;
-						var msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
-						var msgclientContact = messageAfter.embeds[0].data.fields[7].value;
-						var msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
-						var msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
-						var msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
-						var msgAmtOwed = messageAfter.embeds[0].data.fields[11].value;
-						var msgFinancingAgreement = messageAfter.embeds[0].data.fields[12].value;
+						let msgRealtor = messageAfter.embeds[0].data.fields[0].value;
+						let msgSaleDate = messageAfter.embeds[0].data.fields[1].value;
+						let msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
+						let msgNextPaymentDateString = messageAfter.embeds[0].data.fields[3].value;
+						let msgFinanceNum = messageAfter.embeds[0].data.fields[4].value;
+						let msgClientName = messageAfter.embeds[0].data.fields[5].value;
+						let msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
+						let msgclientContact = messageAfter.embeds[0].data.fields[7].value;
+						let msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
+						let msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
+						let msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
+						let msgAmtOwed = messageAfter.embeds[0].data.fields[11].value;
+						let msgFinancingAgreement = messageAfter.embeds[0].data.fields[12].value;
 						if (messageAfter.embeds[0].data.fields[13]) {
-							var msgNotes = messageAfter.embeds[0].data.fields[13].value;
+							let msgNotes = messageAfter.embeds[0].data.fields[13].value;
 						}
 
 						let amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''))
@@ -111,11 +111,11 @@ module.exports.checkPayments = async (client) => {
 
 						let newAmtOwed = formatter.format(amtOwed);
 
-						var now = Math.floor(new Date().getTime() / 1000.0);
-						var evictionAvailDate = `<t:${now}:d>`;
+						let now = Math.floor(new Date().getTime() / 1000.0);
+						let evictionAvailDate = `<t:${now}:d>`;
 
 						if (messageAfter.embeds[0].data.fields[13]) {
-							var currentEmbed = new EmbedBuilder()
+							let currentEmbed = new EmbedBuilder()
 								.setTitle('A new Financing Agreement has been submitted!')
 								.addFields(
 									{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -135,7 +135,7 @@ module.exports.checkPayments = async (client) => {
 								)
 								.setColor('FAD643');
 						} else {
-							var currentEmbed = new EmbedBuilder()
+							let currentEmbed = new EmbedBuilder()
 								.setTitle('A new Financing Agreement has been submitted!')
 								.addFields(
 									{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -159,7 +159,7 @@ module.exports.checkPayments = async (client) => {
 						let btnRows = addBtnRows();
 						await messageAfter.edit({ embeds: [currentEmbed], components: btnRows });
 
-						var overdueEmbed = new EmbedBuilder()
+						let overdueEmbed = new EmbedBuilder()
 							.setTitle('A Financing Agreement has overdue payments!')
 							.addFields(
 								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
@@ -185,34 +185,34 @@ module.exports.checkPayments = async (client) => {
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 		console.log(`Checking for overdue agreements with no payments after 3 days on ${logTime}`);
 
-		var channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
-		var messagesAfter = await channelAfter.messages.fetch();
+		let channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
+		let messagesAfter = await channelAfter.messages.fetch();
 
-		var overdueNoPaymentsDate = (now - (86400 * 18)); // 86400 seconds in a day times 18 days
+		let overdueNoPaymentsDate = (now - (86400 * 18)); // 86400 seconds in a day times 18 days
 
 		messagesAfter.forEach(async (messageAfter) => {
 			if (messageAfter.embeds[0]) {
-				var embedTitle = messageAfter.embeds[0].data.title;
+				let embedTitle = messageAfter.embeds[0].data.title;
 				if (embedTitle === 'A new Financing Agreement has been submitted!' && messageAfter.components.length == 0) {
-					var msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
-					var lastPaymentDate = Number(msgPaymentDate.replaceAll('<t:', '').replaceAll(':d>', ''));
+					let msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
+					let lastPaymentDate = Number(msgPaymentDate.replaceAll('<t:', '').replaceAll(':d>', ''));
 
 					if (lastPaymentDate <= overdueNoPaymentsDate) {
-						var msgRealtor = messageAfter.embeds[0].data.fields[0].value;
-						var msgSaleDate = messageAfter.embeds[0].data.fields[1].value;
-						var msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
-						var msgNextPaymentDateString = messageAfter.embeds[0].data.fields[3].value;
-						var msgFinanceNum = messageAfter.embeds[0].data.fields[4].value;
-						var msgClientName = messageAfter.embeds[0].data.fields[5].value;
-						var msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
-						var msgclientContact = messageAfter.embeds[0].data.fields[7].value;
-						var msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
-						var msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
-						var msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
-						var msgAmtOwed = messageAfter.embeds[0].data.fields[11].value;
-						var msgFinancingAgreement = messageAfter.embeds[0].data.fields[12].value;
+						let msgRealtor = messageAfter.embeds[0].data.fields[0].value;
+						let msgSaleDate = messageAfter.embeds[0].data.fields[1].value;
+						let msgPaymentDate = messageAfter.embeds[0].data.fields[2].value;
+						let msgNextPaymentDateString = messageAfter.embeds[0].data.fields[3].value;
+						let msgFinanceNum = messageAfter.embeds[0].data.fields[4].value;
+						let msgClientName = messageAfter.embeds[0].data.fields[5].value;
+						let msgClientInfo = messageAfter.embeds[0].data.fields[6].value;
+						let msgclientContact = messageAfter.embeds[0].data.fields[7].value;
+						let msgStreetAddress = messageAfter.embeds[0].data.fields[8].value;
+						let msgSalePrice = messageAfter.embeds[0].data.fields[9].value;
+						let msgDownPayment = messageAfter.embeds[0].data.fields[10].value;
+						let msgAmtOwed = messageAfter.embeds[0].data.fields[11].value;
+						let msgFinancingAgreement = messageAfter.embeds[0].data.fields[12].value;
 						if (messageAfter.embeds[0].data.fields[13]) {
-							var msgNotes = messageAfter.embeds[0].data.fields[13].value;
+							let msgNotes = messageAfter.embeds[0].data.fields[13].value;
 						}
 
 						let amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''))
@@ -220,11 +220,11 @@ module.exports.checkPayments = async (client) => {
 
 						let newAmtOwed = formatter.format(amtOwed);
 
-						var now = Math.floor(new Date().getTime() / 1000.0);
-						var evictionAvailDate = `<t:${now}:d>`;
+						let now = Math.floor(new Date().getTime() / 1000.0);
+						let evictionAvailDate = `<t:${now}:d>`;
 
 						if (messageAfter.embeds[0].data.fields[13]) {
-							var currentEmbed = new EmbedBuilder()
+							let currentEmbed = new EmbedBuilder()
 								.setTitle('A new Financing Agreement has been submitted!')
 								.addFields(
 									{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -244,7 +244,7 @@ module.exports.checkPayments = async (client) => {
 								)
 								.setColor('FAD643');
 						} else {
-							var currentEmbed = new EmbedBuilder()
+							let currentEmbed = new EmbedBuilder()
 								.setTitle('A new Financing Agreement has been submitted!')
 								.addFields(
 									{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -268,7 +268,7 @@ module.exports.checkPayments = async (client) => {
 						let btnRows = addBtnRows();
 						await messageAfter.edit({ embeds: [currentEmbed], components: btnRows });
 
-						var overdueEmbed = new EmbedBuilder()
+						let overdueEmbed = new EmbedBuilder()
 							.setTitle('A Financing Agreement has overdue payments!')
 							.addFields(
 								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },

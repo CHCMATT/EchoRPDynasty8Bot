@@ -1,7 +1,7 @@
-var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField, EmbedBuilder } = require('discord.js');
+let dbCmds = require('../dbCmds.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0
@@ -27,27 +27,27 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var calctype = interaction.options.getString('calctype');
-			var saleprice = interaction.options.getInteger('saleprice');
+			let calctype = interaction.options.getString('calctype');
+			let saleprice = interaction.options.getInteger('saleprice');
 
 			if (calctype == 'regular') {
-				var costPrice = (saleprice * 0.70);
-				var d8Profit = saleprice - costPrice;
-				var realtorCommission = (d8Profit * 0.20);
+				let costPrice = (saleprice * 0.70);
+				let d8Profit = saleprice - costPrice;
+				let realtorCommission = (d8Profit * 0.20);
 
-				var formattedPrice = formatter.format(saleprice);
-				var formattedCostPrice = formatter.format(costPrice);
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
+				let formattedPrice = formatter.format(saleprice);
+				let formattedCostPrice = formatter.format(costPrice);
+				let formattedD8Profit = formatter.format(d8Profit);
+				let formattedRealtorCommission = formatter.format(realtorCommission);
 
 				await interaction.reply({ content: `Regular Sale Calculator Results:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 			} else if (calctype == 'financing') {
-				var downPayment = (saleprice * 0.3);
-				var amountOwed = (saleprice - downPayment + ((saleprice - downPayment) * .14));
+				let downPayment = (saleprice * 0.3);
+				let amountOwed = (saleprice - downPayment + ((saleprice - downPayment) * .14));
 
-				var formattedPrice = formatter.format(saleprice);
-				var formattedDownPayment = formatter.format(downPayment);
-				var formattedAmountOwed = formatter.format(amountOwed);
+				let formattedPrice = formatter.format(saleprice);
+				let formattedDownPayment = formatter.format(downPayment);
+				let formattedAmountOwed = formatter.format(amountOwed);
 
 				await interaction.reply({ content: `Financing Sale Calculator Results:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
 

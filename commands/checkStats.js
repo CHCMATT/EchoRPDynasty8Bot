@@ -1,5 +1,5 @@
-var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField, EmbedBuilder } = require('discord.js');
+let dbCmds = require('../dbCmds.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'checkstats',
@@ -14,13 +14,13 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
-			var personnelData = await dbCmds.readPersStats(user.id)
+			let user = interaction.options.getUser('user');
+			let personnelData = await dbCmds.readPersStats(user.id)
 			if (personnelData !== null) {
 
-				var miscSales = personnelData.miscSales;
+				let miscSales = personnelData.miscSales;
 
-				var embedDesc =
+				let embedDesc =
 					`• **Houses Sold:** ${housesSold}
 		• **Warehouses Sold:** ${warehousesSold}
 		• **Properties Quoted:** ${propertiesQuoted}
@@ -28,7 +28,7 @@ module.exports = {
 		• **Train Activities Checked:** ${activityChecks}
 		• **Misc. Sales Completed:** ${miscSales}`;
 
-				var personnelEmbed = new EmbedBuilder()
+				let personnelEmbed = new EmbedBuilder()
 					.setTitle(`Dynasty 8 statistics for ${charName}:`)
 					.setDescription(embedDesc)
 					.setColor(embedColor);

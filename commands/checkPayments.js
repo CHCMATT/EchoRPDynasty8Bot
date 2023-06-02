@@ -1,5 +1,5 @@
-var checkPayments = require('../checkPayments.js');
-var { PermissionsBitField } = require('discord.js');
+let checkPayments = require('../checkPayments.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'checkpayments',

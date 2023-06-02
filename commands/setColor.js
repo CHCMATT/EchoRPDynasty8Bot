@@ -1,6 +1,6 @@
-var dbCmds = require('../dbCmds.js');
+let dbCmds = require('../dbCmds.js');
 const editEmbed = require('../editEmbed.js');
-var { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'setcolor',
@@ -21,13 +21,13 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
-			var newHex = interaction.options.getString('hexcolor');
+			let user = interaction.options.getUser('user');
+			let newHex = interaction.options.getString('hexcolor');
 			if (newHex == "random") {
-				var randomColor = (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
+				let randomColor = (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
 				await dbCmds.setPersColor(user.id, randomColor);
 
-				var charName = interaction.guild.members.cache.get(user.id).displayName;
+				let charName = interaction.guild.members.cache.get(user.id).displayName;
 
 				await editEmbed.editEmbed(interaction.client);
 
@@ -43,7 +43,7 @@ module.exports = {
 
 					await editEmbed.editEmbed(interaction.client);
 
-					var charName = interaction.guild.members.cache.get(user.id).displayName;
+					let charName = interaction.guild.members.cache.get(user.id).displayName;
 					await interaction.reply({ content: `Successfully changed the Discord embed color for \`${charName}\` to \`${newHex}\`.`, ephemeral: true });
 
 				} else {

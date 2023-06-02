@@ -1,5 +1,5 @@
-var dbCmds = require('./dbCmds.js');
-var { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
+let dbCmds = require('./dbCmds.js');
+let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
 module.exports.editEmbed = async (client) => {
 	let employeeStats = await dbCmds.currStats();
@@ -56,11 +56,11 @@ module.exports.editEmbed = async (client) => {
 		.setDescription(monthlyDescList)
 		.setColor('926C15');
 
-	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
+	let embedChannel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
 
-	var statsMsgId = await dbCmds.readMsgId("statsMsg");
+	let statsMsgId = await dbCmds.readMsgId("statsMsg");
 
-	var statsMsg = await channel.messages.fetch(statsMsgId);
+	let statsMsg = await embedChannel.messages.fetch(statsMsgId);
 
 	statsMsg.edit({ embeds: [overallStatsEmbed, monthlyStatsEmbed] });
 
@@ -85,58 +85,58 @@ module.exports.editEmbed = async (client) => {
 	countFinancialAgreements = countFinancialAgreements.toString();
 	countFinancialPayments = countFinancialPayments.toString();
 
-	var housesSoldEmbed = new EmbedBuilder()
+	let housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
 		.setColor('#805B10');
 
-	var warehousesSoldEmbed = new EmbedBuilder()
+	let warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
 		.setColor('#926C15');
 
-	var propertiesQuotedEmbed = new EmbedBuilder()
+	let propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
 		.setColor('#A47E1B');
 
-	var propertiesRepodEmbed = new EmbedBuilder()
+	let propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
 		.setColor('#B69121');
 
-	var trainActivitiesCheckedEmbed = new EmbedBuilder()
+	let trainActivitiesCheckedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Train Activities Checked:')
 		.setDescription(countTrainActivitiesChecked)
 		.setColor('#C9A227');
 
-	var miscSalesEmbed = new EmbedBuilder()
+	let miscSalesEmbed = new EmbedBuilder()
 		.setTitle('Amount of Miscellaneous Sales Completed:')
 		.setDescription(countMiscSales)
 		.setColor('#C9A227');
 
-	var finanAgreeEmbed = new EmbedBuilder()
+	let finanAgreeEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Agreements Completed:')
 		.setDescription(countFinancialAgreements)
 		.setColor('#DBB42C');
 
-	var finanPaymentsEmbed = new EmbedBuilder()
+	let finanPaymentsEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Payments Accepted:')
 		.setDescription(countFinancialPayments)
 		.setColor('#EDC531');
 
-	var currEmbed = await dbCmds.readMsgId("embedMsg");
+	let currEmbed = await dbCmds.readMsgId("embedMsg");
 
-	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-	var currMsg = await channel.messages.fetch(currEmbed);
+	let embedChannel2 = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
+	let currMsg = await embedChannel2.messages.fetch(currEmbed);
 
-	var btnRows = addBtnRows();
+	let btnRows = addBtnRows();
 
 	currMsg.edit({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed, finanAgreeEmbed, finanPaymentsEmbed], components: btnRows });
 };
 
 function addBtnRows() {
-	var row1 = new ActionRowBuilder().addComponents(
+	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addHouseSold')
 			.setLabel('Add a House Sale')
@@ -163,7 +163,7 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 	);
 
-	var row2 = new ActionRowBuilder().addComponents(
+	let row2 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addPropQuoted')
 			.setLabel('Add a Property Quote')
@@ -180,7 +180,7 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Primary),
 	);
 
-	var row3 = new ActionRowBuilder().addComponents(
+	let row3 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addFinancingAgreement')
 			.setLabel('Add a Financing Agreement')
@@ -192,6 +192,6 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Secondary),
 	);
 
-	var rows = [row1, row2, row3];
+	let rows = [row1, row2, row3];
 	return rows;
 };

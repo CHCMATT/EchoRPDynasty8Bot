@@ -1,6 +1,6 @@
-var dbCmds = require('../dbCmds.js');
+let dbCmds = require('../dbCmds.js');
 const editEmbed = require('../editEmbed.js');
-var { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'resetsummary',
@@ -20,24 +20,24 @@ module.exports = {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 			if (counterName === "houses") {
 				await dbCmds.resetSummValue("countHousesSold");
-				var newValue = await dbCmds.readSummValue("countHousesSold");
-				var fixedName = "Houses Sold";
+				let newValue = await dbCmds.readSummValue("countHousesSold");
+				let fixedName = "Houses Sold";
 			} else if (counterName === "warehouses") {
 				await dbCmds.resetSummValue("countWarehousesSold");
-				var newValue = await dbCmds.readSummValue("countWarehousesSold");
-				var fixedName = "Warehouses Sold";
+				let newValue = await dbCmds.readSummValue("countWarehousesSold");
+				let fixedName = "Warehouses Sold";
 			} else if (counterName === "quotes") {
 				await dbCmds.resetSummValue("countPropertiesQuoted");
-				var newValue = await dbCmds.readSummValue("countPropertiesQuoted");
-				var fixedName = "Properties Quoted";
+				let newValue = await dbCmds.readSummValue("countPropertiesQuoted");
+				let fixedName = "Properties Quoted";
 			} else if (counterName === "repos") {
 				await dbCmds.resetSummValue("countPropertiesRepod");
-				var newValue = await dbCmds.readSummValue("countPropertiesRepod");
-				var fixedName = "Properties Repossessed";
+				let newValue = await dbCmds.readSummValue("countPropertiesRepod");
+				let fixedName = "Properties Repossessed";
 			} else if (counterName === "trains") {
 				await dbCmds.resetSummValue("countTrainActivitiesChecked");
-				var newValue = await dbCmds.readSummValue("countTrainActivitiesChecked");
-				var fixedName = "Train Activities Checked";
+				let newValue = await dbCmds.readSummValue("countTrainActivitiesChecked");
+				let fixedName = "Train Activities Checked";
 			}
 
 			await editEmbed.editEmbed(interaction.client);

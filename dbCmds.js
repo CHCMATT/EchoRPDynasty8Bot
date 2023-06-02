@@ -1,8 +1,8 @@
-var d8SummaryInfo = require('./schemas/d8SummaryInfo');
-var d8PersonnelInfo = require('./schemas/d8PersonnelInfo');
+let d8SummaryInfo = require('./schemas/d8SummaryInfo');
+let d8PersonnelInfo = require('./schemas/d8PersonnelInfo');
 
 module.exports.readSummValue = async (summaryName) => {
-	var result = await d8SummaryInfo.findOne({ summaryName }, { value: 1, _id: 0 });
+	let result = await d8SummaryInfo.findOne({ summaryName }, { value: 1, _id: 0 });
 	if (result !== null) {
 		return result.value;
 	}
@@ -39,7 +39,7 @@ module.exports.resetPersStats = async (discordId) => {
 };
 
 module.exports.readPersStats = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, currentCommission: 1, bankAccount: 1, _id: 0 });
 	return result;
 };
 
@@ -62,7 +62,7 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 
 //monthly statistics report stuff
 module.exports.monthlyStatsRep = async () => {
-	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
+	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
 
@@ -76,7 +76,7 @@ module.exports.setPersonnelMsgId = async (discordId, embedId) => {
 };
 
 module.exports.readPersonnelMsgId = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { embedMsgId: 1, _id: 0 });
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { embedMsgId: 1, _id: 0 });
 	return result.embedMsgId;
 };
 
@@ -95,12 +95,12 @@ module.exports.resetCommission = async (discordId) => {
 };
 
 module.exports.readCommission = async (discordId) => {
-	var result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentCommission: 1, _id: 0 });
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentCommission: 1, _id: 0 });
 	return result.currentCommission;
 };
 
 module.exports.commissionRep = async () => {
-	var result = await d8PersonnelInfo.find({ currentCommission: { $gt: 0 } }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, _id: 0 });
+	let result = await d8PersonnelInfo.find({ currentCommission: { $gt: 0 } }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, _id: 0 });
 	return result;
 };
 
@@ -111,7 +111,7 @@ module.exports.setMsgId = async (summaryName, newValue) => {
 };
 
 module.exports.readMsgId = async (summaryName) => {
-	var result = await d8SummaryInfo.findOne({ summaryName }, { msgId: 1, _id: 0 });
+	let result = await d8SummaryInfo.findOne({ summaryName }, { msgId: 1, _id: 0 });
 	if (result !== null) {
 		return result.msgId;
 	}
@@ -126,7 +126,7 @@ module.exports.setRepDate = async (summaryName, newValue) => {
 };
 
 module.exports.readRepDate = async (summaryName) => {
-	var result = await d8SummaryInfo.findOne({ summaryName }, { repDate: 1, _id: 0 });
+	let result = await d8SummaryInfo.findOne({ summaryName }, { repDate: 1, _id: 0 });
 	if (result !== null) {
 		return result.repDate;
 	}
@@ -141,7 +141,7 @@ module.exports.setFinanceNum = async (summaryName, newValue) => {
 };
 
 module.exports.readFinanceNum = async (summaryName) => {
-	var result = await d8SummaryInfo.findOne({ summaryName }, { financeNum: 1, _id: 0 });
+	let result = await d8SummaryInfo.findOne({ summaryName }, { financeNum: 1, _id: 0 });
 	if (result !== null) {
 		return result.financeNum;
 	}
@@ -151,7 +151,7 @@ module.exports.readFinanceNum = async (summaryName) => {
 };
 
 module.exports.currStats = async () => {
-	var result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
+	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
 

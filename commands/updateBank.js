@@ -1,5 +1,5 @@
-var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField } = require('discord.js');
+let dbCmds = require('../dbCmds.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'updatebank',
@@ -20,8 +20,8 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
-			var bankNum = interaction.options.getString('accountnumber');
+			let user = interaction.options.getUser('user');
+			let bankNum = interaction.options.getString('accountnumber');
 			await dbCmds.setBankAccount(user.id, bankNum)
 			await interaction.reply({ content: `Successfully set the bank account number for <@${user.id}> to \`${bankNum}\`.`, ephemeral: true });
 		}

@@ -1,6 +1,6 @@
-var dbCmds = require('../dbCmds.js');
+let dbCmds = require('../dbCmds.js');
 const editEmbed = require('../editEmbed.js');
-var { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'resetstats',
@@ -15,8 +15,8 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
-			var personnelData = await dbCmds.readPersStats(user.id)
+			let user = interaction.options.getUser('user');
+			let personnelData = await dbCmds.readPersStats(user.id)
 			if (personnelData !== null) {
 				await dbCmds.resetPersStats(user.id);
 

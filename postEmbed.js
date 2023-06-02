@@ -110,12 +110,12 @@ module.exports.postEmbed = async (client) => {
 		.setDescription(countMiscSales)
 		.setColor('#C9A227');
 
-	var finanAgreeEmbed = new EmbedBuilder()
+	let finanAgreeEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Agreements Completed:')
 		.setDescription(countFinancialAgreements)
 		.setColor('#DBB42C');
 
-	var finanPaymentsEmbed = new EmbedBuilder()
+	let finanPaymentsEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Payments Accepted:')
 		.setDescription(countFinancialPayments)
 		.setColor('#EDC531');
