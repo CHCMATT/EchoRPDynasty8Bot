@@ -75,7 +75,7 @@ module.exports = {
 									)
 									.setColor('FAD643')];
 
-								await message.edit({ embeds: agreementEmbed });
+								await message.edit({ embeds: agreementEmbed, components: [] });
 
 							} else {
 								let agreementEmbed = [new EmbedBuilder()
@@ -98,7 +98,7 @@ module.exports = {
 									)
 									.setColor('FAD643')];
 
-								await message.edit({ embeds: agreementEmbed });
+								await message.edit({ embeds: agreementEmbed, components: [] });
 							}
 
 							await interaction.reply({ content: `Successfully removed Eviction Notice and Late Fee from \`${financingNum}\`!`, ephemeral: true });
