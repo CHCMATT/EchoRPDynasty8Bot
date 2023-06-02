@@ -28,6 +28,10 @@ module.exports.statsReport = async (client) => {
 		var lastRep = `<t:${nowMinus7}:d>`
 	}
 
+	if (statsDescList == '') {
+		statsDescList = "There is no realtor data to display for this time period."
+	}
+
 	var embed = new EmbedBuilder()
 		.setTitle(`Monthly Realtor Stats Report for ${lastRep} through ${today}:`)
 		.setDescription(statsDescList)

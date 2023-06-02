@@ -20,6 +20,10 @@ module.exports.editEmbed = async (client) => {
 		}
 	}
 
+	if (overallDescList == '') {
+		overallDescList = "There is no realtor data to display yet."
+	}
+
 	let overallStatsEmbed = new EmbedBuilder()
 		.setTitle(`Overall Realtor Statistics as of ${today}:`)
 		.setDescription(overallDescList)
@@ -37,6 +41,10 @@ module.exports.editEmbed = async (client) => {
 		• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
 		• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}\n\n`);
 		}
+	}
+
+	if (monthlyDescList == '') {
+		monthlyDescList = "There is no realtor data to display yet."
 	}
 
 	let monthlyStatsEmbed = new EmbedBuilder()
