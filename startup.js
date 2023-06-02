@@ -1,11 +1,11 @@
 require('discord.js');
-var dbCmds = require('./dbCmds.js');
-var postEmbed = require('./postEmbed.js');
-var editEmbed = require('./editEmbed.js');
+let dbCmds = require('./dbCmds.js');
+let postEmbed = require('./postEmbed.js');
+let editEmbed = require('./editEmbed.js');
 
 module.exports.startUp = async (client) => {
-	var channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
-	var oldEmbed = await dbCmds.readMsgId("embedMsg");
+	let channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
+	let oldEmbed = await dbCmds.readMsgId("embedMsg");
 
 	try {
 		await channel.messages.fetch(oldEmbed);
