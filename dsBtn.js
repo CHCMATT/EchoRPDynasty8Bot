@@ -125,13 +125,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('notesInput')
 					.setLabel("Any notes about the requested quote?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('House with a view on Rich Bitch Avenue, Vibes like Malibu')
+					.setPlaceholder('House with a view on Rich Bitch Avenue, vibes like Malibu')
 					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
 					.setLabel("Include photos of GPS & front of house")
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('https://i.imgur.com/9ZMbCsA.jpg, https://i.imgur.com/ztKYnMn.jpg')
+					.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
