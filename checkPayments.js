@@ -183,7 +183,7 @@ module.exports.checkPayments = async (client) => {
 		})
 	}, (0.25 * 60000)) // 0.25 minute times 60000ms
 
-	setTimeout(async () => {
+	/*setTimeout(async () => {
 		// check for overdue payments with no payments after 3 days 
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 		console.log(`Checking for overdue agreements with no payments after 3 days on ${logTime}`);
@@ -292,7 +292,7 @@ module.exports.checkPayments = async (client) => {
 			}
 			//}
 		})
-	}, (0.50 * 60000)) // 0.50 minute times 60000ms
+	}, (0.50 * 60000))*/ // 0.50 minute times 60000ms
 };
 
 
