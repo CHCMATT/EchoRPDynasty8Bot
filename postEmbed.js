@@ -111,7 +111,7 @@ module.exports.postEmbed = async (client) => {
 		.setColor('#C9A227');
 
 	let finanAgreeEmbed = new EmbedBuilder()
-		.setTitle('Amount of Financial Agreements Completed:')
+		.setTitle('Amount of Financial Agreements Filed:')
 		.setDescription(countFinancialAgreements)
 		.setColor('#DBB42C');
 
