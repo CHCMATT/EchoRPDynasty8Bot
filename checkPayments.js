@@ -225,16 +225,9 @@ module.exports.checkPayments = async (client) => {
 							await client.channels.cache.get(process.env.PAYMENTS_OVERDUE_CHANNEL_ID).send({ embeds: [overdueEmbed] });
 						}
 					}
-					else {
-						console.log('not overdue')
-					}
-				} else {
-					console.log('no msg components')
 				}
 			}
-			else {
-				console.log('no embed')
-			}
+
 		})
 	}, (0.25 * 60000)) // 0.25 times 60000ms (1 minute)
 };
