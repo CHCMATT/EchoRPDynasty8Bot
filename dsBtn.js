@@ -265,17 +265,17 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
-				var oldLotNumInput = new TextInputBuilder()
-					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('5678')
-					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('6789, upgraded to HighEndV3, 956-252-1929')
+					.setRequired(true);
+				var oldLotNumInput = new TextInputBuilder()
+					.setCustomId('oldLotNumInput')
+					.setLabel("What is the old lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('5678')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -293,12 +293,12 @@ module.exports.btnPressed = async (interaction) => {
 				// meme gallery: https://imgur.com/gallery/Et0Qm
 
 				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
-				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
 				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				addHouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
 				await interaction.showModal(addHouseRemodelModal);
 				break;
 			case 'addWarehouseRemodel':
@@ -311,17 +311,17 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
-				var oldLotNumInput = new TextInputBuilder()
-					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number?")
-					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('7891')
-					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8910, upgraded from XS to Small Warehouse, 956-252-1929')
+					.setRequired(true);
+				var oldLotNumInput = new TextInputBuilder()
+					.setCustomId('oldLotNumInput')
+					.setLabel("What is the old lot number?")
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('7891')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -339,12 +339,12 @@ module.exports.btnPressed = async (interaction) => {
 				// meme gallery: https://imgur.com/gallery/Et0Qm
 
 				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
-				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
 				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addHouseRemodelModal.addComponents(remodelForInputRow, oldLotNumInputRow, newLotNumNotesInputRow, priceInputRow, photosInputRow);
+				addHouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
 				await interaction.showModal(addHouseRemodelModal);
 				break;
 			case 'addFinancingAgreement':

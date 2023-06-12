@@ -7,7 +7,7 @@ module.exports = {
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 			await checkPayments.checkPayments(interaction.client);
-			await interaction.reply({ content: `Initiated a check for $0 due agreements, overdue on payment agreements, and agreements ready for repossession! *(this process will take about 45 seconds)*`, ephemeral: true });
+			await interaction.reply({ content: `Initiated a check for $0 due agreements, overdue on payment agreements, and agreements ready for repossession! *(this process will take about 30 seconds)*`, ephemeral: true });
 		}
 		else {
 			await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
