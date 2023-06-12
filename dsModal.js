@@ -1242,7 +1242,7 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 												{ name: `Notes:`, value: `${msgNotes}\n- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
 											)
-											.setColor('FAD643')];
+											.setColor('1EC276')];
 									} else {
 										var agreementEmbed = [new EmbedBuilder()
 											.setTitle('A new Financing Agreement has been submitted!')
@@ -1262,12 +1262,12 @@ module.exports.modalSubmit = async (interaction) => {
 												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 												{ name: `Notes:`, value: `- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
 											)
-											.setColor('FAD643')];
+											.setColor('1EC276')];
 									}
 
-									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
-									var currMsg = await channel.messages.fetch(msgId);
-									currMsg.edit({ embeds: agreementEmbed, components: [] });
+									await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: agreementEmbed });
+
+									await message.delete();
 
 									var embeds = [new EmbedBuilder()
 										.setTitle('A new Financing Payment has been submitted!')
@@ -1282,7 +1282,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
 
-									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
+									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement and moved the agreement to the Completed Financing section.`, ephemeral: true });
 								} else { // if payments are still due
 									var afterPaymentAmt = amtOwed - paymentAmt;
 									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
