@@ -227,7 +227,6 @@ module.exports.checkPayments = async (client) => {
 					}
 				}
 			}
-
 		})
 	}, (0.25 * 60000)) // 0.25 times 60000ms (1 minute)
 };
