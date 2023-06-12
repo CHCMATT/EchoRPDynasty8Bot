@@ -137,6 +137,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countHousesSold");
+				await dbCmds.addOneSumm("countMonthlyHousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
 				await editEmbed.editEmbed(interaction.client);
@@ -264,6 +265,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countWarehousesSold");
+				await dbCmds.addOneSumm("countMonthlyWarehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyWarehousesSold");
 				await editEmbed.editEmbed(interaction.client);
@@ -398,6 +400,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesQuoted");
+				await dbCmds.addOneSumm("countMonthlyPropertiesQuoted");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesQuoted");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesQuoted");
 				await editEmbed.editEmbed(interaction.client);
@@ -507,6 +510,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesRepod");
+				await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 				await editEmbed.editEmbed(interaction.client);
@@ -614,6 +618,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				await dbCmds.addOneSumm("countTrainActivitiesChecked");
+				await dbCmds.addOneSumm("countMonthlyTrainActivitiesChecked");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "activityChecks");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyActivityChecks");
 				await editEmbed.editEmbed(interaction.client);
@@ -671,6 +676,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
+				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
@@ -813,6 +819,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
+				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
@@ -955,6 +962,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
+				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
@@ -1139,6 +1147,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.FINANCING_AGREEMENTS_CHANNEL_ID).send({ embeds: embeds });
 
 				await dbCmds.addOneSumm("countFinancialAgreements");
+				await dbCmds.addOneSumm("countMonthlyFinancialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
 				await editEmbed.editEmbed(interaction.client);
@@ -1345,6 +1354,7 @@ module.exports.modalSubmit = async (interaction) => {
 										.setColor('FFE169')];
 
 									await dbCmds.addOneSumm("countFinancialPayments");
+									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
 									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
 									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
 									await editEmbed.editEmbed(interaction.client);
