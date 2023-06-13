@@ -61,12 +61,11 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 
 
 
-//monthly statistics report stuff
+// monthly statistics report stuff
 module.exports.monthlyRealtorStatsRep = async () => {
 	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
-
 
 module.exports.resetMonthlyRealtorStats = async (discordId) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0 }, { upsert: true });
@@ -74,7 +73,7 @@ module.exports.resetMonthlyRealtorStats = async (discordId) => {
 
 
 
-//personnel message id stuff
+// personnel message id stuff
 module.exports.setPersonnelMsgId = async (discordId, embedId) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { embedMsgId: embedId }, { upsert: true });
 };
