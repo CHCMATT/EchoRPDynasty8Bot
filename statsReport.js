@@ -55,6 +55,15 @@ module.exports.statsReport = async (client) => {
 	let countMonthlyFinancialAgreements = await dbCmds.readSummValue("countMonthlyFinancialAgreements");
 	let countMonthlyFinancialPayments = await dbCmds.readSummValue("countMonthlyFinancialPayments");
 
+	await dbCmds.resetSummValue("countMonthlyHousesSold");
+	await dbCmds.resetSummValue("countMonthlyWarehousesSold");
+	await dbCmds.resetSummValue("countMonthlyPropertiesRepod");
+	await dbCmds.resetSummValue("countMonthlyPropertiesQuoted");
+	await dbCmds.resetSummValue("countMonthlyTrainActivitiesChecked");
+	await dbCmds.resetSummValue("countMonthlyMiscSales");
+	await dbCmds.resetSummValue("countMonthlyFinancialAgreements");
+	await dbCmds.resetSummValue("countMonthlyFinancialPayments");
+
 	let overallStatsEmbed = new EmbedBuilder()
 		.setTitle(`Monthly Dynasty 8 Stats Report for ${lastRep} through ${today}:`)
 		.setDescription(`• **Houses Sold:** ${countMonthlyHousesSold}
