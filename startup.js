@@ -7,6 +7,15 @@ module.exports.startUp = async (client) => {
 	let channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
 	let oldEmbed = await dbCmds.readMsgId("embedMsg");
 
+	await dbCmds.resetSummValue("countMonthlyHousesSold");
+	await dbCmds.resetSummValue("countMonthlyWarehousesSold");
+	await dbCmds.resetSummValue("countMonthlyPropertiesRepod");
+	await dbCmds.resetSummValue("countMonthlyPropertiesQuoted");
+	await dbCmds.resetSummValue("countMonthlyTrainActivitiesChecked");
+	await dbCmds.resetSummValue("countMonthlyMiscSales");
+	await dbCmds.resetSummValue("countMonthlyFinancialAgreements");
+	await dbCmds.resetSummValue("countMonthlyFinancialPayments");
+
 	try {
 		await channel.messages.fetch(oldEmbed);
 		await editEmbed.editEmbed(client);
