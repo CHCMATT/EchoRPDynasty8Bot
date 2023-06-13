@@ -60,15 +60,19 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 };
 
 
+
 //monthly statistics report stuff
-module.exports.monthlyStatsRep = async () => {
+module.exports.monthlyRealtorStatsRep = async () => {
 	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
 
-module.exports.resetMonthlyStats = async (discordId) => {
+
+module.exports.resetMonthlyRealtorStats = async (discordId) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0 }, { upsert: true });
 };
+
+
 
 //personnel message id stuff
 module.exports.setPersonnelMsgId = async (discordId, embedId) => {
@@ -79,6 +83,7 @@ module.exports.readPersonnelMsgId = async (discordId) => {
 	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { embedMsgId: 1, _id: 0 });
 	return result.embedMsgId;
 };
+
 
 
 // commission stuff
@@ -105,6 +110,7 @@ module.exports.commissionRep = async () => {
 };
 
 
+
 // for setting message ID of current Discord embed message
 module.exports.setMsgId = async (summaryName, newValue) => {
 	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { msgId: newValue }, { upsert: true });
@@ -119,6 +125,8 @@ module.exports.readMsgId = async (summaryName) => {
 		return `Value not found for ${summaryName}.`;
 	}
 };
+
+
 
 // for setting string of latest commission report date
 module.exports.setRepDate = async (summaryName, newValue) => {
@@ -150,8 +158,9 @@ module.exports.readFinanceNum = async (summaryName) => {
 	}
 };
 
+
+
 module.exports.currStats = async () => {
 	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, _id: 0 });
 	return result;
 };
-
