@@ -31,7 +31,7 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, financialPayments: 1, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 1 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, financialPayments: 0, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0 }, { upsert: true });
 };
 
 module.exports.resetPersStats = async (discordId) => {
