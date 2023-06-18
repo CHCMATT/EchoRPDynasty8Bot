@@ -21,6 +21,9 @@ module.exports.commissionReport = async (client) => {
 	} else {
 
 		let peopleArray = await dbCmds.commissionRep();
+		peopleArray.sort((a, b) => {
+			return b.currentCommission - a.currentCommission;
+		});
 		let commissionDescList = '';
 
 		for (i = 0; i < peopleArray.length; i++) {
