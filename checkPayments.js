@@ -66,7 +66,7 @@ module.exports.checkPayments = async (client) => {
 								{ name: `Street Address:`, value: `${msgStreetAddress}` },
 								{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 								{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-								{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
+								{ name: `Amount Owed:`, value: `${newAmtOwed}`, inline: true },
 								{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 								{ name: `Notes:`, value: `${msgNotes}\n- $10,000 Late Fee added on ${evictionAvailDate}.\n- Eviction Notice available on ${evictionAvailDate}.` },
 							)
@@ -89,7 +89,7 @@ module.exports.checkPayments = async (client) => {
 								{ name: `Street Address:`, value: `${msgStreetAddress}` },
 								{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
 								{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-								{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
+								{ name: `Amount Owed:`, value: `${newAmtOwed}`, inline: true },
 								{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 								{ name: `Notes:`, value: `- $10,000 Late Fee added on ${evictionAvailDate}.\n- Eviction Notice available on ${evictionAvailDate}.` },
 							)
@@ -107,7 +107,7 @@ module.exports.checkPayments = async (client) => {
 							{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
 							{ name: `Last Payment Date:`, value: `${msgPaymentDate} (<t:${lastPaymentDate}:R>)` },
 							{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
-							{ name: `Amount Still Owed:`, value: `${msgAmtOwed}`, inline: true },
+							{ name: `Amount Still Owed:`, value: `${newAmtOwed}`, inline: true },
 							{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 							{ name: `Message Link:`, value: `https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}` },
 						)
