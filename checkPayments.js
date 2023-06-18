@@ -74,6 +74,7 @@ module.exports.checkPayments = async (client) => {
 
 						let btnRows = addBtnRows();
 						await message.edit({ embeds: [currentEmbed], components: btnRows });
+
 					} else {
 						let currentEmbed = new EmbedBuilder()
 							.setTitle('A new Financing Agreement has been submitted!')
@@ -180,7 +181,7 @@ module.exports.checkPayments = async (client) => {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${newAmtOwed}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `${msgNotes}\n- Ready for repossession on ${repoReadyDate} due to no payments since ${msgPaymentDate}.` }
+										{ name: `Notes:`, value: `${msgNotes}\n- Ready for repossession on ${repoReadyDate} due to no payments since ${msgPaymentDate}.` },
 									)
 									.setColor('FAD643');
 							} else {
@@ -223,6 +224,7 @@ module.exports.checkPayments = async (client) => {
 								.setColor('DC2F02');
 
 							await client.channels.cache.get(process.env.PAYMENTS_OVERDUE_CHANNEL_ID).send({ embeds: [overdueEmbed] });
+
 						}
 					}
 				}
