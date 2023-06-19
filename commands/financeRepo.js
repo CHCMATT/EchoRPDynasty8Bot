@@ -1,4 +1,5 @@
 let dbCmds = require('../dbCmds.js');
+var editEmbed = require('../editEmbed.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
@@ -99,6 +100,11 @@ module.exports = {
 							}
 
 							await message.delete();
+
+							await dbCmds.subtractOneSumm("activeFinancialAgreements");
+							await dbCmds.subtractValueSumm("activeFinancialAmount", amtOwed);
+
+							await editEmbed.editEmbed(interaction.client);
 
 							await interaction.reply({ content: `Successfully marked property \`${financingNum}\` as repossessed!`, ephemeral: true });
 						}
