@@ -7,7 +7,7 @@ module.exports = {
 	options: [
 		{
 			name: 'user',
-			description: 'The user you\'d like to update the bank account for on',
+			description: 'The user you\'d like to update the bank account for',
 			type: 6,
 			required: true,
 		},

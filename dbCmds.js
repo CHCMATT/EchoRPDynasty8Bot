@@ -67,6 +67,10 @@ module.exports.setBankAccount = async (discordId, bankNum) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { bankAccount: bankNum }, { upsert: true });
 };
 
+module.exports.setCharName = async (discordId, charName) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { charName: charName }, { upsert: true });
+};
+
 
 
 // monthly statistics report stuff
