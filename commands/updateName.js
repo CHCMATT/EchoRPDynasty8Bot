@@ -1,5 +1,6 @@
 let dbCmds = require('../dbCmds.js');
 let { PermissionsBitField } = require('discord.js');
+const editEmbed = require('../editEmbed.js');
 
 module.exports = {
 	name: 'updatename',
@@ -26,7 +27,9 @@ module.exports = {
 				charName = guildUser.user.username;
 			}
 
-			await dbCmds.setCharName(userId, charName)
+			await dbCmds.setCharName(userId, charName);
+
+			await editEmbed.editEmbed(interaction.client);
 			await interaction.reply({ content: `Successfully set the name for <@${userId}> to \`${charName}\`.`, ephemeral: true });
 		}
 		else {
