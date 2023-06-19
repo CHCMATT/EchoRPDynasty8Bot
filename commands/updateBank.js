@@ -3,7 +3,7 @@ let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	name: 'updatebank',
-	description: 'Updates the bank account number for the specified user',
+	description: 'Updates the bank account number in the database for the specified user',
 	options: [
 		{
 			name: 'user',
