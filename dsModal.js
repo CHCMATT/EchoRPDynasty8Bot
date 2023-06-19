@@ -141,19 +141,24 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
 				await editEmbed.editEmbed(interaction.client);
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-
-				var formattedCommission = formatter.format(realtorCommission);
-				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `House Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('#1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `House Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+
+				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -269,19 +274,24 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyWarehousesSold");
 				await editEmbed.editEmbed(interaction.client);
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-
-				var formattedCommission = formatter.format(realtorCommission);
-				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `Warehouse Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('#1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `Warehouse Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+
+				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Warehouses Sold\` counter - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -680,19 +690,23 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-
-				var formattedCommission = formatter.format(realtorCommission);
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('#1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `Miscellaneous Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -823,19 +837,23 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-
-				var formattedCommission = formatter.format(realtorCommission);
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `House Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${itemsSold}.`)
-					.setColor('#1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `House Remodel to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully logged this \`House Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
@@ -966,19 +984,23 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editEmbed(interaction.client);
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-
-				var formattedCommission = formatter.format(realtorCommission);
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${itemsSold}.`)
-					.setColor('#1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `Warehouse Remodel to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
