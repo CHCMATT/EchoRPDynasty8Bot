@@ -1188,6 +1188,9 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyFinancialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
+				await dbCmds.addOneSumm("activeFinancialAgreements");
+				await dbCmds.addValueSumm("activeFinancialAmount", Math.round(amountOwed));
+
 				await editEmbed.editEmbed(interaction.client);
 
 				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
@@ -1316,6 +1319,16 @@ module.exports.modalSubmit = async (interaction) => {
 
 									await message.delete();
 
+									await dbCmds.addOneSumm("countFinancialPayments");
+									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
+									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
+									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
+
+									await dbCmds.subtractOneSumm("activeFinancialAgreements");
+									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
+
+									await editEmbed.editEmbed(interaction.client);
+
 									var embeds = [new EmbedBuilder()
 										.setTitle('A new Financing Payment has been submitted!')
 										.addFields(
@@ -1395,6 +1408,10 @@ module.exports.modalSubmit = async (interaction) => {
 									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
 									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
 									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
+
+									await dbCmds.subtractOneSumm("activeFinancialAgreements");
+									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
+
 									await editEmbed.editEmbed(interaction.client);
 
 									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });

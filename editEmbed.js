@@ -1,6 +1,12 @@
 let dbCmds = require('./dbCmds.js');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
+var formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports.editEmbed = async (client) => {
 	let employeeStats = await dbCmds.currStats();
 	let overallDescList = '';
@@ -17,7 +23,7 @@ module.exports.editEmbed = async (client) => {
 • **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
 • **Train Activities Checked:** ${employeeStats[i].activityChecks}
 • **Misc. Sales Completed:** ${employeeStats[i].miscSales}
-• **Financial Agreements Completed:** ${employeeStats[i].financialAgreements}
+• **Financial Agreements Filed:** ${employeeStats[i].financialAgreements}
 • **Financial Payments Accepted:** ${employeeStats[i].financialPayments}\n\n`);
 		}
 	}
@@ -42,7 +48,7 @@ module.exports.editEmbed = async (client) => {
 • **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
 • **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
 • **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}
-• **Financial Agreements Completed:** ${employeeStats[i].monthlyFinancialAgreements}
+• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}
 • **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}\n\n`);
 		}
 	}
@@ -72,6 +78,7 @@ module.exports.editEmbed = async (client) => {
 	let countTrainActivitiesChecked = await dbCmds.readSummValue("countTrainActivitiesChecked");
 	let countMiscSales = await dbCmds.readSummValue("countMiscSales");
 	let countFinancialAgreements = await dbCmds.readSummValue("countFinancialAgreements");
+	let activeFinancialAgreements = await dbCmds.readSummValue("activeFinancialAgreements");
 	let countFinancialPayments = await dbCmds.readSummValue("countFinancialPayments");
 
 	// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
@@ -83,6 +90,7 @@ module.exports.editEmbed = async (client) => {
 	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
 	countMiscSales = countMiscSales.toString();
 	countFinancialAgreements = countFinancialAgreements.toString();
+	activeFinancialAgreements = activeFinancialAgreements.toString();
 	countFinancialPayments = countFinancialPayments.toString();
 
 	let housesSoldEmbed = new EmbedBuilder()
@@ -117,7 +125,7 @@ module.exports.editEmbed = async (client) => {
 
 	let finanAgreeEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Agreements Filed:')
-		.setDescription(countFinancialAgreements)
+		.setDescription(`${countFinancialAgreements} (${activeFinancialAgreements} active)`)
 		.setColor('#DBB42C');
 
 	let finanPaymentsEmbed = new EmbedBuilder()

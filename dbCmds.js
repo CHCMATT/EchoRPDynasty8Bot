@@ -19,6 +19,14 @@ module.exports.subtractOneSumm = async (summaryName) => {
 	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: -1 } }, { upsert: true });
 };
 
+module.exports.addValueSumm = async (summaryName, value) => {
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: value } }, { upsert: true });
+};
+
+module.exports.subtractValueSumm = async (summaryName, value) => {
+	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { $inc: { value: -value } }, { upsert: true });
+};
+
 module.exports.setSummValue = async (summaryName, newValue) => {
 	await d8SummaryInfo.findOneAndUpdate({ summaryName: summaryName }, { value: newValue }, { upsert: true });
 };
