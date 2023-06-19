@@ -7,6 +7,9 @@ module.exports.startUp = async (client) => {
 	let channel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID);
 	let oldEmbed = await dbCmds.readMsgId("embedMsg");
 
+	dbCmds.resetSummValue("activeFinancialAgreements")
+	dbCmds.resetSummValue("activeFinancialAmount")
+
 	try {
 		await channel.messages.fetch(oldEmbed);
 		await editEmbed.editEmbed(client);
