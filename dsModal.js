@@ -524,8 +524,24 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 				await editEmbed.editEmbed(interaction.client);
+
+				var realtorCommission = 4500;
+				var formattedCommission = formatter.format(realtorCommission);
+
+				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+				var reason = `Repossession of property number \`${lotNum}\` on ${repoDate}`
+
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('#1EC276');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.`, ephemeral: true });
+
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`$4500\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+
 				break;
 			case 'addTrainCheckModal':
 				var realtorName;
@@ -697,7 +713,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (realtorCommission > 0) {
 					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Miscellaneous Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+					var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
 
 					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 					var notificationEmbed = new EmbedBuilder()
@@ -844,7 +860,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (realtorCommission > 0) {
 					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `House Remodel to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+					var reason = `House Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
 
 					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 					var notificationEmbed = new EmbedBuilder()
@@ -991,7 +1007,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (realtorCommission > 0) {
 					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Warehouse Remodel to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+					var reason = `Warehouse Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
 
 					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 					var notificationEmbed = new EmbedBuilder()
