@@ -367,7 +367,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('clientContactInput')
 					.setLabel("What is the contact info for the client?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('123-456-7890 | DudeItsMeFam#8049')
+					.setPlaceholder('phone # | email | bank account #')
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
