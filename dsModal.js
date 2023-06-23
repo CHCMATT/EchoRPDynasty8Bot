@@ -1186,10 +1186,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await dbCmds.addOneSumm("countFinancialAgreements");
 				await dbCmds.addOneSumm("countMonthlyFinancialAgreements");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
 				await dbCmds.addOneSumm("activeFinancialAgreements");
 				await dbCmds.addValueSumm("activeFinancialAmount", Math.round(amountOwed));
+				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
 
 				await editEmbed.editEmbed(interaction.client);
 
@@ -1406,10 +1406,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 									await dbCmds.addOneSumm("countFinancialPayments");
 									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
+
 									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
 									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
 
-									await dbCmds.subtractOneSumm("activeFinancialAgreements");
 									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
 
 									await editEmbed.editEmbed(interaction.client);
