@@ -72,7 +72,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `${msgNotes}\n- Property Repossession completed on ${today}.` }
+										{ name: `Notes:`, value: `${msgNotes}\n- Property Repossession completed by <@${interaction.user.id}> on ${today}.` }
 									)
 									.setColor('706677');
 								await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: [embeds] });
@@ -93,7 +93,7 @@ module.exports = {
 										{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
 										{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
 										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-										{ name: `Notes:`, value: `- Property Repossession completed on ${today}.` }
+										{ name: `Notes:`, value: `- Property Repossession completed by <@${interaction.user.id}> on ${today}.` }
 									)
 									.setColor('706677');
 								await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: [embeds] });
