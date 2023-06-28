@@ -1195,7 +1195,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
 
-				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: <${documentLink}>`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;
