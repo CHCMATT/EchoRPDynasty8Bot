@@ -164,8 +164,10 @@ module.exports.checkPayments = async (client) => {
 							let now = Math.floor(new Date().getTime() / 1000.0);
 							let repoReadyDate = `<t:${now}:d>`;
 
+							let currentEmbed;
+
 							if (message.embeds[0].data.fields[13]) {
-								var currentEmbed = new EmbedBuilder()
+								currentEmbed = new EmbedBuilder()
 									.setTitle('A new Financing Agreement has been submitted!')
 									.addFields(
 										{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -185,7 +187,7 @@ module.exports.checkPayments = async (client) => {
 									)
 									.setColor('FAD643');
 							} else {
-								var currentEmbed = new EmbedBuilder()
+								currentEmbed = new EmbedBuilder()
 									.setTitle('A new Financing Agreement has been submitted!')
 									.addFields(
 										{ name: `Realtor Name:`, value: `${msgRealtor}` },
@@ -223,7 +225,12 @@ module.exports.checkPayments = async (client) => {
 								)
 								.setColor('DC2F02');
 
-							await client.channels.cache.get(process.env.PAYMENTS_OVERDUE_CHANNEL_ID).send({ embeds: [overdueEmbed] });
+							let overdueMsg = await client.channels.cache.get(process.env.PAYMENTS_OVERDUE_CHANNEL_ID).send({ embeds: [overdueEmbed] });
+
+							overdueMsg.startThread({
+								name: msgFinanceNum,
+								autoArchiveDuration: 4320,
+							})
 
 						}
 					}
