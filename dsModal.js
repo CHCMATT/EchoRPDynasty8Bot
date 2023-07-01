@@ -130,7 +130,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.HOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
+					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -263,7 +263,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: embeds });
+					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -403,7 +403,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.PROPERTY_QUOTES_CHANNEL_ID).send({ embeds: embeds });
+					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ embeds: embeds });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -514,7 +514,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				embeds = embeds.concat(photosEmbed);
 
-				await interaction.client.channels.cache.get(process.env.PROPERTY_REPOS_CHANNEL_ID).send({ embeds: embeds });
+				await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -637,7 +637,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				embeds = embeds.concat(photosEmbed);
 
-				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHECKS_CHANNEL_ID).send({ embeds: embeds });
+				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -829,7 +829,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					houseSaleEmbed = houseSaleEmbed.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.HOUSE_SALES_CHANNEL_ID).send({ embeds: houseSaleEmbed });
+					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: houseSaleEmbed });
 				}
 
 				var miscSaleEmbed = [new EmbedBuilder()
@@ -976,7 +976,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					warehouseRemodelEmbed = warehouseRemodelEmbed.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.WAREHOUSE_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
+					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
 				}
 
 				var miscSaleEmbed = [new EmbedBuilder()
@@ -1178,7 +1178,7 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Sale Price:`, value: `${formattedPrice}`, inline: true },
 						{ name: `Down Payment:`, value: `${formattedDownPayment}`, inline: true },
 						{ name: `Amount Owed:`, value: `${formattedAmountOwed}`, inline: true },
-						{ name: `Financing Agreement:`, value: `${documentLink}` },
+						{ name: `Financing Agreement:`, value: `[Click to view Financing Agreement](<${documentLink}>)` },
 					)
 					.setColor('FAD643')];
 
@@ -1340,7 +1340,7 @@ module.exports.modalSubmit = async (interaction) => {
 										)
 										.setColor('FFE169')];
 
-									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+									await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
 									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement and moved the agreement to the Completed Financing section.`, ephemeral: true });
 								} else { // if payments are still due
@@ -1414,7 +1414,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 									await editEmbed.editEmbed(interaction.client);
 
-									await interaction.client.channels.cache.get(process.env.FINANCING_PAYMENTS_CHANNEL_ID).send({ embeds: embeds });
+									await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
 									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
 								}
