@@ -47,11 +47,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:G", valueInputOption: "RAW", resource: { values: [[`House Sale``${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:G", valueInputOption: "RAW", resource: { values: [[`House Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
-				var costPrice = (price * 0.70);
+				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
 
@@ -184,7 +184,7 @@ module.exports.modalSubmit = async (interaction) => {
 				});
 
 				var formattedPrice = formatter.format(price);
-				var costPrice = (price * 0.70);
+				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
 

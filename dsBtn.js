@@ -19,7 +19,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the house lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('1234')
+					.setPlaceholder('1234 Baytree Canyon Rd')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -29,9 +29,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel("What is the locat. and notes about the sale?")
+					.setLabel("What is the contact info & notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Baytree Canyon Rd, provided smart locks, 956-252-1929')
+					.setPlaceholder('956-252-1929, Provided smart locks')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -66,7 +66,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('lotNumInput')
 					.setLabel("What is the warehouse lot number?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('2345')
+					.setPlaceholder('2345 Grove St')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -76,9 +76,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel("What is the locat. and notes about the sale?")
+					.setLabel("What is the contact info & notes about the sale?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('Capital Blvd, upgraded to 5 car garage, 956-252-1929')
+					.setPlaceholder('956-252-1929, Upgraded to 5 car garage')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -269,13 +269,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('6789, upgraded to HighEndV3, 956-252-1929')
+					.setPlaceholder('6789 Grove St, upgraded to HighEndV3, 956-252-1929')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number?")
+					.setLabel("What is the old lot number & street name?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('5678')
+					.setPlaceholder('5678 Grove St')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -315,13 +315,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('newLotNumNotesInput')
 					.setLabel("What is the new lot number, and any notes?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8910, upgraded from XS to Small Warehouse, 956-252-1929')
+					.setPlaceholder('8910 Route 68, upgraded from XS to Small Warehouse, 956-252-1929')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number?")
+					.setLabel("What is the old lot number & nearest road?")
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('7891')
+					.setPlaceholder('7891 Route 68')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')

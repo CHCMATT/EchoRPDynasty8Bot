@@ -31,7 +31,7 @@ module.exports = {
 			let saleprice = interaction.options.getInteger('saleprice');
 
 			if (calctype == 'regular') {
-				let costPrice = (saleprice * 0.70);
+				let costPrice = (saleprice * 0.85);
 				let d8Profit = saleprice - costPrice;
 				let realtorCommission = (d8Profit * 0.20);
 
