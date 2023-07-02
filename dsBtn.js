@@ -29,7 +29,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel('What is the contact info & notes about the sale?')
+					.setLabel('What is the phone num & notes about the sale?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('956-252-1929, Provided smart locks')
 					.setRequired(true);
@@ -76,7 +76,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel('What is the contact info & notes about the sale?')
+					.setLabel('What is the phone num & notes about the sale?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('956-252-1929, Upgraded to 5 car garage')
 					.setRequired(true);
