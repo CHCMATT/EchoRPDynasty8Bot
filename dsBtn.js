@@ -11,31 +11,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a house that you sold');
 				var soldToInput = new TextInputBuilder()
 					.setCustomId('soldToInput')
-					.setLabel("What is the name and info of the buyer?")
+					.setLabel('What is the name and info of the buyer?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
-					.setLabel("What is the house lot number?")
+					.setLabel('What is the house lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('1234 Baytree Canyon Rd')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the final sale price?")
+					.setLabel('What was the final sale price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('150000')
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel("What is the contact info & notes about the sale?")
+					.setLabel('What is the contact info & notes about the sale?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('956-252-1929, Provided smart locks')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of house")
+					.setLabel('Include photos of GPS & front of house')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/wgJiq13.jpg, https://i.imgur.com/hv6jVYT.jpg')
 					.setRequired(true);
@@ -58,31 +58,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a warehouse that you sold');
 				var soldToInput = new TextInputBuilder()
 					.setCustomId('soldToInput')
-					.setLabel("What is the name and info of the buyer?")
+					.setLabel('What is the name and info of the buyer?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
-					.setLabel("What is the warehouse lot number?")
+					.setLabel('What is the warehouse lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('2345 Grove St')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the final sale price?")
+					.setLabel('What was the final sale price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('250000')
 					.setRequired(true);
 				var locNotesInput = new TextInputBuilder()
 					.setCustomId('locNotesInput')
-					.setLabel("What is the contact info & notes about the sale?")
+					.setLabel('What is the contact info & notes about the sale?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('956-252-1929, Upgraded to 5 car garage')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of warehouse")
+					.setLabel('Include photos of GPS & front of warehouse')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/TBj8voN.jpg, https://i.imgur.com/gLGae7c.jpg')
 					.setRequired(true);
@@ -105,31 +105,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Request a quote for a property');
 				var clientInfoInput = new TextInputBuilder()
 					.setCustomId('clientInfoInput')
-					.setLabel("What is the name and phone # of the client?")
+					.setLabel('What is the name and phone # of the client?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - Phone Number')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What is the price you estimate it will be?")
+					.setLabel('What is the price you estimate it will be?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('850000')
 					.setRequired(true);
 				var intTypeInput = new TextInputBuilder()
 					.setCustomId('intTypeInput')
-					.setLabel("What is the requested interior type?")
+					.setLabel('What is the requested interior type?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('HighEndV2')
 					.setRequired(true);
 				var notesInput = new TextInputBuilder()
 					.setCustomId('notesInput')
-					.setLabel("Any notes about the requested quote?")
+					.setLabel('Any notes about the requested quote?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('House with a view on Rich Bitch Avenue, vibes like Malibu')
 					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of house")
+					.setLabel('Include photos of GPS & front of house')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
 					.setRequired(true);
@@ -152,31 +152,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a property that you repossessed');
 				var prevOwnerInput = new TextInputBuilder()
 					.setCustomId('prevOwnerInput')
-					.setLabel("What is the name and info of the prev. owner?")
+					.setLabel('What is the name and info of the prev. owner?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
-					.setLabel("What is the property lot number?")
+					.setLabel('What is the property lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('3456')
 					.setRequired(true);
 				var repoReasonInput = new TextInputBuilder()
 					.setCustomId('repoReasonInput')
-					.setLabel("What was the reason for the repossession?")
+					.setLabel('What was the reason for the repossession?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Foreclosure')
 					.setRequired(true);
 				var notesInput = new TextInputBuilder()
 					.setCustomId('notesInput')
-					.setLabel("Any notes about the repossession?")
+					.setLabel('Any notes about the repossession?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Foreclosure, failure to pay')
 					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of property")
+					.setLabel('Include photos of GPS & front of property')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/tnLaQWD.jpg, https://i.imgur.com/EZ81DMA.jpg')
 					.setRequired(true);
@@ -199,25 +199,25 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Request a train activity check');
 				var currentOwnerInput = new TextInputBuilder()
 					.setCustomId('currentOwnerInput')
-					.setLabel("What is the name & CID of the current owner?")
+					.setLabel('What is the name & CID of the current owner?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID')
 					.setRequired(true);
 				var lotNumInput = new TextInputBuilder()
 					.setCustomId('lotNumInput')
-					.setLabel("What is the property lot number?")
+					.setLabel('What is the property lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('4567')
 					.setRequired(true);
 				var notesInput = new TextInputBuilder()
 					.setCustomId('notesInput')
-					.setLabel("Any notes about the train activity check?")
+					.setLabel('Any notes about the train activity check?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('Neighbor stated saw the owner with a moving truck')
 					.setRequired(false);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include 1 photo of GPS & front of house")
+					.setLabel('Include 1 photo of GPS & front of house')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
 					.setRequired(true);
@@ -237,13 +237,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Add a Miscellaneous Sale');
 				var itemsSoldInput = new TextInputBuilder()
 					.setCustomId('itemsSoldInput')
-					.setLabel("What did you sell?")
+					.setLabel('What did you sell?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('3x Garage Slots')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the total sale price?")
+					.setLabel('What was the total sale price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('15000')
 					.setRequired(true);
@@ -261,31 +261,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a house remodel that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
-					.setLabel("What is the name and info of the owner?")
+					.setLabel('What is the name and info of the owner?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
-					.setLabel("What is the new lot number, and any notes?")
+					.setLabel('What is the new lot number, and any notes?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('6789 Grove St, upgraded to HighEndV3, 956-252-1929')
+					.setPlaceholder('6789 Grove St, ph. num, upgraded to HighEndV3')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number & street name?")
+					.setLabel('What is the old lot number & street name?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('5678 Grove St')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the remodel price?")
+					.setLabel('What was the remodel price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('35000')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of house")
+					.setLabel('Include photos of GPS & front of house')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/qTL6xiG.jpg, https://i.imgur.com/jMYxD9d.jpg')
 					.setRequired(true);
@@ -307,31 +307,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a warehouse upgrade that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
-					.setLabel("What is the name and info of the owner?")
+					.setLabel('What is the name and info of the owner?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
-					.setLabel("What is the new lot number, and any notes?")
+					.setLabel('What is the new lot number, and any notes?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('8910 Route 68, upgraded from XS to Small Warehouse, 956-252-1929')
+					.setPlaceholder('8910 Route 68, ph. num, upgraded to Small WH')
 					.setRequired(true);
 				var oldLotNumInput = new TextInputBuilder()
 					.setCustomId('oldLotNumInput')
-					.setLabel("What is the old lot number & nearest road?")
+					.setLabel('What is the old lot number & nearest road?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('7891 Route 68')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the upgrade price?")
+					.setLabel('What was the upgrade price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('45000')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
-					.setLabel("Include photos of GPS & front of warehouse")
+					.setLabel('Include photos of GPS & front of warehouse')
 					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
 					.setRequired(true);
@@ -353,31 +353,31 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a financing agreement that you completed');
 				var clientNameInput = new TextInputBuilder()
 					.setCustomId('clientNameInput')
-					.setLabel("What is the name of the client?")
+					.setLabel('What is the name of the client?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName')
 					.setRequired(true);
 				var clientInfoInput = new TextInputBuilder()
 					.setCustomId('clientInfoInput')
-					.setLabel("What is the CID and DOB of the client?")
+					.setLabel('What is the CID and DOB of the client?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('CID | DOB')
 					.setRequired(true);
 				var clientContactInput = new TextInputBuilder()
 					.setCustomId('clientContactInput')
-					.setLabel("What is the contact info for the client?")
+					.setLabel('What is the contact info for the client?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('phone # | email | bank account #')
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel("What is the lot number and nearest street?")
+					.setLabel('What is the lot number and nearest street?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8912 Paleto Blvd')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel("What was the final sale price?")
+					.setLabel('What was the final sale price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('275000')
 					.setRequired(true);
@@ -397,18 +397,18 @@ module.exports.btnPressed = async (interaction) => {
 					.setTitle('Log a financing payment that you received');
 				var payersNameInput = new TextInputBuilder()
 					.setCustomId('payersNameInput')
-					.setLabel("What is the name of the person paying?")
+					.setLabel('What is the name of the person paying?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName')
 					.setRequired(true);
 				var financingNumInput = new TextInputBuilder()
 					.setCustomId('financingNumInput')
-					.setLabel("What is the financing agreement number?")
+					.setLabel('What is the financing agreement number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('H12345')
 				var paymentInput = new TextInputBuilder()
 					.setCustomId('paymentInput')
-					.setLabel("What is the payment amount?")
+					.setLabel('What is the payment amount?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('120000')
 					.setRequired(true);
@@ -466,56 +466,56 @@ module.exports.btnPressed = async (interaction) => {
 								replaceAllText: {
 									replaceText: todayDate,
 									containsText: {
-										"text": "{today_date}",
-										"matchCase": true
+										'text': '{today_date}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: msgClientName,
 									containsText: {
-										"text": "{client_name}",
-										"matchCase": true
+										'text': '{client_name}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: msgStreetAddress,
 									containsText: {
-										"text": "{street_address}",
-										"matchCase": true
+										'text': '{street_address}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: financingDate,
 									containsText: {
-										"text": "{finance_date}",
-										"matchCase": true
+										'text': '{finance_date}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: todayDatePlus3,
 									containsText: {
-										"text": "{today_plus3}",
-										"matchCase": true
+										'text': '{today_plus3}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: msgAmtOwed,
 									containsText: {
-										"text": "{past_due_amt}",
-										"matchCase": true
+										'text': '{past_due_amt}',
+										'matchCase': true
 									}
 								},
 							}, {
 								replaceAllText: {
 									replaceText: realtorName,
 									containsText: {
-										"text": "{realtor_name}",
-										"matchCase": true
+										'text': '{realtor_name}',
+										'matchCase': true
 									}
 								},
 							}]
