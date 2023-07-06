@@ -27,29 +27,39 @@ module.exports = {
 	],
 	async execute(interaction) {
 		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			let calctype = interaction.options.getString('calctype');
-			let saleprice = interaction.options.getInteger('saleprice');
+			let calcType = interaction.options.getString('calctype');
+			let salePrice = interaction.options.getInteger('saleprice');
 
-			if (calctype == 'regular') {
-				let costPrice = (saleprice * 0.85);
-				let d8Profit = saleprice - costPrice;
+			if (calcType == 'regular') {
+				let costPrice = (salePrice * 0.85);
+				let taxPrice = Math.round((salePrice * 0.0519));
+				let totalPrice = (salePrice + taxPrice);
+				let d8Profit = salePrice - costPrice;
 				let realtorCommission = (d8Profit * 0.20);
 
-				let formattedPrice = formatter.format(saleprice);
+				let formattedSalePrice = formatter.format(salePrice);
+				let formattedTotalPrice = formatter.format(totalPrice);
+				let formattedTaxPrice = formatter.format(taxPrice);
 				let formattedCostPrice = formatter.format(costPrice);
 				let formattedD8Profit = formatter.format(d8Profit);
 				let formattedRealtorCommission = formatter.format(realtorCommission);
 
-				await interaction.reply({ content: `Regular Sale Calculator Results:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
-			} else if (calctype == 'financing') {
-				let downPayment = (saleprice * 0.3);
-				let amountOwed = (saleprice - downPayment + ((saleprice - downPayment) * .14));
+				await interaction.reply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
+			} else if (calcType == 'financing') {
+				let downPayment = (salePrice * 0.3);
+				let taxPrice = Math.round((salePrice * 0.0519));
+				let interestPrice = Math.round(((salePrice - downPayment) * .14));
+				let totalPrice = (salePrice + taxPrice);
+				let amountOwed = ((salePrice + taxPrice + interestPrice) - downPayment);
 
-				let formattedPrice = formatter.format(saleprice);
+				let formattedSalePrice = formatter.format(salePrice);
+				let formattedTotalPrice = formatter.format(totalPrice);
+				let formattedTaxPrice = formatter.format(taxPrice);
+				let formattedInterestPrice = formatter.format(interestPrice);
 				let formattedDownPayment = formatter.format(downPayment);
 				let formattedAmountOwed = formatter.format(amountOwed);
 
-				await interaction.reply({ content: `Financing Sale Calculator Results:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
 
 			} else {
 				console.log(`Error: Unrecognized calculator type:  ${calctype}`)

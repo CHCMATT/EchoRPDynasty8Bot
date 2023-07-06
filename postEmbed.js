@@ -114,7 +114,7 @@ module.exports.postEmbed = async (client) => {
 		.setColor('#C9A227');
 
 	let miscSalesEmbed = new EmbedBuilder()
-		.setTitle('Amount of Miscellaneous Sales Completed:')
+		.setTitle('Amount of Misc. Sales Completed:')
 		.setDescription(countMiscSales)
 		.setColor('#C9A227');
 
