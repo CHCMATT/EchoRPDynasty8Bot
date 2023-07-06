@@ -749,7 +749,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var formattedPrice = formatter.format(price);
 
-				var d8Profit = (price * 0.85);
+				var costPrice = (price * 0.85);
+				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
 
 				var formattedD8Profit = formatter.format(d8Profit);
@@ -896,7 +897,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var formattedPrice = formatter.format(price);
 
-				var d8Profit = (price * 0.85);
+				var costPrice = (price * 0.85);
+				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.20);
 
 				var formattedD8Profit = formatter.format(d8Profit);
