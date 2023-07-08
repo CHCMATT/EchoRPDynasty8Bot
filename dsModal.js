@@ -679,9 +679,11 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var formattedPrice = formatter.format(price);
 
-				var d8Profit = price;
-				var realtorCommission = (d8Profit * 0.20);
+				var d8Cost = (price * 0.9);
+				var d8Profit = price - d8Cost;
+				var realtorCommission = (d8Profit * 0.5);
 
+				var formattedD8Cost = formatter.format(d8Cost);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 
@@ -724,7 +726,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addHouseRemodelModal':
 				var realtorName;

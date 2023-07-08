@@ -245,7 +245,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('priceInput')
 					.setLabel('What was the total sale price?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('15000')
+					.setPlaceholder('30000')
 					.setRequired(true);
 
 				// meme gallery: https://imgur.com/gallery/Et0Qm
