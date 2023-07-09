@@ -53,7 +53,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.20);
+				var realtorCommission = (d8Profit * 0.30);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
@@ -186,7 +186,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.20);
+				var realtorCommission = (d8Profit * 0.30);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
@@ -753,7 +753,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.20);
+				var realtorCommission = (d8Profit * 0.30);
 
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
@@ -901,7 +901,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.20);
+				var realtorCommission = (d8Profit * 0.30);
 
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
