@@ -176,7 +176,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
-						.setLabel('What is the new property id and nearest street?')
+						.setLabel('What is the new property id and nearest st.?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('6789 Grove St')
 						.setRequired(true);
@@ -220,7 +220,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
-						.setLabel('What is the new property id and nearest street?')
+						.setLabel('What is the new property id and nearest st.?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('8910 Route 68')
 						.setRequired(true);
