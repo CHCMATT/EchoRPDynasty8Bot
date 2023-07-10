@@ -1,5 +1,5 @@
 var moment = require('moment');
-var { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField } = require('discord.js');
+var { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {
 	try {
@@ -15,9 +15,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
-				var lotNumInput = new TextInputBuilder()
-					.setCustomId('lotNumInput')
-					.setLabel('What is the house lot number?')
+				var lotNumStreetNameInput = new TextInputBuilder()
+					.setCustomId('lotNumStreetNameInput')
+					.setLabel('What is the house street address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('1234 Baytree Canyon Rd')
 					.setRequired(true);
@@ -40,15 +40,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/wgJiq13.jpg, https://i.imgur.com/hv6jVYT.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var soldToInputRow = new ActionRowBuilder().addComponents(soldToInput);
-				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var locNotesInputRow = new ActionRowBuilder().addComponents(locNotesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addHouseSoldModal.addComponents(soldToInputRow, lotNumInputRow, priceInputRow, locNotesInputRow, photosInputRow);
+				addHouseSoldModal.addComponents(soldToInputRow, lotNumStreetNameInputRow, priceInputRow, locNotesInputRow, photosInputRow);
 
 				await interaction.showModal(addHouseSoldModal);
 				break;
@@ -62,9 +60,9 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
-				var lotNumInput = new TextInputBuilder()
-					.setCustomId('lotNumInput')
-					.setLabel('What is the warehouse lot number?')
+				var lotNumStreetNameInput = new TextInputBuilder()
+					.setCustomId('lotNumStreetNameInput')
+					.setLabel('What is the warehouse street address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('2345 Grove St')
 					.setRequired(true);
@@ -78,7 +76,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('locNotesInput')
 					.setLabel('What is the phone num & notes about the sale?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('956-252-1929, Upgraded to 5 car garage')
+					.setPlaceholder('956-252-1929, Remodeled to 5 car garage')
 					.setRequired(true);
 				var photosInput = new TextInputBuilder()
 					.setCustomId('photosInput')
@@ -87,15 +85,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/TBj8voN.jpg, https://i.imgur.com/gLGae7c.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var soldToInputRow = new ActionRowBuilder().addComponents(soldToInput);
-				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var locNotesInputRow = new ActionRowBuilder().addComponents(locNotesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addWarehouseSoldModal.addComponents(soldToInputRow, lotNumInputRow, priceInputRow, locNotesInputRow, photosInputRow);
+				addWarehouseSoldModal.addComponents(soldToInputRow, lotNumStreetNameInputRow, priceInputRow, locNotesInputRow, photosInputRow);
 
 				await interaction.showModal(addWarehouseSoldModal);
 				break;
@@ -134,8 +130,6 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var intTypeInputRow = new ActionRowBuilder().addComponents(intTypeInput);
@@ -156,8 +150,8 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID - DOB')
 					.setRequired(true);
-				var lotNumInput = new TextInputBuilder()
-					.setCustomId('lotNumInput')
+				var lotNumStreetNameInput = new TextInputBuilder()
+					.setCustomId('lotNumStreetNameInput')
 					.setLabel('What is the property lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('3456')
@@ -181,15 +175,13 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/tnLaQWD.jpg, https://i.imgur.com/EZ81DMA.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var prevOwnerInputRow = new ActionRowBuilder().addComponents(prevOwnerInput);
-				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var repoReasonInputRow = new ActionRowBuilder().addComponents(repoReasonInput);
 				var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addPropertyRepodModal.addComponents(prevOwnerInputRow, lotNumInputRow, repoReasonInputRow, notesInputRow, photosInputRow);
+				addPropertyRepodModal.addComponents(prevOwnerInputRow, lotNumStreetNameInputRow, repoReasonInputRow, notesInputRow, photosInputRow);
 
 				await interaction.showModal(addPropertyRepodModal);
 				break;
@@ -203,8 +195,8 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('FirstName LastName - CID')
 					.setRequired(true);
-				var lotNumInput = new TextInputBuilder()
-					.setCustomId('lotNumInput')
+				var lotNumStreetNameInput = new TextInputBuilder()
+					.setCustomId('lotNumStreetNameInput')
 					.setLabel('What is the property lot number?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('4567')
@@ -222,13 +214,11 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var currentOwnerInputRow = new ActionRowBuilder().addComponents(currentOwnerInput);
-				var lotNumInputRow = new ActionRowBuilder().addComponents(lotNumInput);
+				var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 				var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
-				addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumInputRow, notesInputRow, photosInputRow);
+				addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
 				await interaction.showModal(addTrainCheckModal);
 				break;
 			case 'addMiscSale':
@@ -247,8 +237,6 @@ module.exports.btnPressed = async (interaction) => {
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('30000')
 					.setRequired(true);
-
-				// meme gallery: https://imgur.com/gallery/Et0Qm
 
 				var itemsSoldInputRow = new ActionRowBuilder().addComponents(itemsSoldInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
@@ -275,7 +263,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('oldLotNumInput')
 					.setLabel('What is the old street address, & any notes?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('5678 Grove St, ph. num, upgraded to HighEndV3')
+					.setPlaceholder('5678 Grove St, ph. num, remodeled to HighEndV3')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
@@ -290,8 +278,6 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/qTL6xiG.jpg, https://i.imgur.com/jMYxD9d.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
 				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
 				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
@@ -302,9 +288,9 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(addHouseRemodelModal);
 				break;
 			case 'addWarehouseRemodel':
-				var addHouseRemodelModal = new ModalBuilder()
+				var addWarehouseRemodelModal = new ModalBuilder()
 					.setCustomId('addWarehouseRemodelModal')
-					.setTitle('Log a warehouse upgrade that you completed');
+					.setTitle('Log a warehouse remodel that you completed');
 				var remodelForInput = new TextInputBuilder()
 					.setCustomId('remodelForInput')
 					.setLabel('What is the name and info of the owner?')
@@ -321,11 +307,11 @@ module.exports.btnPressed = async (interaction) => {
 					.setCustomId('oldLotNumInput')
 					.setLabel('What is the old street address, & any notes?')
 					.setStyle(TextInputStyle.Short)
-					.setPlaceholder('7891 Route 68, ph. num, upgraded to Small WH')
+					.setPlaceholder('7891 Route 68, ph. num, remodeled to Small WH')
 					.setRequired(true);
 				var priceInput = new TextInputBuilder()
 					.setCustomId('priceInput')
-					.setLabel('What was the upgrade price?')
+					.setLabel('What was the remodel price?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('45000')
 					.setRequired(true);
@@ -336,16 +322,14 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
 					.setRequired(true);
 
-				// meme gallery: https://imgur.com/gallery/Et0Qm
-
 				var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
 				var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
 				var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
 				var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
 				var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-				addHouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
-				await interaction.showModal(addHouseRemodelModal);
+				addWarehouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
+				await interaction.showModal(addWarehouseRemodelModal);
 				break;
 			case 'addFinancingAgreement':
 				var addFinancingAgreementModal = new ModalBuilder()
@@ -590,8 +574,56 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
+			case 'addSale':
+				let addSaleSelectOptions = new StringSelectMenuBuilder()
+					.setCustomId('addSaleDropdown')
+					.setPlaceholder('Select a Sale Type')
+					.addOptions(
+						new StringSelectMenuOptionBuilder()
+							.setLabel('House')
+							.setEmoji('🏡')
+							.setValue('houseSale'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Warehouse')
+							.setEmoji('🏭')
+							.setValue('warehouseSale'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Office')
+							.setEmoji('🏢')
+							.setValue('officeSale'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Miscellaneous')
+							.setEmoji('🇲')
+							.setValue('miscSale'),
+					);
+
+				let addSaleSelectionsComponent = new ActionRowBuilder()
+					.addComponents(addSaleSelectOptions);
+
+				await interaction.reply({ content: `What type of **sale** is this?`, components: [addSaleSelectionsComponent], ephemeral: true });
+				break;
+			case 'addRemodel':
+				let addRemodelSelectOptions = new StringSelectMenuBuilder()
+					.setCustomId('addRemodelDropdown')
+					.setPlaceholder('Select a Remodel Type')
+					.addOptions(
+						new StringSelectMenuOptionBuilder()
+							.setLabel('House')
+							.setEmoji('🏡')
+							.setValue('houseRemodel'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Warehouse')
+							.setEmoji('🏭')
+							.setValue('warehouseRemodel'),
+					);
+
+				let addRemodelSelectionsComponent = new ActionRowBuilder()
+					.addComponents(addRemodelSelectOptions);
+
+				await interaction.reply({ content: `What type of **remodel** is this?`, components: [addRemodelSelectionsComponent], ephemeral: true });
+				break;
 			default:
-				await interaction.editReply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
 		}
 	}

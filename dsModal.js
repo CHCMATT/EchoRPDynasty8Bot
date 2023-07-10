@@ -41,13 +41,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var saleDate = `<t:${now}:d>`;
 
 				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
-				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`House Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`House Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, soldTo, locationNotes, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -119,7 +119,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Sale Date:`, value: `${saleDate}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
 							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
 							{ name: `House Sold To:`, value: `${soldTo}` },
 							{ name: `Location/Notes:`, value: `${locationNotes}` }
@@ -160,7 +160,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Houses Sold\` counter - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addWarehouseSoldModal':
 				var realtorName;
@@ -174,13 +174,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var saleDate = `<t:${now}:d>`;
 
 				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
-				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Warehouse Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNum, price, soldTo, locationNotes, photosString]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Warehouse Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, soldTo, locationNotes, photosString]] }
 				});
 
 				var formattedPrice = formatter.format(price);
@@ -252,7 +252,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Sale Date:`, value: `${saleDate}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
 							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
 							{ name: `Warehouse Sold To:`, value: `${soldTo}` },
 							{ name: `Location/Notes:`, value: `${locationNotes}` }
@@ -293,7 +293,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Warehouses Sold\` counter - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;
@@ -429,13 +429,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var repoDate = `<t:${now}:d>`;
 
 				var prevOwner = strCleanup(interaction.fields.getTextInputValue('prevOwnerInput'));
-				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var repoReason = strCleanup(interaction.fields.getTextInputValue('repoReasonInput'));
 				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Logs!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNum, repoReason, notes, photosString]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Logs!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNumStreetName, repoReason, notes, photosString]] }
 				});
 
 				var photos = [photosString];
@@ -492,7 +492,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Repossession Date:`, value: `${repoDate}` },
 							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
@@ -504,7 +504,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Repossession Date:`, value: `${repoDate}` },
 							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 						)
 						.setColor('B69121')];
@@ -530,7 +530,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-				var reason = `Repossession of property number \`${lotNum}\` on ${repoDate}`
+				var reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`
 
 				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 				var notificationEmbed = new EmbedBuilder()
@@ -555,12 +555,12 @@ module.exports.modalSubmit = async (interaction) => {
 				var reqDate = `<t:${now}:d>`;
 
 				var ownerInfo = strCleanup(interaction.fields.getTextInputValue('currentOwnerInput'));
-				var lotNum = strCleanup(interaction.fields.getTextInputValue('lotNumInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Train Activity!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNum, notes, photosString]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Train Activity!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNumStreetName, notes, photosString]] }
 				});
 
 				var photos = [photosString];
@@ -617,7 +617,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
 							{ name: `Owner Information:`, value: `${ownerInfo}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
 						.setColor('C9A227')];
@@ -628,7 +628,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
 							{ name: `Owner Information:`, value: `${ownerInfo}` },
-							{ name: `Lot Number:`, value: `${lotNum}` },
+							{ name: `Lot Number:`, value: `${lotNumStreetName}` }
 						)
 						.setColor('C9A227')];
 				}
@@ -818,8 +818,8 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Remodel Date:`, value: `${remodelDate}` },
-							{ name: `Old Lot Number:`, value: `${oldLotNum}` },
-							{ name: `New Lot Number/Notes:`, value: `${newLotNumNotes}` },
+							{ name: `Old Street Address/Notes:`, value: `${oldLotNum}` },
+							{ name: `New Street Address:`, value: `${newLotNumNotes}` },
 							{ name: `Remodel Completed For:`, value: `${remodelFor}` },
 							{ name: `Remodel Price:`, value: `${formattedPrice}` },
 						)
@@ -966,8 +966,8 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Remodel Date:`, value: `${remodelDate}` },
-							{ name: `Old Lot Number:`, value: `${oldLotNum}` },
-							{ name: `New Lot Number/Notes:`, value: `${newLotNumNotes}` },
+							{ name: `Old Street Address:`, value: `${oldLotNum}` },
+							{ name: `New Street Address/Notes:`, value: `${newLotNumNotes}` },
 							{ name: `Remodel Completed For:`, value: `${remodelFor}` },
 							{ name: `Remodel Price:`, value: `${formattedPrice}` },
 						)
@@ -1432,6 +1432,213 @@ module.exports.modalSubmit = async (interaction) => {
 						ephemeral: true
 					});
 				};
+				break;
+			case 'addOfficeSoldModal':
+				await interaction.deferReply({ ephemeral: true });
+
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var saleDate = `<t:${now}:d>`;
+
+				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Office Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, clientName, clientInfo, photosString]] }
+				});
+
+				let officeSaleNewFile = await interaction.client.driveFiles.copy({
+					auth: interaction.client.driveAuth, fileId: process.env.LIMITED_PROP_TEMPLATE_DOC_ID, resource: { name: `${clientName} | Dynasty 8 Limited Property Contract` }
+				});
+
+				let officeSaleDocumentLink = `https://docs.google.com/document/d/${officeSaleNewFile.data.id}`;
+
+				let officeSaleTodayDate = moment().format('MMMM DD, YYYY');
+
+				var formattedPrice = formatter.format(price);
+				var costPrice = (price * 0.85);
+				var d8Profit = price - costPrice;
+				var realtorCommission = (d8Profit * 0.30);
+
+				var formattedCostPrice = formatter.format(costPrice);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
+
+				await interaction.client.googleDocs.batchUpdate({
+					auth: interaction.client.driveAuth, documentId: officeSaleNewFile.data.id, resource: {
+						requests: [{
+							replaceAllText: {
+								replaceText: clientName,
+								containsText: {
+									"text": "{client_name}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: clientInfo,
+								containsText: {
+									"text": "{client_info}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: officeSaleTodayDate,
+								containsText: {
+									"text": "{today_date}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: lotNumStreetName,
+								containsText: {
+									"text": "{street_address}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedPrice,
+								containsText: {
+									"text": "{purchase_price}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: 'Office',
+								containsText: {
+									"text": "{property_type}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: realtorName,
+								containsText: {
+									"text": "{realtor_name}",
+									"matchCase": true
+								}
+							},
+						}]
+					}
+				});
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+				else {
+					var photos = [photosString];
+					if (photosString.includes(",")) {
+						photos = photosString.split(",")
+					} else if (photosString.includes(";")) {
+						photos = photosString.split(";")
+					} else if (photosString.includes(" ")) {
+						photos = photosString.split(" ")
+					} else if (photosString.includes("|")) {
+						photos = photosString.split("|")
+					} else if (photos.length > 1) {
+						await interaction.reply({
+							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					for (let i = 0; i < photos.length; i++) {
+						if (photos[i] == "") {
+							photos.splice(i, 1);
+							continue;
+						}
+						if (!isValidUrl(photos[i])) { // validate photo link
+							await interaction.reply({
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+								ephemeral: true
+							});
+							return;
+						}
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+							await interaction.reply({
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+								ephemeral: true
+							});
+							return;
+						}
+					}
+
+					if (photos.length >= 10) {
+						await interaction.reply({
+							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Office has been sold!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Sale Date:`, value: `${saleDate}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
+							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
+							{ name: `Client Name:`, value: `${clientName}` },
+							{ name: `Client Info:`, value: `${clientInfo}` },
+							{ name: `Limited Prop. Contract:`, value: `[Click to view Contract](<${officeSaleDocumentLink}>)` }
+
+						)
+						.setColor('805B10')];
+
+					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
+
+					embeds = embeds.concat(photosEmbed);
+
+					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+				}
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+				await dbCmds.addOneSumm("countHousesSold");
+				await dbCmds.addOneSumm("countMonthlyHousesSold");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
+				await editEmbed.editEmbed(interaction.client);
+				if (realtorCommission > 0) {
+					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
+				}
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+
+				if (realtorCommission > 0) {
+					var formattedCommission = formatter.format(realtorCommission);
+					var reason = `Office Sale to \`${clientName}\` costing \`${formattedPrice}\` on ${saleDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					var notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('#1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				}
+
+				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
+
+				await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			default:
 				await interaction.reply({

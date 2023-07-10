@@ -146,28 +146,13 @@ module.exports.editEmbed = async (client) => {
 function addBtnRows() {
 	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId('addHouseSold')
-			.setLabel('Add a House Sale')
+			.setCustomId('addSale')
+			.setLabel('Add a Sale')
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
-			.setCustomId('addWarehouseSold')
-			.setLabel('Add a Warehouse Sale')
-			.setStyle(ButtonStyle.Success),
-
-		new ButtonBuilder()
-			.setCustomId('addMiscSale')
-			.setLabel('Add a Misc. Sale')
-			.setStyle(ButtonStyle.Success),
-
-		new ButtonBuilder()
-			.setCustomId('addHouseRemodel')
-			.setLabel('Add a House Remodel')
-			.setStyle(ButtonStyle.Success),
-
-		new ButtonBuilder()
-			.setCustomId('addWarehouseRemodel')
-			.setLabel('Add a Warehouse Remodel')
+			.setCustomId('addRemodel')
+			.setLabel('Add a Remodel')
 			.setStyle(ButtonStyle.Success),
 	);
 
