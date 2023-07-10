@@ -1468,9 +1468,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
+				var buybackPrice = (price * 0.75);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedBuybackPrice = formatter.format(buybackPrice);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 
 				await interaction.client.googleDocs.batchUpdate({
@@ -1512,6 +1514,14 @@ module.exports.modalSubmit = async (interaction) => {
 								replaceText: formattedPrice,
 								containsText: {
 									"text": "{purchase_price}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedBuybackPrice,
+								containsText: {
+									"text": "{buyback_price}",
 									"matchCase": true
 								}
 							},
