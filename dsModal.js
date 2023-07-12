@@ -1650,6 +1650,66 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
+			case 'addYPAdvertModal':
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var adDate = `<t:${now}:d>`;
+
+				var screenshotLink = strCleanup(interaction.fields.getTextInputValue('screenshotInput'));
+
+				if (!isValidUrl(screenshotLink)) { // validate photo link
+					await interaction.reply({
+						content: `:exclamation: \`${screenshotLink}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+						ephemeral: true
+					});
+					return;
+				}
+				var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+				if (!RegExp(allowedValues.join('|')).test(screenshotLink.toLowerCase())) { // validate photo link, again
+					await interaction.reply({
+						content: `:exclamation: \`${screenshotLink}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var realtorCommission = 500;
+				var formattedCommission = formatter.format(realtorCommission);
+				var reason = `Yellow Pages ad listed on ${adDate}`
+
+				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
+
+				var embeds = new EmbedBuilder()
+					.setTitle('A new Misc. Sale has been submitted!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Advertisement Date:`, value: `${adDate}` },
+					)
+					.setColor('DBB42C');
+
+				var photosEmbed = new EmbedBuilder()
+					.setColor('DBB42C')
+					.setURL('https://echorp.net/')
+					.setImage(screenshotLink);
+
+				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: [embeds, photosEmbed] });
+
+				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+				var notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('#1EC276');
+				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+
+				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+
+				break;
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,

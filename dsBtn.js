@@ -622,6 +622,20 @@ module.exports.btnPressed = async (interaction) => {
 
 				await interaction.reply({ content: `What type of **remodel** is this?`, components: [addRemodelSelectionsComponent], ephemeral: true });
 				break;
+			case 'addYPAdvert':
+				let addYPAdvertModal = new ModalBuilder()
+					.setCustomId('addYPAdvertModal')
+					.setTitle('Log an advertisement');
+				let screenshotInput = new TextInputBuilder()
+					.setCustomId('screenshotInput')
+					.setLabel('What is the link to a screenshot of the ad?')
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('https://i.imgur.com/wXfNIId.jpeg')
+					.setRequired(true);
+				let screenshotInputRow = new ActionRowBuilder().addComponents(screenshotInput);
+				addYPAdvertModal.addComponents(screenshotInputRow);
+				await interaction.showModal(addYPAdvertModal);
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

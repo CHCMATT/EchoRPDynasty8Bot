@@ -154,6 +154,11 @@ function addBtnRows() {
 			.setCustomId('addRemodel')
 			.setLabel('Add a Remodel')
 			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('addYPAdvert')
+			.setLabel('Log a YP Ad')
+			.setStyle(ButtonStyle.Secondary),
 	);
 
 	let row2 = new ActionRowBuilder().addComponents(
