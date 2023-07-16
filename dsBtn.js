@@ -625,7 +625,7 @@ module.exports.btnPressed = async (interaction) => {
 			case 'addYPAdvert':
 				let addYPAdvertModal = new ModalBuilder()
 					.setCustomId('addYPAdvertModal')
-					.setTitle('Log an advertisement');
+					.setTitle('Log a Yellow Pages advertisement');
 				let screenshotInput = new TextInputBuilder()
 					.setCustomId('screenshotInput')
 					.setLabel('What is the link to a screenshot of the ad?')
