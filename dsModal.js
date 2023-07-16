@@ -1681,15 +1681,16 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var realtorCommission = 500;
 				var formattedCommission = formatter.format(realtorCommission);
-				var reason = `Yellow Pages ad listed on ${adDate}`
+				var reason = `Yellow Pages ad listed on ${adDate}`;
 
+				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
 				var embeds = new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Advertisement Date:`, value: `${adDate}` },
+						{ name: `Ad Date:`, value: `${adDate}` },
 					)
 					.setColor('DBB42C');
 
