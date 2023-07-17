@@ -650,9 +650,13 @@ module.exports.btnPressed = async (interaction) => {
 							.setEmoji('📋')
 							.setValue('propRepo'),
 						new StringSelectMenuOptionBuilder()
-							.setLabel('Property Remodel')
-							.setEmoji('🏗')
-							.setValue('propRemodel'),
+							.setLabel('House Remodel')
+							.setEmoji('🏡')
+							.setValue('houseRemodel'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Warehouse Remodel')
+							.setEmoji('🏭')
+							.setValue('warehouseRemodel'),
 						new StringSelectMenuOptionBuilder()
 							.setLabel('Train Check')
 							.setEmoji('🚄')
