@@ -1679,7 +1679,7 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var realtorCommission = 500;
+				var realtorCommission = 526;
 				var formattedCommission = formatter.format(realtorCommission);
 				var reason = `Yellow Pages ad listed on ${adDate}`;
 
