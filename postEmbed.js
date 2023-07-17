@@ -148,6 +148,11 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Success),
 
 		new ButtonBuilder()
+			.setCustomId('addPropAction')
+			.setLabel('Add a Property Action')
+			.setStyle(ButtonStyle.Primary),
+
+		new ButtonBuilder()
 			.setCustomId('addYPAdvert')
 			.setLabel('Log a YP Ad')
 			.setStyle(ButtonStyle.Secondary),
