@@ -1,12 +1,6 @@
 let dbCmds = require('./dbCmds.js');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
-	style: 'currency',
-	currency: 'USD',
-	maximumFractionDigits: 0
-});
-
 module.exports.postEmbed = async (client) => {
 	let employeeStats = await dbCmds.currStats();
 	let overallDescList = '';
