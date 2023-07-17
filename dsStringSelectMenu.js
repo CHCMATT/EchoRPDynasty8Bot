@@ -257,126 +257,169 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				break;
 			case 'addPropActionDropdown':
 				if (interaction.values[0] == 'propQuote') {
-					var addPropertyQuoteModal = new ModalBuilder()
+					let addPropertyQuoteModal = new ModalBuilder()
 						.setCustomId('addPropertyQuoteModal')
 						.setTitle('Request a quote for a property');
-					var clientInfoInput = new TextInputBuilder()
+					let clientInfoInput = new TextInputBuilder()
 						.setCustomId('clientInfoInput')
 						.setLabel('What is the name and phone # of the client?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('FirstName LastName - Phone Number')
 						.setRequired(true);
-					var priceInput = new TextInputBuilder()
+					let priceInput = new TextInputBuilder()
 						.setCustomId('priceInput')
 						.setLabel('What is the price you estimate it will be?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('850000')
 						.setRequired(true);
-					var intTypeInput = new TextInputBuilder()
+					let intTypeInput = new TextInputBuilder()
 						.setCustomId('intTypeInput')
 						.setLabel('What is the requested interior type?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('HighEndV2')
 						.setRequired(true);
-					var notesInput = new TextInputBuilder()
+					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
 						.setLabel('Any notes about the requested quote?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('House with a view on Rich Bitch Avenue, vibes like Malibu')
 						.setRequired(false);
-					var photosInput = new TextInputBuilder()
+					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
 						.setLabel('Include photos of GPS & front of house')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
 						.setRequired(true);
 
-					var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
-					var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
-					var intTypeInputRow = new ActionRowBuilder().addComponents(intTypeInput);
-					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
-					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+					let clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
+					let priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+					let intTypeInputRow = new ActionRowBuilder().addComponents(intTypeInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
 					addPropertyQuoteModal.addComponents(clientInfoInputRow, priceInputRow, intTypeInputRow, notesInputRow, photosInputRow);
 
 					await interaction.showModal(addPropertyQuoteModal);
 				} else if (interaction.values[0] == 'propRepo') {
-					var addPropertyRepodModal = new ModalBuilder()
+					let addPropertyRepodModal = new ModalBuilder()
 						.setCustomId('addPropertyRepodModal')
 						.setTitle('Log a property that you repossessed');
-					var prevOwnerInput = new TextInputBuilder()
+					let prevOwnerInput = new TextInputBuilder()
 						.setCustomId('prevOwnerInput')
 						.setLabel('What is the name and info of the prev. owner?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('FirstName LastName - CID - DOB')
 						.setRequired(true);
-					var lotNumStreetNameInput = new TextInputBuilder()
+					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
 						.setLabel('What is the property lot number?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('3456')
 						.setRequired(true);
-					var repoReasonInput = new TextInputBuilder()
+					let repoReasonInput = new TextInputBuilder()
 						.setCustomId('repoReasonInput')
 						.setLabel('What was the reason for the repossession?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Foreclosure')
 						.setRequired(true);
-					var notesInput = new TextInputBuilder()
+					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
 						.setLabel('Any notes about the repossession?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Foreclosure, failure to pay')
 						.setRequired(false);
-					var photosInput = new TextInputBuilder()
+					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
 						.setLabel('Include photos of GPS & front of property')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/tnLaQWD.jpg, https://i.imgur.com/EZ81DMA.jpg')
 						.setRequired(true);
 
-					var prevOwnerInputRow = new ActionRowBuilder().addComponents(prevOwnerInput);
-					var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
-					var repoReasonInputRow = new ActionRowBuilder().addComponents(repoReasonInput);
-					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
-					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+					let prevOwnerInputRow = new ActionRowBuilder().addComponents(prevOwnerInput);
+					let lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
+					let repoReasonInputRow = new ActionRowBuilder().addComponents(repoReasonInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
 					addPropertyRepodModal.addComponents(prevOwnerInputRow, lotNumStreetNameInputRow, repoReasonInputRow, notesInputRow, photosInputRow);
 
 					await interaction.showModal(addPropertyRepodModal);
+				} else if (interaction.values[0] == 'propRemodel') {
+					let addRemodalModal = new ModalBuilder()
+						.setCustomId('addRemodalModal')
+						.setTitle('Log a remodel that you have completed');
+					let remodelForInput = new TextInputBuilder()
+						.setCustomId('remodelForInput')
+						.setLabel('What is the name and info of the owner?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setRequired(true);
+					let newLotNumNotesInput = new TextInputBuilder()
+						.setCustomId('newLotNumNotesInput')
+						.setLabel('What is the property id and nearest street?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('8910 Route 68')
+						.setRequired(true);
+					let oldLotNumInput = new TextInputBuilder()
+						.setCustomId('oldLotNumInput')
+						.setLabel('What is the old street address, & any notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('7891 Route 68, ph. num, remodeled to Small WH')
+						.setRequired(true);
+					let priceInput = new TextInputBuilder()
+						.setCustomId('priceInput')
+						.setLabel('What was the remodel price?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('45000')
+						.setRequired(true);
+					let photosInput = new TextInputBuilder()
+						.setCustomId('photosInput')
+						.setLabel('Include photos of GPS & front of warehouse')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
+						.setRequired(true);
+
+					let remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+					let newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+					let oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+					let priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+					addRemodalModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
+					await interaction.showModal(addRemodalModal);
 				} else if (interaction.values[0] == 'trainCheck') {
-					var addTrainCheckModal = new ModalBuilder()
+					let addTrainCheckModal = new ModalBuilder()
 						.setCustomId('addTrainCheckModal')
 						.setTitle('Request a train activity check');
-					var currentOwnerInput = new TextInputBuilder()
+					let currentOwnerInput = new TextInputBuilder()
 						.setCustomId('currentOwnerInput')
 						.setLabel('What is the name & CID of the current owner?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('FirstName LastName - CID')
 						.setRequired(true);
-					var lotNumStreetNameInput = new TextInputBuilder()
+					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
 						.setLabel('What is the property lot number?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('4567')
 						.setRequired(true);
-					var notesInput = new TextInputBuilder()
+					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
 						.setLabel('Any notes about the train activity check?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Neighbor stated saw the owner with a moving truck')
 						.setRequired(false);
-					var photosInput = new TextInputBuilder()
+					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
 						.setLabel('Include 1 photo of GPS & front of house')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
 						.setRequired(true);
 
-					var currentOwnerInputRow = new ActionRowBuilder().addComponents(currentOwnerInput);
-					var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
-					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
-					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+					let currentOwnerInputRow = new ActionRowBuilder().addComponents(currentOwnerInput);
+					let lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 					addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
 					await interaction.showModal(addTrainCheckModal);
 				}
