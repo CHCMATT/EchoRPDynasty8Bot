@@ -1,5 +1,5 @@
 var moment = require('moment');
-var { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require('discord.js');
+var { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, Embed } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {
 	try {
@@ -667,6 +667,112 @@ module.exports.btnPressed = async (interaction) => {
 					.addComponents(addPropActionSelectOptions);
 
 				await interaction.reply({ content: `What type of **property action** are you taking?`, components: [addPropActionSelectionsComponent], ephemeral: true });
+				break;
+			case 'approveQuote':
+				let approvalNow = Math.floor(new Date().getTime() / 1000.0);
+				let approvalDate = `<t:${approvalNow}:d>`;
+
+				await interaction.message.react('✅');
+
+				let msgEmbeds = interaction.message.embeds;
+
+				let mainEmbedFields = msgEmbeds[0].data.fields;
+
+				let originalRealtor = mainEmbedFields[0].value;
+				let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+
+				let approvedQuoteBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('approveQuote')
+						.setLabel('Approve Quote')
+						.setStyle(ButtonStyle.Success)
+						.setDisabled(true),
+
+					new ButtonBuilder()
+						.setCustomId('adjustQuote')
+						.setLabel('Adjust & Approve')
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true),
+
+					new ButtonBuilder()
+						.setCustomId('denyQuote')
+						.setLabel('Deny Quote')
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true),
+				)];
+
+				let approvalMsgNotes;
+				if (mainEmbedFields[5]) {
+					approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
+				} else {
+					approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
+				}
+
+				msgEmbeds[0] = new EmbedBuilder()
+					.setTitle('A new Property Quote request has been submitted!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+						{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+						{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+						{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+						{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+						{ name: `Notes:`, value: `${approvalMsgNotes}` }
+					)
+					.setColor('A47E1B');
+
+				await interaction.message.edit({ embeds: msgEmbeds, components: approvedQuoteBtns })
+
+				let approvalMsgEmbed = [new EmbedBuilder()
+					.setTitle('A quote you submitted has received approval')
+					.addFields(
+						{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+						{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+					)
+					.setColor('A47E1B')];
+
+				await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+
+				await interaction.reply({ content: `Successfully marked this quote for approval.`, ephemeral: true });
+				break;
+			case 'adjustQuote':
+				let adjustQuoteModal = new ModalBuilder()
+					.setCustomId('adjustQuoteModal')
+					.setTitle('Adjust and approve a submitted quote');
+				let adjustPriceInput = new TextInputBuilder()
+					.setCustomId('adjustPriceInput')
+					.setLabel('What is the adjusted price?')
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('150000')
+					.setRequired(true);
+				let adjustNotesInput = new TextInputBuilder()
+					.setCustomId('adjustNotesInput')
+					.setLabel('Any notes to submit with this adjustment?')
+					.setStyle(TextInputStyle.Paragraph)
+					.setPlaceholder('Has a nice backyard with a pool')
+					.setRequired(false);
+
+				let adjustPriceInputRow = new ActionRowBuilder().addComponents(adjustPriceInput);
+				let adjustNotesInputRow = new ActionRowBuilder().addComponents(adjustNotesInput);
+
+				adjustQuoteModal.addComponents(adjustPriceInputRow, adjustNotesInputRow);
+				await interaction.showModal(adjustQuoteModal);
+				break;
+			case 'denyQuote':
+				let denyQuoteModal = new ModalBuilder()
+					.setCustomId('denyQuoteModal')
+					.setTitle('Deny a submitted quote');
+				let denyNotesInput = new TextInputBuilder()
+					.setCustomId('denyNotesInput')
+					.setLabel('Any notes to submit with this denial?')
+					.setStyle(TextInputStyle.Paragraph)
+					.setPlaceholder('Located in the heart of Vinewood')
+					.setRequired(false);
+
+				let adjustedPriceInputRow = new ActionRowBuilder().addComponents(adjustedPriceInput);
+				let denyNotesInputRow = new ActionRowBuilder().addComponents(denyNotesInput);
+
+				denyQuoteModal.addComponents(adjustedPriceInputRow, denyNotesInputRow);
+				await interaction.showModal(denyQuoteModal);
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

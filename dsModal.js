@@ -1,7 +1,7 @@
 var moment = require('moment');
 var dbCmds = require('./dbCmds.js');
 var editEmbed = require('./editEmbed.js');
-var { EmbedBuilder } = require('discord.js');
+var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 var personnelCmds = require('./personnelCmds.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
@@ -403,7 +403,24 @@ module.exports.modalSubmit = async (interaction) => {
 
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ embeds: embeds });
+					let quoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Success),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Primary),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Danger),
+					)];
+
+					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ embeds: embeds, components: quoteBtns, });
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -414,6 +431,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesQuoted");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesQuoted");
 				await editEmbed.editEmbed(interaction.client);
+
 				var newPropertiesQuotedTotal = await dbCmds.readSummValue("countPropertiesQuoted");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
 				break;
