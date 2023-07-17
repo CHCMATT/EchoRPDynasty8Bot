@@ -255,6 +255,135 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				}
 				break;
+			case 'addPropActionDropdown':
+				if (interaction.values[0] == 'propQuote') {
+					var addPropertyQuoteModal = new ModalBuilder()
+						.setCustomId('addPropertyQuoteModal')
+						.setTitle('Request a quote for a property');
+					var clientInfoInput = new TextInputBuilder()
+						.setCustomId('clientInfoInput')
+						.setLabel('What is the name and phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName - Phone Number')
+						.setRequired(true);
+					var priceInput = new TextInputBuilder()
+						.setCustomId('priceInput')
+						.setLabel('What is the price you estimate it will be?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('850000')
+						.setRequired(true);
+					var intTypeInput = new TextInputBuilder()
+						.setCustomId('intTypeInput')
+						.setLabel('What is the requested interior type?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('HighEndV2')
+						.setRequired(true);
+					var notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any notes about the requested quote?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('House with a view on Rich Bitch Avenue, vibes like Malibu')
+						.setRequired(false);
+					var photosInput = new TextInputBuilder()
+						.setCustomId('photosInput')
+						.setLabel('Include photos of GPS & front of house')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
+						.setRequired(true);
+
+					var clientInfoInputRow = new ActionRowBuilder().addComponents(clientInfoInput);
+					var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+					var intTypeInputRow = new ActionRowBuilder().addComponents(intTypeInput);
+					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+					addPropertyQuoteModal.addComponents(clientInfoInputRow, priceInputRow, intTypeInputRow, notesInputRow, photosInputRow);
+
+					await interaction.showModal(addPropertyQuoteModal);
+				} else if (interaction.values[0] == 'propRepo') {
+					var addPropertyRepodModal = new ModalBuilder()
+						.setCustomId('addPropertyRepodModal')
+						.setTitle('Log a property that you repossessed');
+					var prevOwnerInput = new TextInputBuilder()
+						.setCustomId('prevOwnerInput')
+						.setLabel('What is the name and info of the prev. owner?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setRequired(true);
+					var lotNumStreetNameInput = new TextInputBuilder()
+						.setCustomId('lotNumStreetNameInput')
+						.setLabel('What is the property lot number?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('3456')
+						.setRequired(true);
+					var repoReasonInput = new TextInputBuilder()
+						.setCustomId('repoReasonInput')
+						.setLabel('What was the reason for the repossession?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Foreclosure')
+						.setRequired(true);
+					var notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any notes about the repossession?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Foreclosure, failure to pay')
+						.setRequired(false);
+					var photosInput = new TextInputBuilder()
+						.setCustomId('photosInput')
+						.setLabel('Include photos of GPS & front of property')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('https://i.imgur.com/tnLaQWD.jpg, https://i.imgur.com/EZ81DMA.jpg')
+						.setRequired(true);
+
+					var prevOwnerInputRow = new ActionRowBuilder().addComponents(prevOwnerInput);
+					var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
+					var repoReasonInputRow = new ActionRowBuilder().addComponents(repoReasonInput);
+					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+					addPropertyRepodModal.addComponents(prevOwnerInputRow, lotNumStreetNameInputRow, repoReasonInputRow, notesInputRow, photosInputRow);
+
+					await interaction.showModal(addPropertyRepodModal);
+				} else if (interaction.values[0] == 'trainCheck') {
+					var addTrainCheckModal = new ModalBuilder()
+						.setCustomId('addTrainCheckModal')
+						.setTitle('Request a train activity check');
+					var currentOwnerInput = new TextInputBuilder()
+						.setCustomId('currentOwnerInput')
+						.setLabel('What is the name & CID of the current owner?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName - CID')
+						.setRequired(true);
+					var lotNumStreetNameInput = new TextInputBuilder()
+						.setCustomId('lotNumStreetNameInput')
+						.setLabel('What is the property lot number?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('4567')
+						.setRequired(true);
+					var notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any notes about the train activity check?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Neighbor stated saw the owner with a moving truck')
+						.setRequired(false);
+					var photosInput = new TextInputBuilder()
+						.setCustomId('photosInput')
+						.setLabel('Include 1 photo of GPS & front of house')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
+						.setRequired(true);
+
+					var currentOwnerInputRow = new ActionRowBuilder().addComponents(currentOwnerInput);
+					var lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
+					var notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+					addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
+					await interaction.showModal(addTrainCheckModal);
+				}
+				else {
+					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				}
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized string select ID: ${interaction.customId}`);

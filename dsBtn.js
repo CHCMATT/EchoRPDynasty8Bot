@@ -636,6 +636,30 @@ module.exports.btnPressed = async (interaction) => {
 				addYPAdvertModal.addComponents(screenshotInputRow);
 				await interaction.showModal(addYPAdvertModal);
 				break;
+			case 'addPropAction':
+				let addPropActionSelectOptions = new StringSelectMenuBuilder()
+					.setCustomId('addPropActionDropdown')
+					.setPlaceholder('Select a Property Action Type')
+					.addOptions(
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Property Quote')
+							.setEmoji('🏡')
+							.setValue('propQuote'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Property Repo')
+							.setEmoji('📋')
+							.setValue('propRepo'),
+						new StringSelectMenuOptionBuilder()
+							.setLabel('Train Check')
+							.setEmoji('🚄')
+							.setValue('trainCheck'),
+					);
+
+				let addPropActionSelectionsComponent = new ActionRowBuilder()
+					.addComponents(addPropActionSelectOptions);
+
+				await interaction.reply({ content: `What type of **property action** are you taking?`, components: [addPropActionSelectionsComponent], ephemeral: true });
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

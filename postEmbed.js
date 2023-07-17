@@ -142,10 +142,10 @@ function addBtnRows() {
 			.setLabel('Add a Sale')
 			.setStyle(ButtonStyle.Success),
 
-		new ButtonBuilder()
+		/*new ButtonBuilder()
 			.setCustomId('addRemodel')
 			.setLabel('Add a Remodel')
-			.setStyle(ButtonStyle.Success),
+			.setStyle(ButtonStyle.Success),*/
 
 		new ButtonBuilder()
 			.setCustomId('addPropAction')
@@ -175,7 +175,7 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Primary),
 	);
 
-	/*let row3 = new ActionRowBuilder().addComponents(
+	let row3 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addFinancingAgreement')
 			.setLabel('Add a Financing Agreement')
@@ -185,8 +185,8 @@ function addBtnRows() {
 			.setCustomId('addFinancingPayment')
 			.setLabel('Add a Financing Payment')
 			.setStyle(ButtonStyle.Secondary),
-	);*/
+	);
 
-	let rows = [row1, row2/*, row3*/];
+	let rows = [row1/*, row2, row3*/];
 	return rows;
 };
