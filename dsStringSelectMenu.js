@@ -344,49 +344,92 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					addPropertyRepodModal.addComponents(prevOwnerInputRow, lotNumStreetNameInputRow, repoReasonInputRow, notesInputRow, photosInputRow);
 
 					await interaction.showModal(addPropertyRepodModal);
-				} else if (interaction.values[0] == 'propRemodel') {
-					let addRemodalModal = new ModalBuilder()
-						.setCustomId('addRemodalModal')
-						.setTitle('Log a remodel that you have completed');
-					let remodelForInput = new TextInputBuilder()
+				} else if (interaction.values[0] == 'houseRemodel') {
+					var addHouseRemodelModal = new ModalBuilder()
+						.setCustomId('addHouseRemodelModal')
+						.setTitle('Log a house remodel that you completed');
+					var remodelForInput = new TextInputBuilder()
 						.setCustomId('remodelForInput')
 						.setLabel('What is the name and info of the owner?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('FirstName LastName - CID - DOB')
 						.setRequired(true);
-					let newLotNumNotesInput = new TextInputBuilder()
+					var newLotNumNotesInput = new TextInputBuilder()
+						.setCustomId('newLotNumNotesInput')
+						.setLabel('What is the property id and nearest street?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('6789 Grove St')
+						.setRequired(true);
+					var oldLotNumInput = new TextInputBuilder()
+						.setCustomId('oldLotNumInput')
+						.setLabel('What is the old street address, & any notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('5678 Grove St, ph. num, remodeled to HighEndV3')
+						.setRequired(true);
+					var priceInput = new TextInputBuilder()
+						.setCustomId('priceInput')
+						.setLabel('What was the remodel price?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('35000')
+						.setRequired(true);
+					var photosInput = new TextInputBuilder()
+						.setCustomId('photosInput')
+						.setLabel('Include photos of GPS & front of house')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('https://i.imgur.com/qTL6xiG.jpg, https://i.imgur.com/jMYxD9d.jpg')
+						.setRequired(true);
+
+					var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+					var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+					var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+					var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+
+					addHouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
+					await interaction.showModal(addHouseRemodelModal);
+				} else if (interaction.values[0] == 'warehouseRemodel') {
+					var addWarehouseRemodelModal = new ModalBuilder()
+						.setCustomId('addWarehouseRemodelModal')
+						.setTitle('Log a warehouse remodel that you completed');
+					var remodelForInput = new TextInputBuilder()
+						.setCustomId('remodelForInput')
+						.setLabel('What is the name and info of the owner?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setRequired(true);
+					var newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
 						.setLabel('What is the property id and nearest street?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('8910 Route 68')
 						.setRequired(true);
-					let oldLotNumInput = new TextInputBuilder()
+					var oldLotNumInput = new TextInputBuilder()
 						.setCustomId('oldLotNumInput')
 						.setLabel('What is the old street address, & any notes?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('7891 Route 68, ph. num, remodeled to Small WH')
 						.setRequired(true);
-					let priceInput = new TextInputBuilder()
+					var priceInput = new TextInputBuilder()
 						.setCustomId('priceInput')
 						.setLabel('What was the remodel price?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('45000')
 						.setRequired(true);
-					let photosInput = new TextInputBuilder()
+					var photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
 						.setLabel('Include photos of GPS & front of warehouse')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/iKef1iS.jpg, https://i.imgur.com/w1N7n0x.jpg')
 						.setRequired(true);
 
-					let remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
-					let newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
-					let oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
-					let priceInputRow = new ActionRowBuilder().addComponents(priceInput);
-					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
+					var remodelForInputRow = new ActionRowBuilder().addComponents(remodelForInput);
+					var newLotNumNotesInputRow = new ActionRowBuilder().addComponents(newLotNumNotesInput);
+					var oldLotNumInputRow = new ActionRowBuilder().addComponents(oldLotNumInput);
+					var priceInputRow = new ActionRowBuilder().addComponents(priceInput);
+					var photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 
-					addRemodalModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
-					await interaction.showModal(addRemodalModal);
+					addWarehouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
+					await interaction.showModal(addWarehouseRemodelModal);
 				} else if (interaction.values[0] == 'trainCheck') {
 					let addTrainCheckModal = new ModalBuilder()
 						.setCustomId('addTrainCheckModal')
