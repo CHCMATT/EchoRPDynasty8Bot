@@ -93,45 +93,59 @@ module.exports.editEmbed = async (client) => {
 	activeFinancialAgreements = activeFinancialAgreements.toString();
 	countFinancialPayments = countFinancialPayments.toString();
 
-	let housesSoldEmbed = new EmbedBuilder()
+	/*let housesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Houses Sold:')
 		.setDescription(countHousesSold)
-		.setColor('#805B10');
+		.setColor('805B10');
 
 	let warehousesSoldEmbed = new EmbedBuilder()
 		.setTitle('Amount of Warehouses Sold:')
 		.setDescription(countWarehousesSold)
-		.setColor('#926C15');
+		.setColor('926C15');
 
 	let propertiesQuotedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Quoted:')
 		.setDescription(countPropertiesQuoted)
-		.setColor('#A47E1B');
+		.setColor('A47E1B');
 
 	let propertiesRepodEmbed = new EmbedBuilder()
 		.setTitle('Amount of Properties Repossessed:')
 		.setDescription(countPropertiesRepod)
-		.setColor('#B69121');
+		.setColor('B69121');
 
 	let trainActivitiesCheckedEmbed = new EmbedBuilder()
 		.setTitle('Amount of Train Activities Checked:')
 		.setDescription(countTrainActivitiesChecked)
-		.setColor('#C9A227');
+		.setColor('C9A227');
 
 	let miscSalesEmbed = new EmbedBuilder()
 		.setTitle('Amount of Misc. Sales Completed:')
 		.setDescription(countMiscSales)
-		.setColor('#C9A227');
+		.setColor('C9A227');
 
 	let finanAgreeEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Agreements Filed:')
 		.setDescription(`${countFinancialAgreements} (${activeFinancialAgreements} active)`)
-		.setColor('#DBB42C');
+		.setColor('DBB42C');
 
 	let finanPaymentsEmbed = new EmbedBuilder()
 		.setTitle('Amount of Financial Payments Accepted:')
 		.setDescription(countFinancialPayments)
-		.setColor('#EDC531');
+		.setColor('EDC531');*/
+
+	let mainEmbed = new EmbedBuilder()
+		.setTitle(`Dynasty 8 Overall Statistics as of ${today}:`)
+		.addFields(
+			{ name: `Houses Sold:`, value: `${countHousesSold}` },
+			{ name: `Warehouses Sold:`, value: `${countWarehousesSold}` },
+			{ name: `Properties Quoted:`, value: `${countPropertiesQuoted}` },
+			{ name: `Properties Repossessed:`, value: `${countPropertiesRepod}` },
+			{ name: `Train Activities Checked:`, value: `${countTrainActivitiesChecked}` },
+			{ name: `Misc. Sales Completed:`, value: `${countMiscSales}` },
+			{ name: `Financial Agreements Filed:`, value: `${countFinancialAgreements} (${activeFinancialAgreements} active)` },
+			{ name: `Financial Payments Accepted:`, value: `${countFinancialPayments}` }
+		)
+		.setColor('926C15');
 
 	let currEmbed = await dbCmds.readMsgId("embedMsg");
 
@@ -140,7 +154,9 @@ module.exports.editEmbed = async (client) => {
 
 	let btnRows = addBtnRows();
 
-	currMsg.edit({ embeds: [housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed, finanAgreeEmbed, finanPaymentsEmbed], components: btnRows });
+	currMsg.edit({
+		embeds: [/*housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed, finanAgreeEmbed, finanPaymentsEmbed*/ mainEmbed], components: btnRows
+	});
 };
 
 function addBtnRows() {
