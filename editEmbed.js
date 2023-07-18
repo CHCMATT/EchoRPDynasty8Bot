@@ -127,28 +127,44 @@ module.exports.editEmbed = async (client) => {
 
 	// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
-	countHousesSold = countHousesSold.toString();
-	countWarehousesSold = countWarehousesSold.toString();
-	countPropertiesQuoted = countPropertiesQuoted.toString();
-	countPropertiesRepod = countPropertiesRepod.toString();
-	countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
-	countMiscSales = countMiscSales.toString();
-	countFinancialAgreements = countFinancialAgreements.toString();
-	activeFinancialAgreements = activeFinancialAgreements.toString();
-	countFinancialPayments = countFinancialPayments.toString();
+	let mainFields = [];
+
+	if (countHousesSold >= 1) {
+		countHousesSold = countHousesSold.toString();
+		mainFields.push({ name: `Houses Sold: `, value: `${countHousesSold}` });
+	}
+	if (countWarehousesSold >= 1) {
+		countWarehousesSold = countWarehousesSold.toString();
+		mainFields.push({ name: `Warehouses Sold:`, value: `${countWarehousesSold}` });
+	}
+	if (countPropertiesQuoted >= 1) {
+		countPropertiesQuoted = countPropertiesQuoted.toString();
+		mainFields.push({ name: `Properties Quoted:`, value: `${countPropertiesQuoted}` });
+	}
+	if (countPropertiesRepod >= 1) {
+		countPropertiesRepod = countPropertiesRepod.toString();
+		mainFields.push({ name: `Properties Repossessed:`, value: `${countPropertiesRepod}` });
+	}
+	if (countTrainActivitiesChecked >= 1) {
+		countTrainActivitiesChecked = countTrainActivitiesChecked.toString();
+		mainFields.push({ name: `Train Activities Checked:`, value: `${countTrainActivitiesChecked}` });
+	}
+	if (countMiscSales >= 1) {
+		countMiscSales = countMiscSales.toString();
+		mainFields.push({ name: `Misc. Sales Completed:`, value: `${countMiscSales}` });
+	}
+	if (countFinancialAgreements >= 1) {
+		countFinancialAgreements = countFinancialAgreements.toString();
+		mainFields.push({ name: `Financial Agreements Filed:`, value: `${countFinancialAgreements} (${activeFinancialAgreements} active)` });
+	}
+	if (countFinancialPayments >= 1) {
+		countFinancialPayments = countFinancialPayments.toString();
+		mainFields.push({ name: `Financial Payments Accepted:`, value: `${countFinancialPayments} ` });
+	}
 
 	let mainEmbed = new EmbedBuilder()
-		.setTitle(`Dynasty 8 Overall Statistics as of ${today}:`)
-		.addFields(
-			{ name: `Houses Sold:`, value: `${countHousesSold}` },
-			{ name: `Warehouses Sold:`, value: `${countWarehousesSold}` },
-			{ name: `Properties Quoted:`, value: `${countPropertiesQuoted}` },
-			{ name: `Properties Repossessed:`, value: `${countPropertiesRepod}` },
-			{ name: `Train Activities Checked:`, value: `${countTrainActivitiesChecked}` },
-			{ name: `Misc. Sales Completed:`, value: `${countMiscSales}` },
-			{ name: `Financial Agreements Filed:`, value: `${countFinancialAgreements} (${activeFinancialAgreements} active)` },
-			{ name: `Financial Payments Accepted:`, value: `${countFinancialPayments}` }
-		)
+		.setTitle(`Dynasty 8 Overall Statistics as of ${today}: `)
+		.addFields(mainFields)
 		.setColor('926C15');
 
 	let currEmbed = await dbCmds.readMsgId("embedMsg");
