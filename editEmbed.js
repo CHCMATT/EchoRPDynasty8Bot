@@ -18,7 +18,7 @@ module.exports.editEmbed = async (client) => {
 			employeeStats[i].financialAgreements > 0 ||
 			employeeStats[i].financialPayments > 0) {
 
-			overallDescList = overallDescList.concat(`\n\n__${employeeStats[i].charName}__:`);
+			overallDescList = overallDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
 			if (employeeStats[i].housesSold >= 1) {
 				overallDescList = overallDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].housesSold}`);
@@ -68,7 +68,7 @@ module.exports.editEmbed = async (client) => {
 			employeeStats[i].monthlyFinancialAgreements > 0 ||
 			employeeStats[i].monthlyFinancialPayments > 0) {
 
-			monthlyDescList = monthlyDescList.concat(`\n\n__${employeeStats[i].charName}__:`);
+			monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
 			if (employeeStats[i].monthlyHousesSold >= 1) {
 				monthlyDescList = monthlyDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}`);
