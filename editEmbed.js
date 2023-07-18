@@ -9,16 +9,41 @@ module.exports.editEmbed = async (client) => {
 	let today = `<t:${now}:d>`;
 
 	for (let i = 0; i < employeeStats.length; i++) {
-		if (employeeStats[i].housesSold > 0 || employeeStats[i].warehousesSold > 0 || employeeStats[i].propertiesQuoted > 0 || employeeStats[i].propertiesRepod > 0 || employeeStats[i].activityChecks > 0 || employeeStats[i].miscSales > 0 || employeeStats[i].financialAgreements > 0 || employeeStats[i].financialPayments > 0) {
-			overallDescList = overallDescList.concat(`__${employeeStats[i].charName}__:
-• **Houses Sold:** ${employeeStats[i].housesSold}
-• **Warehouses Sold:** ${employeeStats[i].warehousesSold}
-• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}
-• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}
-• **Train Activities Checked:** ${employeeStats[i].activityChecks}
-• **Misc. Sales Completed:** ${employeeStats[i].miscSales}
-• **Financial Agreements Filed:** ${employeeStats[i].financialAgreements}
-• **Financial Payments Accepted:** ${employeeStats[i].financialPayments}\n\n`);
+		if (employeeStats[i].housesSold > 0 ||
+			employeeStats[i].warehousesSold > 0 ||
+			employeeStats[i].propertiesQuoted > 0 ||
+			employeeStats[i].propertiesRepod > 0 ||
+			employeeStats[i].activityChecks > 0 ||
+			employeeStats[i].miscSales > 0 ||
+			employeeStats[i].financialAgreements > 0 ||
+			employeeStats[i].financialPayments > 0) {
+
+			overallDescList = overallDescList.concat(`\n\n__${employeeStats[i].charName}__:`);
+
+			if (employeeStats[i].housesSold >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].housesSold}`);
+			}
+			if (employeeStats[i].warehousesSold >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Warehouses Sold:** ${employeeStats[i].warehousesSold}`);
+			}
+			if (employeeStats[i].propertiesQuoted >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Properties Quoted:** ${employeeStats[i].propertiesQuoted}`);
+			}
+			if (employeeStats[i].propertiesRepod >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Properties Repossessed:** ${employeeStats[i].propertiesRepod}`);
+			}
+			if (employeeStats[i].activityChecks >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Train Activities Checked:** ${employeeStats[i].activityChecks}`);
+			}
+			if (employeeStats[i].miscSales >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Misc. Sales Completed:** ${employeeStats[i].miscSales}`);
+			}
+			if (employeeStats[i].financialAgreements >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].financialAgreements}`);
+			}
+			if (employeeStats[i].financialPayments >= 1) {
+				overallDescList = overallDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].financialPayments}`);
+			}
 		}
 	}
 
@@ -34,16 +59,41 @@ module.exports.editEmbed = async (client) => {
 	let monthlyDescList = '';
 
 	for (let i = 0; i < employeeStats.length; i++) {
-		if (employeeStats[i].monthlyHousesSold > 0 || employeeStats[i].monthlyWarehousesSold > 0 || employeeStats[i].monthlyPropertiesQuoted > 0 || employeeStats[i].monthlyPropertiesRepod > 0 || employeeStats[i].monthlyActivityChecks > 0 || employeeStats[i].monthlyMiscSales > 0 || employeeStats[i].monthlyFinancialAgreements > 0 || employeeStats[i].monthlyFinancialPayments > 0) {
-			monthlyDescList = monthlyDescList.concat(`__${employeeStats[i].charName}__:
-• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}
-• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}
-• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}
-• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}
-• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}
-• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}
-• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}
-• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}\n\n`);
+		if (employeeStats[i].monthlyHousesSold > 0 ||
+			employeeStats[i].monthlyWarehousesSold > 0 ||
+			employeeStats[i].monthlyPropertiesQuoted > 0 ||
+			employeeStats[i].monthlyPropertiesRepod > 0 ||
+			employeeStats[i].monthlyActivityChecks > 0 ||
+			employeeStats[i].monthlyMiscSales > 0 ||
+			employeeStats[i].monthlyFinancialAgreements > 0 ||
+			employeeStats[i].monthlyFinancialPayments > 0) {
+
+			monthlyDescList = monthlyDescList.concat(`\n\n__${employeeStats[i].charName}__:`);
+
+			if (employeeStats[i].monthlyHousesSold >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}`);
+			}
+			if (employeeStats[i].monthlyWarehousesSold >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}`);
+			}
+			if (employeeStats[i].monthlyPropertiesQuoted >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}`);
+			}
+			if (employeeStats[i].monthlyPropertiesRepod >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}`);
+			}
+			if (employeeStats[i].monthlyActivityChecks >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}`);
+			}
+			if (employeeStats[i].monthlyMiscSales >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}`);
+			}
+			if (employeeStats[i].monthlyFinancialAgreements >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
+			}
+			if (employeeStats[i].monthlyFinancialPayments >= 1) {
+				monthlyDescList = monthlyDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}`);
+			}
 		}
 	}
 
