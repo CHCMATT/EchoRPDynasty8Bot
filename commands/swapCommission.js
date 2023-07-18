@@ -58,12 +58,12 @@ module.exports = {
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
 						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${removeUser.id}>'s current commission for a new total of \`${formattedRemoveUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('#FFA630');
+						.setColor('FFA630');
 
 					let notificationEmbed2 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
 						.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${addUser.id}>'s current commission for a new total of \`${formattedAddUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('#FFA630');
+						.setColor('FFA630');
 
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });

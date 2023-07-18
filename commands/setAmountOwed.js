@@ -22,7 +22,6 @@ module.exports = {
 			type: 4,
 			required: true,
 		},
-
 	],
 	async execute(interaction) {
 		if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {

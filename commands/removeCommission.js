@@ -47,7 +47,7 @@ module.exports = {
 					let notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
 						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('#FFA630');
+						.setColor('FFA630');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 					await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
 				} else {
