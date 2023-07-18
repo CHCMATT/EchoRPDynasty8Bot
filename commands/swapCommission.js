@@ -37,46 +37,67 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
-		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			let removeUser = interaction.options.getUser('removeuser');
-			let addUser = interaction.options.getUser('adduser');
-			if (interaction.user.id == removeUser.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let amount = Math.abs(interaction.options.getInteger('amount'));
-				let reason = interaction.options.getString('reason');
-				let formattedAmt = formatter.format(amount);
-				let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id);
-				if (removeUserPersonnelData.currentCommission != null && removeUserPersonnelData.currentCommission > 0) {
-					await dbCmds.removeCommission(removeUser.id, amount)
-					await dbCmds.addCommission(addUser.id, amount)
-					let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id)
-					let addUserPersonnelData = await dbCmds.readPersStats(addUser.id)
-					let removeUserNewCommission = removeUserPersonnelData.currentCommission;
-					let addUserNewCommission = addUserPersonnelData.currentCommission;
-					let formattedRemoveUserNewCommission = formatter.format(removeUserNewCommission);
-					let formattedAddUserNewCommission = formatter.format(addUserNewCommission);
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					let notificationEmbed1 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${removeUser.id}>'s current commission for a new total of \`${formattedRemoveUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('FFA630');
+		try {
+			if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				let removeUser = interaction.options.getUser('removeuser');
+				let addUser = interaction.options.getUser('adduser');
+				if (interaction.user.id == removeUser.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let amount = Math.abs(interaction.options.getInteger('amount'));
+					let reason = interaction.options.getString('reason');
+					let formattedAmt = formatter.format(amount);
+					let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id);
+					if (removeUserPersonnelData.currentCommission != null && removeUserPersonnelData.currentCommission > 0) {
+						await dbCmds.removeCommission(removeUser.id, amount)
+						await dbCmds.addCommission(addUser.id, amount)
+						let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id)
+						let addUserPersonnelData = await dbCmds.readPersStats(addUser.id)
+						let removeUserNewCommission = removeUserPersonnelData.currentCommission;
+						let addUserNewCommission = addUserPersonnelData.currentCommission;
+						let formattedRemoveUserNewCommission = formatter.format(removeUserNewCommission);
+						let formattedAddUserNewCommission = formatter.format(addUserNewCommission);
+						// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+						let notificationEmbed1 = new EmbedBuilder()
+							.setTitle('Commission Modified Manually:')
+							.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${removeUser.id}>'s current commission for a new total of \`${formattedRemoveUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+							.setColor('FFA630');
 
-					let notificationEmbed2 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${addUser.id}>'s current commission for a new total of \`${formattedAddUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('FFA630');
+						let notificationEmbed2 = new EmbedBuilder()
+							.setTitle('Commission Modified Manually:')
+							.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${addUser.id}>'s current commission for a new total of \`${formattedAddUserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+							.setColor('FFA630');
 
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
+						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
 
-					await interaction.reply({ content: `Successfully swapped \`${formattedAmt}\` from <@${removeUser.id}> to <@${addUser.id}>'s current commission.`, ephemeral: true });
+						await interaction.reply({ content: `Successfully swapped \`${formattedAmt}\` from <@${removeUser.id}> to <@${addUser.id}>'s current commission.`, ephemeral: true });
+					} else {
+						await interaction.reply({ content: `:exclamation: <@${removeUser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
+					}
 				} else {
-					await interaction.reply({ content: `:exclamation: <@${removeUser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.reply({ content: `:x: You must have the \`Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
-		} else {
-			await interaction.reply({ content: `:x: You must have the \`Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+		} catch (error) {
+			if (process.env.BOT_NAME == 'test') {
+				console.error(error);
+			} else {
+				let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+				let fileParts = __filename.split(/[\\/]/);
+				let fileName = fileParts[fileParts.length - 1];
+
+				let errorEmbed = [new EmbedBuilder()
+					.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+					.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+					.setColor('B80600')
+					.setFooter({ text: `${errTime}` })];
+
+				await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+
+				console.log(`Error occured at ${errTime} at file ${fileName}!`);
+				console.error(error);
+			}
 		}
 	},
 };
