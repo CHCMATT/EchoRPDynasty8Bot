@@ -4,7 +4,16 @@ let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 module.exports.postEmbed = async (client) => {
 	try {
 		let employeeStats = await dbCmds.currStats();
+
 		let overallDescList = '';
+
+		employeeStats.sort((a, b) => {
+			let fa = a.charName.toLowerCase(),
+				fb = b.charName.toLowerCase();
+			if (fa < fb) { return -1; }
+			if (fa > fb) { return 1; }
+			return 0;
+		});
 
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
