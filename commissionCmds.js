@@ -53,7 +53,7 @@ module.exports.commissionReport = async (client) => {
 		let notificationEmbed = new EmbedBuilder()
 			.setTitle('Commission Modified Automatically:')
 			.setDescription(`\`System\` reset all realtor's commissions to \`$0\`.\n\n**Reason:** ${reason}.`)
-			.setColor('#1EC276');
+			.setColor('1EC276');
 		await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 		return "success";
 	}

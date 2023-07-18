@@ -1,7 +1,7 @@
 var moment = require('moment');
 var dbCmds = require('./dbCmds.js');
 var editEmbed = require('./editEmbed.js');
-var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
 var personnelCmds = require('./personnelCmds.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
@@ -154,7 +154,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 
@@ -287,7 +287,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 
@@ -554,7 +554,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('#1EC276');
+					.setColor('1EC276');
 				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 
@@ -739,7 +739,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
@@ -887,7 +887,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
@@ -1035,7 +1035,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
@@ -1217,7 +1217,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
 
-				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;
@@ -1660,7 +1660,7 @@ module.exports.modalSubmit = async (interaction) => {
 					var notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Automatically:')
 						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('#1EC276');
+						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				}
 
@@ -1723,11 +1723,191 @@ module.exports.modalSubmit = async (interaction) => {
 				var notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
 					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('#1EC276');
+					.setColor('1EC276');
 				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
 				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
 
+				break;
+			case 'adjustQuoteModal':
+				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let adjustedPrice = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('adjustPriceInput')).replaceAll(',', '').replaceAll('$', '')));
+
+					if (isNaN(adjustedPrice)) { // validate quantity of money
+						await interaction.reply({
+							content: `:exclamation: \`${interaction.fields.getTextInputValue('adjustPriceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					let formattedAdjustedPrice = formatter.format(adjustedPrice);
+
+					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('adjustNotesInput'));
+
+					let approvalNow = Math.floor(new Date().getTime() / 1000.0);
+					let approvalDate = `<t:${approvalNow}:d>`;
+
+					let msgEmbeds = interaction.message.embeds;
+
+					let mainEmbedFields = msgEmbeds[0].data.fields;
+
+					let originalRealtor = mainEmbedFields[0].value;
+					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+					let originalRealtorName = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1));
+
+					let newQuoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+					)];
+
+					let approvalMsgNotes;
+
+					if (approvalNotes) {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						} else {
+							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						}
+					} else {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+						} else {
+							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+						}
+					}
+
+					msgEmbeds[0] = new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+							{ name: `Notes:`, value: `${approvalMsgNotes}` }
+						)
+						.setColor('A47E1B');
+
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+
+					await interaction.message.react('⚠');
+					await interaction.message.react('✅');
+
+					let approvalMsgEmbed = [new EmbedBuilder()
+						.setTitle('A quote you submitted has been approved with adjustments')
+						.addFields(
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+							{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+						)
+						.setColor('FFA630')];
+
+					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+
+					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'denyQuoteModal':
+				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let denialNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
+
+					let denialNow = Math.floor(new Date().getTime() / 1000.0);
+					let denialDate = `<t:${denialNow}:d>`;
+
+					let msgEmbeds = interaction.message.embeds;
+
+					let mainEmbedFields = msgEmbeds[0].data.fields;
+
+					let originalRealtor = mainEmbedFields[0].value;
+					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+
+					let newQuoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Danger)
+							.setDisabled(true),
+					)];
+
+					let denialMsgNotes;
+
+					if (denialNotes) {
+						if (mainEmbedFields[5]) {
+							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
+						} else {
+							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
+						}
+					} else {
+						if (mainEmbedFields[5]) {
+							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
+						} else {
+							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
+						}
+					}
+
+					msgEmbeds[0] = new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+							{ name: `Notes:`, value: `${denialMsgNotes}` }
+						)
+						.setColor('A47E1B');
+
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+
+					await interaction.message.react('❌');
+
+					let approvalMsgEmbed = [new EmbedBuilder()
+						.setTitle('A quote you submitted has been denied')
+						.addFields(
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+							{ name: `Denied By:`, value: `<@${interaction.member.id}>` }
+						)
+						.setColor('B80600')];
+
+					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+
+					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
 				break;
 			default:
 				await interaction.reply({

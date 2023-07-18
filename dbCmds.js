@@ -34,7 +34,7 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, financialPayments: 0, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, financialPayments: 0, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyFinancialPayments: 0, settingQuotePing: true }, { upsert: true });
 };
 
 module.exports.readPersStats = async (discordId) => {
@@ -53,6 +53,24 @@ module.exports.addOnePersStat = async (discordId, statName) => {
 
 module.exports.subtractOnePersStat = async (discordId, statName) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { [statName]: -1 } });
+};
+
+module.exports.readPersSetting = async (discordId, settingChoice) => {
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { [settingChoice]: 1, _id: 0 });
+	console.log(settingChoice, result.settingChoice);
+	if (result !== null && result.settingChoice !== null && Object.keys(result).length > 0) {
+		console.log('value found');
+		return result.settingChoice;
+	}
+	else {
+		console.log('value not found');
+		await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { [settingChoice]: true });
+		return true;
+	}
+};
+
+module.exports.setPersSetting = async (discordId, settingChoice, value) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { [settingChoice]: value });
 };
 
 module.exports.setBankAccount = async (discordId, bankNum) => {
