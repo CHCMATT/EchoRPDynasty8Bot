@@ -132,46 +132,6 @@ module.exports.postEmbed = async (client) => {
 	activeFinancialAgreements = activeFinancialAgreements.toString();
 	countFinancialPayments = countFinancialPayments.toString();
 
-	/*let housesSoldEmbed = new EmbedBuilder()
-			.setTitle('Amount of Houses Sold:')
-			.setDescription(countHousesSold)
-			.setColor('805B10');
-	
-		let warehousesSoldEmbed = new EmbedBuilder()
-			.setTitle('Amount of Warehouses Sold:')
-			.setDescription(countWarehousesSold)
-			.setColor('926C15');
-	
-		let propertiesQuotedEmbed = new EmbedBuilder()
-			.setTitle('Amount of Properties Quoted:')
-			.setDescription(countPropertiesQuoted)
-			.setColor('A47E1B');
-	
-		let propertiesRepodEmbed = new EmbedBuilder()
-			.setTitle('Amount of Properties Repossessed:')
-			.setDescription(countPropertiesRepod)
-			.setColor('B69121');
-	
-		let trainActivitiesCheckedEmbed = new EmbedBuilder()
-			.setTitle('Amount of Train Activities Checked:')
-			.setDescription(countTrainActivitiesChecked)
-			.setColor('C9A227');
-	
-		let miscSalesEmbed = new EmbedBuilder()
-			.setTitle('Amount of Misc. Sales Completed:')
-			.setDescription(countMiscSales)
-			.setColor('C9A227');
-	
-		let finanAgreeEmbed = new EmbedBuilder()
-			.setTitle('Amount of Financial Agreements Filed:')
-			.setDescription(`${ countFinancialAgreements } (${ activeFinancialAgreements } active)`)
-			.setColor('DBB42C');
-	
-		let finanPaymentsEmbed = new EmbedBuilder()
-			.setTitle('Amount of Financial Payments Accepted:')
-			.setDescription(countFinancialPayments)
-			.setColor('EDC531');*/
-
 	let mainEmbed = new EmbedBuilder()
 		.setTitle(`Dynasty 8 Overall Statistics as of ${today}: `)
 		.addFields(
@@ -188,7 +148,7 @@ module.exports.postEmbed = async (client) => {
 
 	let btnRows = addBtnRows();
 
-	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [/*housesSoldEmbed, warehousesSoldEmbed, propertiesQuotedEmbed, propertiesRepodEmbed, trainActivitiesCheckedEmbed, miscSalesEmbed, finanAgreeEmbed, finanPaymentsEmbed*/ mainEmbed], components: btnRows });
+	client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [mainEmbed], components: btnRows });
 
 	await dbCmds.setMsgId("embedMsg", client.embedMsg.id);
 };
@@ -199,11 +159,6 @@ function addBtnRows() {
 			.setCustomId('addSale')
 			.setLabel('Add a Sale')
 			.setStyle(ButtonStyle.Success),
-
-		/*new ButtonBuilder()
-			.setCustomId('addRemodel')
-			.setLabel('Add a Remodel')
-			.setStyle(ButtonStyle.Success),*/
 
 		new ButtonBuilder()
 			.setCustomId('addPropAction')
@@ -216,35 +171,6 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Secondary),
 	);
 
-	let row2 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('addPropQuoted')
-			.setLabel('Add a Property Quote')
-			.setStyle(ButtonStyle.Primary),
-
-		new ButtonBuilder()
-			.setCustomId('addPropRepod')
-			.setLabel('Add a Property Repo')
-			.setStyle(ButtonStyle.Primary),
-
-		new ButtonBuilder()
-			.setCustomId('addTrainCheck')
-			.setLabel('Add a Train Check')
-			.setStyle(ButtonStyle.Primary),
-	);
-
-	let row3 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('addFinancingAgreement')
-			.setLabel('Add a Financing Agreement')
-			.setStyle(ButtonStyle.Secondary),
-
-		new ButtonBuilder()
-			.setCustomId('addFinancingPayment')
-			.setLabel('Add a Financing Payment')
-			.setStyle(ButtonStyle.Secondary),
-	);
-
-	let rows = [row1/*, row2, row3*/];
+	let rows = [row1];
 	return rows;
 };
