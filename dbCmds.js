@@ -57,11 +57,11 @@ module.exports.subtractOnePersStat = async (discordId, statName) => {
 
 module.exports.readPersSetting = async (discordId, settingChoice) => {
 	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { [settingChoice]: 1, _id: 0 });
-	if (result !== null) {
-		return result[settingChoice];
-	} else {
+	if (result[settingChoice] == null) {
 		await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { [settingChoice]: true }, { upsert: true });
 		return true;
+	} else {
+		return result[settingChoice];
 	}
 };
 
