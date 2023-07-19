@@ -1814,7 +1814,7 @@ module.exports.modalSubmit = async (interaction) => {
 						)
 						.setColor('A47E1B');
 
-					await interaction.message.edit({ embeds: msgEmbeds/*, components: newQuoteBtns*/ })
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
 
 					await interaction.message.react('✅');
 
@@ -1927,7 +1927,7 @@ module.exports.modalSubmit = async (interaction) => {
 						)
 						.setColor('A47E1B');
 
-					await interaction.message.edit({ embeds: msgEmbeds/*, components: newQuoteBtns*/ })
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
 
 					await interaction.message.react('⚠');
 					await interaction.message.react('✅');
