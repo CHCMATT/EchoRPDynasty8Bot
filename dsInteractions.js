@@ -28,6 +28,8 @@ module.exports = (client) => {
 			if (process.env.BOT_NAME == 'test') {
 				console.error(error);
 			} else {
+				console.log(`Error occured at ${errTime} at file ${fileName}!`);
+				console.error(error);
 				let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 				let fileParts = __filename.split(/[\\/]/);
 				let fileName = fileParts[fileParts.length - 1];
@@ -39,9 +41,6 @@ module.exports = (client) => {
 					.setFooter({ text: `${errTime}` })];
 
 				await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
-
-				console.log(`Error occured at ${errTime} at file ${fileName}!`);
-				console.error(error);
 			}
 		}
 	});
