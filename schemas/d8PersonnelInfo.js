@@ -33,6 +33,7 @@ let d8PersonnelInfoSchema = new Schema({
 	monthlyFinancialAgreements: reqNum,
 	financialPayments: reqNum,
 	monthlyFinancialPayments: reqNum,
+	settingQuotePing: Boolean,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);

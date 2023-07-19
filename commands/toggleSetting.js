@@ -19,26 +19,19 @@ module.exports = {
 			let discordId = interaction.member.id;
 			let settingChoice = interaction.options.getString('setting');
 
-			let currentSettingOption = dbCmds.readPersSetting(discordId, settingChoice);
+			let currentSettingOption = await dbCmds.readPersSetting(discordId, settingChoice);
 
 			if (settingChoice == 'settingQuotePing') {
 				if (currentSettingOption) {
 					dbCmds.setPersSetting(discordId, settingChoice, false);
 					await interaction.reply({ content: `Successfully toggled the \`Quote Ping\` setting to \`off\`.`, ephemeral: true });
-
 				} else {
 					dbCmds.setPersSetting(discordId, settingChoice, true);
 					await interaction.reply({ content: `Successfully toggled the \`Quote Ping\` setting to \`on\`.`, ephemeral: true });
 				}
 			} else {
-				if (currentSettingOption) {
-					dbCmds.setPersSetting(discordId, settingChoice, false);
-					await interaction.reply({ content: `Successfully toggled the \`unknown name\` setting to \`off\`.`, ephemeral: true });
-
-				} else {
-					dbCmds.setPersSetting(discordId, settingChoice, true);
-					await interaction.reply({ content: `Successfully toggled the \`unknown name\` setting to \`on\`.`, ephemeral: true });
-				}
+				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				console.log(`Error: Unrecognized setting to toggle: ${settingChoice}`);
 			}
 
 		} catch (error) {
