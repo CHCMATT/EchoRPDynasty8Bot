@@ -1765,6 +1765,7 @@ module.exports.modalSubmit = async (interaction) => {
 					)];
 
 					let approvalMsgNotes;
+					let approvalMsgEmbed = [];
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -1772,12 +1773,32 @@ module.exports.modalSubmit = async (interaction) => {
 						} else {
 							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
 						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Approval Notes:`, value: `${approvalNotes}` }
+							)
+							.setColor('1EC276')];
+
 					} else {
 						if (mainEmbedFields[5]) {
 							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate} without notes.`;
 						} else {
 							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate} without notes.`;
 						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('1EC276')];
 					}
 
 					msgEmbeds[0] = new EmbedBuilder()
@@ -1795,15 +1816,6 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
 
 					await interaction.message.react('✅');
-
-					let approvalMsgEmbed = [new EmbedBuilder()
-						.setTitle('A quote you submitted has been approved')
-						.addFields(
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-							{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
-						)
-						.setColor('1EC276')];
 
 					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
 
@@ -1861,6 +1873,7 @@ module.exports.modalSubmit = async (interaction) => {
 					)];
 
 					let approvalMsgNotes;
+					let approvalMsgEmbed = [];
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -1868,12 +1881,31 @@ module.exports.modalSubmit = async (interaction) => {
 						} else {
 							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
 						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved with adjustments')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Adjustment Notes:`, value: `${approvalNotes}` }
+							)
+							.setColor('FFA630')];
 					} else {
 						if (mainEmbedFields[5]) {
 							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
 						} else {
 							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
 						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved with adjustments')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('FFA630')];
 					}
 
 					msgEmbeds[0] = new EmbedBuilder()
@@ -1888,19 +1920,10 @@ module.exports.modalSubmit = async (interaction) => {
 						)
 						.setColor('A47E1B');
 
-					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+					await interaction.message.edit({ embeds: msgEmbeds/*, components: newQuoteBtns*/ })
 
 					await interaction.message.react('⚠');
 					await interaction.message.react('✅');
-
-					let approvalMsgEmbed = [new EmbedBuilder()
-						.setTitle('A quote you submitted has been approved with adjustments')
-						.addFields(
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-							{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
-						)
-						.setColor('FFA630')];
 
 					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
 
@@ -1945,6 +1968,7 @@ module.exports.modalSubmit = async (interaction) => {
 					)];
 
 					let denialMsgNotes;
+					let denialMsgEmbed = [];
 
 					if (denialNotes) {
 						if (mainEmbedFields[5]) {
@@ -1952,12 +1976,31 @@ module.exports.modalSubmit = async (interaction) => {
 						} else {
 							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
 						}
+
+						denialMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been denied')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Denied By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Denial Notes:`, value: `${denialNotes}` }
+							)
+							.setColor('B80600')];
 					} else {
 						if (mainEmbedFields[5]) {
 							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
 						} else {
 							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
 						}
+
+						denialMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been denied')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Denied By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('B80600')];
 					}
 
 					msgEmbeds[0] = new EmbedBuilder()
@@ -1976,16 +2019,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.message.react('❌');
 
-					let approvalMsgEmbed = [new EmbedBuilder()
-						.setTitle('A quote you submitted has been denied')
-						.addFields(
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-							{ name: `Denied By:`, value: `<@${interaction.member.id}>` }
-						)
-						.setColor('B80600')];
-
-					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed });
 
 					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
 				} else {
