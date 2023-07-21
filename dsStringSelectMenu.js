@@ -1,5 +1,14 @@
 let moment = require('moment');
-let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder } = require('discord.js');
+let dsBtn = require('./dsBtn.js');
+let dsModal = require('./dsModal.js');
+let dbCmds = require('./dbCmds.js');
+let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
 
 module.exports.stringSelectMenuSubmit = async (interaction) => {
 	try {
@@ -468,6 +477,106 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				}
 				else {
 					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				}
+				break;
+			case 'houseSwapCommissionRealtorDropdown':
+				if (0 == 0) {
+					let fromUserId = interaction.member.id;
+					let toUserId = interaction.values[0];
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+
+					await dbCmds.removeCommission(fromUserId, commissionNumber);
+					await dbCmds.addCommission(toUserId, commissionNumber);
+
+					let fromUserCommission = await dbCmds.readCommission(fromUserId);
+					let toUserCommission = await dbCmds.readCommission(toUserId);
+
+					let formattedCommission = formatter.format(commissionNumber);
+					let formattedFromUserCommission = formatter.format(fromUserCommission);
+					let formattedToUserCommission = formatter.format(toUserCommission);
+
+					let reason = `Commission Swap for House Sale initiated by <@${fromUserId}>`;
+
+					let notificationEmbed1 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					let notificationEmbed2 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+
+					let prevInteraction = dsBtn.commissionSwapInteraction;
+					let originalHouseSaleReply = dsModal.originalHouseSaleReply;
+
+					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+
+					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('houseSwapSaleCommission')
+							.setLabel('Swap Commission')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true)
+					)];
+
+					await originalHouseSaleReply.editReply({ content: prevInteraction.message.content, components: disabledSwapCommissionBtn, ephemeral: true });
+				}
+				break;
+			case 'warehouseSwapCommissionRealtorDropdown':
+				if (0 == 0) {
+					let fromUserId = interaction.member.id;
+					let toUserId = interaction.values[0];
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+
+					await dbCmds.removeCommission(fromUserId, commissionNumber);
+					await dbCmds.addCommission(toUserId, commissionNumber);
+
+					let fromUserCommission = await dbCmds.readCommission(fromUserId);
+					let toUserCommission = await dbCmds.readCommission(toUserId);
+
+					let formattedCommission = formatter.format(commissionNumber);
+					let formattedFromUserCommission = formatter.format(fromUserCommission);
+					let formattedToUserCommission = formatter.format(toUserCommission);
+
+					let reason = `Commission Swap for Warehouse Sale initiated by <@${fromUserId}>`;
+
+					let notificationEmbed1 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					let notificationEmbed2 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+
+					let prevInteraction = dsBtn.commissionSwapInteraction;
+					let originalWarehouseSaleReply = dsModal.originalWarehouseSaleReply;
+
+					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+
+					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('warehouseSwapSaleCommission')
+							.setLabel('Swap Commission')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true)
+					)];
+
+					await originalWarehouseSaleReply.editReply({ content: prevInteraction.message.content, components: disabledSwapCommissionBtn, ephemeral: true });
 				}
 				break;
 			default:

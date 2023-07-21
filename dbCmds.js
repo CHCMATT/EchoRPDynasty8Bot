@@ -77,6 +77,11 @@ module.exports.setCharName = async (discordId, charName) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { charName: charName }, { upsert: true });
 };
 
+module.exports.readAllRealtors = async () => {
+	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, _id: 0 });
+	return result;
+};
+
 
 // monthly statistics report stuff
 module.exports.monthlyRealtorStatsRep = async () => {

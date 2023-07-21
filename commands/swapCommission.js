@@ -47,10 +47,10 @@ module.exports = {
 					let formattedAmt = formatter.format(amount);
 					let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id);
 					if (removeUserPersonnelData.currentCommission != null && removeUserPersonnelData.currentCommission > 0) {
-						await dbCmds.removeCommission(removeUser.id, amount)
-						await dbCmds.addCommission(addUser.id, amount)
-						let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id)
-						let addUserPersonnelData = await dbCmds.readPersStats(addUser.id)
+						await dbCmds.removeCommission(removeUser.id, amount);
+						await dbCmds.addCommission(addUser.id, amount);
+						let removeUserPersonnelData = await dbCmds.readPersStats(removeUser.id);
+						let addUserPersonnelData = await dbCmds.readPersStats(addUser.id);
 						let removeUserNewCommission = removeUserPersonnelData.currentCommission;
 						let addUserNewCommission = addUserPersonnelData.currentCommission;
 						let formattedRemoveUserNewCommission = formatter.format(removeUserNewCommission);

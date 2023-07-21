@@ -160,7 +160,16 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				let houseSaleBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('houseSwapSaleCommission')
+						.setLabel('Swap Commission')
+						.setStyle(ButtonStyle.Primary)
+				)];
+
+				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
+
+				exports.originalHouseSaleReply = originalHouseSaleReply.interaction;
 				break;
 			case 'addWarehouseSoldModal':
 				var realtorName;
@@ -293,7 +302,16 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
-				await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				let warehouseSaleBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('warehouseSwapSaleCommission')
+						.setLabel('Swap Commission')
+						.setStyle(ButtonStyle.Primary)
+				)];
+
+				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
+
+				exports.originalWarehouseSaleReply = originalWarehouseSaleReply.interaction;
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;

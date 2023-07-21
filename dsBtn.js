@@ -1,5 +1,6 @@
-var moment = require('moment');
-var { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require('discord.js');
+let moment = require('moment');
+let dbCmds = require('./dbCmds.js');
+let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {
 	try {
@@ -733,6 +734,58 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.showModal(denyQuoteModal);
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'houseSwapSaleCommission':
+				if (0 == 0) {
+					let allRealtors = await dbCmds.readAllRealtors();
+
+					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
+
+					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
+						return realtor.data.label !== interaction.member.nickname;
+					});
+
+					let realtorSelectionOptions = new StringSelectMenuBuilder()
+						.setCustomId('houseSwapCommissionRealtorDropdown')
+						.setPlaceholder('Select a Realtor')
+						.addOptions(allRealtorsArray);
+
+					let realtorSelectionComponent = new ActionRowBuilder()
+						.addComponents(realtorSelectionOptions);
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your weekly commission is now:`) - 3));
+
+					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be swapped to?`, components: [realtorSelectionComponent], ephemeral: true });
+					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
+
+				}
+				break;
+			case 'warehouseSwapSaleCommission':
+				if (0 == 0) {
+					let allRealtors = await dbCmds.readAllRealtors();
+
+					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
+
+					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
+						return realtor.data.label !== interaction.member.nickname;
+					});
+
+					let realtorSelectionOptions = new StringSelectMenuBuilder()
+						.setCustomId('warehouseSwapCommissionRealtorDropdown')
+						.setPlaceholder('Select a Realtor')
+						.addOptions(allRealtorsArray);
+
+					let realtorSelectionComponent = new ActionRowBuilder()
+						.addComponents(realtorSelectionOptions);
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your weekly commission is now:`) - 3));
+
+					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be swapped to?`, components: [realtorSelectionComponent], ephemeral: true });
+					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
+
 				}
 				break;
 			default:
