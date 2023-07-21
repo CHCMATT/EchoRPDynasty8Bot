@@ -498,7 +498,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let formattedFromUserCommission = formatter.format(fromUserCommission);
 					let formattedToUserCommission = formatter.format(toUserCommission);
 
-					let reason = `Commission Swap for House Sale initiated by <@${fromUserId}>`;
+					let reason = `Commission Swap for House Sale`;
 
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
@@ -548,7 +548,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let formattedFromUserCommission = formatter.format(fromUserCommission);
 					let formattedToUserCommission = formatter.format(toUserCommission);
 
-					let reason = `Commission Swap for Warehouse Sale initiated by <@${fromUserId}>`;
+					let reason = `Commission Swap for Warehouse Sale`;
 
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
