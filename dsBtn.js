@@ -153,7 +153,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel('What is the property lot number?')
+					.setLabel('What is the property Street Address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('3456')
 					.setRequired(true);
@@ -198,7 +198,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel('What is the property lot number?')
+					.setLabel('What is the property Street Address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('4567')
 					.setRequired(true);
@@ -356,7 +356,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel('What is the lot number and nearest street?')
+					.setLabel('What is the Street Address and nearest street?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8912 Paleto Blvd')
 					.setRequired(true);

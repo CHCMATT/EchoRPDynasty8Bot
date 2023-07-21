@@ -528,7 +528,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Repossession Date:`, value: `${repoDate}` },
 							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
@@ -540,7 +540,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Repossession Date:`, value: `${repoDate}` },
 							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
 							{ name: `Reason for Repossession:`, value: `${repoReason}` },
 						)
 						.setColor('B69121')];
@@ -653,7 +653,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
 							{ name: `Owner Information:`, value: `${ownerInfo}` },
-							{ name: `Lot Number:`, value: `${lotNumStreetName}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
 							{ name: `Notes:`, value: `${notes}` }
 						)
 						.setColor('C9A227')];
@@ -664,7 +664,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
 							{ name: `Owner Information:`, value: `${ownerInfo}` },
-							{ name: `Lot Number:`, value: `${lotNumStreetName}` }
+							{ name: `Street Address:`, value: `${lotNumStreetName}` }
 						)
 						.setColor('C9A227')];
 				}

@@ -27,7 +27,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the house lot number?')
+						.setLabel('What is the house Street Address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('1234 Baytree Canyon Rd')
 						.setRequired(true);
@@ -71,7 +71,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the warehouse lot number?')
+						.setLabel('What is the warehouse Street Address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('2345 Grove St')
 						.setRequired(true);
@@ -121,7 +121,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the lot number and nearest street?')
+						.setLabel('What is the Street Address and nearest street?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('9498 Algonquin Blvd')
 						.setRequired(true);
@@ -321,7 +321,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the property lot number?')
+						.setLabel('What is the property Street Address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('3456')
 						.setRequired(true);
@@ -451,7 +451,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the property lot number?')
+						.setLabel('What is the property Street Address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('4567')
 						.setRequired(true);
