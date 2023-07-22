@@ -127,10 +127,10 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('805B10')];
 
 					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
-
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+					let houseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+					exports.houseSaleMsg = houseSaleMsg;
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -269,10 +269,10 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('926C15')];
 
 					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
-
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+					let warehouseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+					exports.warehouseSaleMsg = warehouseSaleMsg;
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -1094,8 +1094,8 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var downPayment = (price * 0.3);
-				var interest = ((price - downPayment) * .14);
+				var downPayment = (price * 0.1);
+				var interest = ((price - downPayment) * 0.1);
 				var amountOwed = (price - downPayment + interest);
 				var totalOwed = (price + interest);
 

@@ -527,6 +527,13 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					)];
 
 					await originalHouseSaleReply.editReply({ content: prevInteraction.message.content, components: disabledSwapCommissionBtn, ephemeral: true });
+
+					let houseSaleMsg = dsModal.houseSaleMsg;
+					let houseSaleMsgEmbeds = houseSaleMsg.embeds;
+
+					houseSaleMsgEmbeds[0].data.fields[5].value = `${houseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+
+					await houseSaleMsg.edit({ embeds: houseSaleMsgEmbeds })
 				}
 				break;
 			case 'warehouseSwapCommissionRealtorDropdown':
@@ -577,6 +584,13 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					)];
 
 					await originalWarehouseSaleReply.editReply({ content: prevInteraction.message.content, components: disabledSwapCommissionBtn, ephemeral: true });
+
+					let warehouseSaleMsg = dsModal.warehouseSaleMsg;
+					let warehouseSaleMsgEmbeds = warehouseSaleMsg.embeds;
+
+					warehouseSaleMsgEmbeds[0].data.fields[5].value = `${warehouseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+
+					await warehouseSaleMsg.edit({ embeds: warehouseSaleMsgEmbeds })
 				}
 				break;
 			default:
