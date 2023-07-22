@@ -1,5 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
+let dsModal = require('./dsModal.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {
@@ -356,7 +357,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel('What is the Street Address and nearest street?')
+					.setLabel('What is the street address and nearest street?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8912 Paleto Blvd')
 					.setRequired(true);
