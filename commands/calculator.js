@@ -47,9 +47,9 @@ module.exports = {
 
 					await interaction.reply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 				} else if (calcType == 'financing') {
-					let downPayment = (salePrice * 0.3);
+					let downPayment = (salePrice * 0.1);
 					let taxPrice = Math.round((salePrice * 0.052));
-					let interestPrice = Math.round(((salePrice - downPayment) * .14));
+					let interestPrice = Math.round(((salePrice - downPayment) * 0.1));
 					let totalPrice = (salePrice + taxPrice);
 					let amountOwed = ((salePrice + taxPrice + interestPrice) - downPayment);
 
