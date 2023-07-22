@@ -1,4 +1,4 @@
-let checkPayments = require('../checkPayments.js');
+let checkOverduePayments = require('./checkOverduePayments.js');
 let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				await checkPayments.checkPayments(interaction.client);
+				await checkOverduePayments.checkOverduePayments(interaction.client);
 				await interaction.reply({ content: `Checking for overdue on payment agreements and agreements ready for repossession! *(this process will take about 30 seconds)*`, ephemeral: true });
 			}
 			else {

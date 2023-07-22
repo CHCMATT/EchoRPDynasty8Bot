@@ -7,7 +7,7 @@ let formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
-module.exports.checkPayments = async (client) => {
+module.exports.checkOverduePayments = async (client) => {
 	try {
 		// check for overdue payments
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
