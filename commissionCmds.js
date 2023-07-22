@@ -9,7 +9,8 @@ let formatter = new Intl.NumberFormat('en-US', {
 
 module.exports.commissionReport = async (client) => {
 	try {
-		let lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
+		let lastRep;
+		lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
 		let lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
@@ -38,7 +39,7 @@ module.exports.commissionReport = async (client) => {
 
 			if (lastRep == null || lastRep.includes("Value not found")) {
 				let nowMinus7 = now - 604800;
-				let lastRep = `<t:${nowMinus7}:d>`
+				lastRep = `<t:${nowMinus7}:d>`
 			}
 
 			let embed = new EmbedBuilder()
