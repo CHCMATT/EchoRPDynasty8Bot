@@ -6,7 +6,6 @@ let startup = require('./startup.js');
 let { google } = require('googleapis');
 let interact = require('./dsInteractions.js');
 let statsReport = require('./statsReport.js');
-let checkPayments = require('./checkPayments.js');
 let commissionCmds = require('./commissionCmds.js');
 let { Client, Collection, GatewayIntentBits } = require('discord.js');
 
