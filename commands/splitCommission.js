@@ -8,8 +8,8 @@ let formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'swapcommission',
-	description: 'Swaps the specified amount from the 1st specified user to the 2nd specified user\'s commission',
+	name: 'splitcommission',
+	description: 'Divides the amount by 50%, removes it from the 1st user, and adds to the 2nd user\'s commission',
 	options: [
 		{
 			name: 'fromuser',
@@ -43,12 +43,13 @@ module.exports = {
 				let touser = interaction.options.getUser('touser');
 				if (interaction.user.id == fromuser.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let amount = Math.abs(interaction.options.getInteger('amount'));
+					let splitAmount = (amount * 0.50);
 					let reason = interaction.options.getString('reason');
-					let formattedAmt = formatter.format(amount);
+					let formattedSplitAmount = formatter.format(splitAmount);
 					let fromuserPersonnelData = await dbCmds.readPersStats(fromuser.id);
 					if (fromuserPersonnelData.currentCommission != null && fromuserPersonnelData.currentCommission > 0) {
-						await dbCmds.removeCommission(fromuser.id, amount);
-						await dbCmds.addCommission(touser.id, amount);
+						await dbCmds.removeCommission(fromuser.id, splitAmount);
+						await dbCmds.addCommission(touser.id, splitAmount);
 						let fromuserPersonnelData = await dbCmds.readPersStats(fromuser.id);
 						let touserPersonnelData = await dbCmds.readPersStats(touser.id);
 						let fromuserNewCommission = fromuserPersonnelData.currentCommission;
@@ -58,18 +59,18 @@ module.exports = {
 						// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 						let notificationEmbed1 = new EmbedBuilder()
 							.setTitle('Commission Modified Manually:')
-							.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${fromuser.id}>'s current commission for a new total of \`${formattedfromuserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+							.setDescription(`<@${interaction.user.id}> removed \`${formattedSplitAmount}\` from <@${fromuser.id}>'s current commission for a new total of \`${formattedfromuserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 							.setColor('FFA630');
 
 						let notificationEmbed2 = new EmbedBuilder()
 							.setTitle('Commission Modified Manually:')
-							.setDescription(`<@${interaction.user.id}> added \`${formattedAmt}\` to <@${touser.id}>'s current commission for a new total of \`${formattedtouserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+							.setDescription(`<@${interaction.user.id}> added \`${formattedSplitAmount}\` to <@${touser.id}>'s current commission for a new total of \`${formattedtouserNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 							.setColor('FFA630');
 
 						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
 						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
 
-						await interaction.reply({ content: `Successfully swapped \`${formattedAmt}\` from <@${fromuser.id}> to <@${touser.id}>'s current commission.`, ephemeral: true });
+						await interaction.reply({ content: `Successfully swapped \`${formattedSplitAmount}\` from <@${fromuser.id}> to <@${touser.id}>'s current commission.`, ephemeral: true });
 					} else {
 						await interaction.reply({ content: `:exclamation: <@${fromuser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
 					}
