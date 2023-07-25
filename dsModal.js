@@ -169,7 +169,7 @@ module.exports.modalSubmit = async (interaction) => {
 				let houseSaleBtns = [new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
 						.setCustomId('houseSwapSaleCommission')
-						.setLabel('Swap Commission')
+						.setLabel('Split Commission')
 						.setStyle(ButtonStyle.Primary)
 				)];
 
@@ -317,7 +317,7 @@ module.exports.modalSubmit = async (interaction) => {
 				let warehouseSaleBtns = [new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
 						.setCustomId('warehouseSwapSaleCommission')
-						.setLabel('Swap Commission')
+						.setLabel('Split Commission')
 						.setStyle(ButtonStyle.Primary)
 				)];
 
@@ -1706,7 +1706,7 @@ module.exports.modalSubmit = async (interaction) => {
 				let officeSaleBtns = [new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
 						.setCustomId('officeSwapSaleCommission')
-						.setLabel('Swap Commission')
+						.setLabel('Split Commission')
 						.setStyle(ButtonStyle.Primary)
 				)];
 

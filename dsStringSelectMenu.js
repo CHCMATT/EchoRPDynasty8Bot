@@ -485,29 +485,30 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let toUserId = interaction.values[0];
 
 					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be split with?`)));
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionNumber);
-					await dbCmds.addCommission(toUserId, commissionNumber);
+					await dbCmds.removeCommission(fromUserId, commissionSplit);
+					await dbCmds.addCommission(toUserId, commissionSplit);
 
 					let fromUserCommission = await dbCmds.readCommission(fromUserId);
 					let toUserCommission = await dbCmds.readCommission(toUserId);
 
-					let formattedCommission = formatter.format(commissionNumber);
+					let formattedCommissionSwapped = formatter.format(commissionSplit);
 					let formattedFromUserCommission = formatter.format(fromUserCommission);
 					let formattedToUserCommission = formatter.format(toUserCommission);
 
-					let reason = `Commission Swap for House Sale`;
+					let reason = `Commission Split for House Sale`;
 
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					let notificationEmbed2 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
@@ -516,12 +517,12 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalHouseSaleReply = dsModal.originalHouseSaleReply;
 
-					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+					await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
 
 					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
 							.setCustomId('houseSwapSaleCommission')
-							.setLabel('Swap Commission')
+							.setLabel('Split Commission')
 							.setStyle(ButtonStyle.Primary)
 							.setDisabled(true)
 					)];
@@ -531,7 +532,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let houseSaleMsg = dsModal.houseSaleMsg;
 					let houseSaleMsgEmbeds = houseSaleMsg.embeds;
 
-					houseSaleMsgEmbeds[0].data.fields[5].value = `${houseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+					houseSaleMsgEmbeds[0].data.fields[5].value = `${houseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission split with <@${toUserId}>.`;
 
 					await houseSaleMsg.edit({ embeds: houseSaleMsgEmbeds })
 				}
@@ -542,29 +543,30 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let toUserId = interaction.values[0];
 
 					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be split with?`)));
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionNumber);
-					await dbCmds.addCommission(toUserId, commissionNumber);
+					await dbCmds.removeCommission(fromUserId, commissionSplit);
+					await dbCmds.addCommission(toUserId, commissionSplit);
 
 					let fromUserCommission = await dbCmds.readCommission(fromUserId);
 					let toUserCommission = await dbCmds.readCommission(toUserId);
 
-					let formattedCommission = formatter.format(commissionNumber);
+					let formattedCommissionSwapped = formatter.format(commissionSplit);
 					let formattedFromUserCommission = formatter.format(fromUserCommission);
 					let formattedToUserCommission = formatter.format(toUserCommission);
 
-					let reason = `Commission Swap for Warehouse Sale`;
+					let reason = `Commission Split for Warehouse Sale`;
 
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					let notificationEmbed2 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
@@ -573,12 +575,12 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalWarehouseSaleReply = dsModal.originalWarehouseSaleReply;
 
-					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+					await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
 
 					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
 							.setCustomId('warehouseSwapSaleCommission')
-							.setLabel('Swap Commission')
+							.setLabel('Split Commission')
 							.setStyle(ButtonStyle.Primary)
 							.setDisabled(true)
 					)];
@@ -588,7 +590,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let warehouseSaleMsg = dsModal.warehouseSaleMsg;
 					let warehouseSaleMsgEmbeds = warehouseSaleMsg.embeds;
 
-					warehouseSaleMsgEmbeds[0].data.fields[5].value = `${warehouseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+					warehouseSaleMsgEmbeds[0].data.fields[5].value = `${warehouseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission split with <@${toUserId}>.`;
 
 					await warehouseSaleMsg.edit({ embeds: warehouseSaleMsgEmbeds })
 				}
@@ -599,29 +601,30 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let toUserId = interaction.values[0];
 
 					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be split with?`)));
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionNumber);
-					await dbCmds.addCommission(toUserId, commissionNumber);
+					await dbCmds.removeCommission(fromUserId, commissionSplit);
+					await dbCmds.addCommission(toUserId, commissionSplit);
 
 					let fromUserCommission = await dbCmds.readCommission(fromUserId);
 					let toUserCommission = await dbCmds.readCommission(toUserId);
 
-					let formattedCommission = formatter.format(commissionNumber);
+					let formattedCommissionSwapped = formatter.format(commissionSplit);
 					let formattedFromUserCommission = formatter.format(fromUserCommission);
 					let formattedToUserCommission = formatter.format(toUserCommission);
 
-					let reason = `Commission Swap for Office Sale`;
+					let reason = `Commission Split for Office Sale`;
 
 					let notificationEmbed1 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					let notificationEmbed2 = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
 						.setColor('FFA630');
 
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
@@ -631,12 +634,12 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let originalOfficeSaleReply = dsModal.originalOfficeSaleReply;
 					console.log(originalOfficeSaleReply);
 
-					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+					await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
 
 					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
 							.setCustomId('officeSwapSaleCommission')
-							.setLabel('Swap Commission')
+							.setLabel('Split Commission')
 							.setStyle(ButtonStyle.Primary)
 							.setDisabled(true)
 					)];
@@ -646,7 +649,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let officeSaleMsg = dsModal.officeSaleMsg;
 					let officeSaleMsgEmbeds = officeSaleMsg.embeds;
 
-					officeSaleMsgEmbeds[0].data.fields[5].value = `${officeSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+					officeSaleMsgEmbeds[0].data.fields[5].value = `${officeSaleMsgEmbeds[0].data.fields[5].value}\n- Commission split with <@${toUserId}>.`;
 
 					await officeSaleMsg.edit({ embeds: officeSaleMsgEmbeds })
 				}
