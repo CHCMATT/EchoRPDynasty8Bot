@@ -55,11 +55,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
 				var assetFees = (price * 0.01);
+				var taxPrice = Math.round((price * 0.052));
+				var totalPrice = (price + taxPrice);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 				var formattedAssetFees = formatter.format(assetFees);
+				var formattedTotalPrice = formatter.format(totalPrice);
+				var formattedTaxPrice = formatter.format(taxPrice);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -169,7 +173,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
+				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
 
 				exports.originalHouseSaleReply = originalHouseSaleReply.interaction;
 				break;
@@ -199,11 +203,15 @@ module.exports.modalSubmit = async (interaction) => {
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
 				var assetFees = (price * 0.01);
+				var taxPrice = Math.round((price * 0.052));
+				var totalPrice = (price + taxPrice);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 				var formattedAssetFees = formatter.format(assetFees);
+				var formattedTotalPrice = formatter.format(totalPrice);
+				var formattedTaxPrice = formatter.format(taxPrice);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -1504,18 +1512,22 @@ module.exports.modalSubmit = async (interaction) => {
 
 				let officeSaleTodayDate = moment().format('MMMM DD, YYYY');
 
-				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
-				var buybackPrice = (price * 0.75);
 				var assetFees = (price * 0.01);
+				var taxPrice = Math.round((price * 0.052));
+				var totalPrice = (price + taxPrice);
+				var buybackPrice = (price * 0.75);
 
+				var formattedPrice = formatter.format(price);
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedBuybackPrice = formatter.format(buybackPrice);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
 				var formattedAssetFees = formatter.format(assetFees);
+				var formattedTotalPrice = formatter.format(totalPrice);
+				var formattedTaxPrice = formatter.format(taxPrice);
+				var formattedBuybackPrice = formatter.format(buybackPrice);
 
 				await interaction.client.googleDocs.batchUpdate({
 					auth: interaction.client.driveAuth, documentId: officeSaleNewFile.data.id, resource: {
@@ -1698,7 +1710,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
+				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
 
 				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
@@ -1878,7 +1890,7 @@ module.exports.modalSubmit = async (interaction) => {
 						return;
 					}
 
-					let formattedAdjustedPrice = formatter.format(adjustedPrice);
+					var formattedAdjustedPrice = formatter.format(adjustedPrice);
 
 					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('adjustNotesInput'));
 
