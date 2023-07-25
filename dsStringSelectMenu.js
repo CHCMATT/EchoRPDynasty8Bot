@@ -121,7 +121,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the Street Address and nearest street?')
+						.setLabel('What is the street address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('9498 Algonquin Blvd')
 						.setRequired(true);
@@ -365,7 +365,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					var newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
-						.setLabel('What is the property id and nearest street?')
+						.setLabel('What is the street address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('6789 Grove St')
 						.setRequired(true);
@@ -408,7 +408,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					var newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
-						.setLabel('What is the property id and nearest street?')
+						.setLabel('What is the street address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('8910 Route 68')
 						.setRequired(true);
@@ -591,6 +591,64 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					warehouseSaleMsgEmbeds[0].data.fields[5].value = `${warehouseSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
 
 					await warehouseSaleMsg.edit({ embeds: warehouseSaleMsgEmbeds })
+				}
+				break;
+			case 'officeSwapCommissionRealtorDropdown':
+				if (0 == 0) {
+					let fromUserId = interaction.member.id;
+					let toUserId = interaction.values[0];
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be swapped to?`)));
+					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+
+					await dbCmds.removeCommission(fromUserId, commissionNumber);
+					await dbCmds.addCommission(toUserId, commissionNumber);
+
+					let fromUserCommission = await dbCmds.readCommission(fromUserId);
+					let toUserCommission = await dbCmds.readCommission(toUserId);
+
+					let formattedCommission = formatter.format(commissionNumber);
+					let formattedFromUserCommission = formatter.format(fromUserCommission);
+					let formattedToUserCommission = formatter.format(toUserCommission);
+
+					let reason = `Commission Swap for Office Sale`;
+
+					let notificationEmbed1 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommission}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					let notificationEmbed2 = new EmbedBuilder()
+						.setTitle('Commission Modified Manually:')
+						.setDescription(`<@${interaction.user.id}> added \`${formattedCommission}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('FFA630');
+
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+
+					let prevInteraction = dsBtn.commissionSwapInteraction;
+					let originalOfficeSaleReply = dsModal.originalOfficeSaleReply;
+					console.log(originalOfficeSaleReply);
+
+					await prevInteraction.editReply({ content: `Successfully swapped your commission of \`${commissionString}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+
+					let disabledSwapCommissionBtn = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('officeSwapSaleCommission')
+							.setLabel('Swap Commission')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true)
+					)];
+
+					await originalOfficeSaleReply.editReply({ content: prevInteraction.message.content, components: disabledSwapCommissionBtn, ephemeral: true });
+
+					let officeSaleMsg = dsModal.officeSaleMsg;
+					let officeSaleMsgEmbeds = officeSaleMsg.embeds;
+
+					officeSaleMsgEmbeds[0].data.fields[5].value = `${officeSaleMsgEmbeds[0].data.fields[5].value}\n- Commission swapped to <@${toUserId}>.`
+
+					await officeSaleMsg.edit({ embeds: officeSaleMsgEmbeds })
 				}
 				break;
 			default:

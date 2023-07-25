@@ -14,7 +14,7 @@ module.exports = {
 		{
 			name: 'calctype',
 			description: 'The type of calculator you\'d like',
-			choices: [{ name: 'Regular Sale', value: 'regular' }, { name: 'Financing Sale', value: 'financing' }],
+			choices: [{ name: 'Regular Sale', value: 'regular' }, { name: 'Financing Sale', value: 'financing' }, { name: 'Asset Fees', value: 'assetfees' }],
 			type: 3,
 			required: true,
 		},
@@ -61,6 +61,14 @@ module.exports = {
 					let formattedAmountOwed = formatter.format(amountOwed);
 
 					await interaction.reply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
+
+				} else if (calcType == 'assetfees') {
+					let assetFees = (salePrice * 0.01);
+
+					let formattedAssetFees = formatter.format(assetFees);
+					let formattedSalePrice = formatter.format(salePrice);
+
+					await interaction.reply({ content: `Asset Fees Calculator Results:\n> Sale Price: \`${formattedSalePrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\``, ephemeral: true });
 
 				} else {
 					console.log(`Error: Unrecognized calculator type:  ${calctype}`)

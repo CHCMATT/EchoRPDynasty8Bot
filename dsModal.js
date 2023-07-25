@@ -54,10 +54,12 @@ module.exports.modalSubmit = async (interaction) => {
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
+				var assetFees = (price * 0.01);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
+				var formattedAssetFees = formatter.format(assetFees);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -167,7 +169,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
+				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
 
 				exports.originalHouseSaleReply = originalHouseSaleReply.interaction;
 				break;
@@ -196,10 +198,12 @@ module.exports.modalSubmit = async (interaction) => {
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
+				var assetFees = (price * 0.01);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
+				var formattedAssetFees = formatter.format(assetFees);
 
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.reply({
@@ -309,7 +313,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
+				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
 
 				exports.originalWarehouseSaleReply = originalWarehouseSaleReply.interaction;
 				break;
@@ -1505,11 +1509,13 @@ module.exports.modalSubmit = async (interaction) => {
 				var d8Profit = price - costPrice;
 				var realtorCommission = (d8Profit * 0.30);
 				var buybackPrice = (price * 0.75);
+				var assetFees = (price * 0.01);
 
 				var formattedCostPrice = formatter.format(costPrice);
 				var formattedD8Profit = formatter.format(d8Profit);
 				var formattedBuybackPrice = formatter.format(buybackPrice);
 				var formattedRealtorCommission = formatter.format(realtorCommission);
+				var formattedAssetFees = formatter.format(assetFees);
 
 				await interaction.client.googleDocs.batchUpdate({
 					auth: interaction.client.driveAuth, documentId: officeSaleNewFile.data.id, resource: {
@@ -1651,10 +1657,11 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('805B10')];
 
 					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
-
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+					let officeSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+
+					exports.officeSaleMsg = officeSaleMsg;
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -1684,7 +1691,16 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				let officeSaleBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('officeSwapSaleCommission')
+						.setLabel('Swap Commission')
+						.setStyle(ButtonStyle.Primary)
+				)];
+
+				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
+
+				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
 			case 'addYPAdvertModal':
 				var realtorName;

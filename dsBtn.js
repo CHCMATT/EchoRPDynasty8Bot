@@ -257,7 +257,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
-					.setLabel('What is the property id and nearest street?')
+					.setLabel('What is the street address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('6789 Grove St')
 					.setRequired(true);
@@ -301,7 +301,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var newLotNumNotesInput = new TextInputBuilder()
 					.setCustomId('newLotNumNotesInput')
-					.setLabel('What is the property id and nearest street?')
+					.setLabel('What is the street address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8910 Route 68')
 					.setRequired(true);
@@ -357,7 +357,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setRequired(true);
 				var lotNumStreetNameInput = new TextInputBuilder()
 					.setCustomId('lotNumStreetNameInput')
-					.setLabel('What is the street address and nearest street?')
+					.setLabel('What is the street address?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('8912 Paleto Blvd')
 					.setRequired(true);
@@ -783,6 +783,32 @@ module.exports.btnPressed = async (interaction) => {
 
 					let messageContent = interaction.message.content;
 					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your weekly commission is now:`) - 3));
+
+					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be swapped to?`, components: [realtorSelectionComponent], ephemeral: true });
+					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
+
+				}
+				break;
+			case 'officeSwapSaleCommission':
+				if (0 == 0) {
+					let allRealtors = await dbCmds.readAllRealtors();
+
+					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
+
+					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
+						return realtor.data.label !== interaction.member.nickname;
+					});
+
+					let realtorSelectionOptions = new StringSelectMenuBuilder()
+						.setCustomId('officeSwapCommissionRealtorDropdown')
+						.setPlaceholder('Select a Realtor')
+						.addOptions(allRealtorsArray);
+
+					let realtorSelectionComponent = new ActionRowBuilder()
+						.addComponents(realtorSelectionOptions);
+
+					let messageContent = interaction.message.content;
+					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Limited Property Contract:`) - 4));
 
 					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be swapped to?`, components: [realtorSelectionComponent], ephemeral: true });
 					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
