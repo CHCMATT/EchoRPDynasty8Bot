@@ -9,7 +9,7 @@ module.exports.btnPressed = async (interaction) => {
 		switch (buttonID) {
 			case 'addHouseSold':
 				var addHouseSoldModal = new ModalBuilder()
-					.setCustomId('addHouseSoldModals')
+					.setCustomId('addHouseSoldModal')
 					.setTitle('Log a house that you sold');
 				var soldToInput = new TextInputBuilder()
 					.setCustomId('soldToInput')

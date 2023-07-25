@@ -40,7 +40,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
 
-				var soldTo = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
+				var soldTos = strCleanup(interaction.fields.getTextInputValue('soldToInput'));
 				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
 				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
 				var locationNotes = strCleanup(interaction.fields.getTextInputValue('locNotesInput'));
