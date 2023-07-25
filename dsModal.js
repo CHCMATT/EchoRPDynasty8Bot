@@ -31,6 +31,7 @@ module.exports.modalSubmit = async (interaction) => {
 		switch (modalID) {
 			case 'addHouseSoldModal':
 				var realtorName;
+				sss
 				if (interaction.member.nickname) {
 					realtorName = interaction.member.nickname;
 				} else {
