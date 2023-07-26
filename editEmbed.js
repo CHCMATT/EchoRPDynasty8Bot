@@ -26,7 +26,8 @@ module.exports.editEmbed = async (client) => {
 				employeeStats[i].activityChecks > 0 ||
 				employeeStats[i].miscSales > 0 ||
 				employeeStats[i].financialAgreements > 0 ||
-				employeeStats[i].financialPayments > 0) {
+				employeeStats[i].financialPayments > 0 ||
+				employeeStats[i].quotesReviewed > 0) {
 
 				overallDescList = overallDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
@@ -54,6 +55,9 @@ module.exports.editEmbed = async (client) => {
 				if (employeeStats[i].financialPayments >= 1) {
 					overallDescList = overallDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].financialPayments}`);
 				}
+				if (employeeStats[i].quotesReviewed >= 1) {
+					overallDescList = overallDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].quotesReviewed}`);
+				}
 			}
 		}
 
@@ -76,7 +80,8 @@ module.exports.editEmbed = async (client) => {
 				employeeStats[i].monthlyActivityChecks > 0 ||
 				employeeStats[i].monthlyMiscSales > 0 ||
 				employeeStats[i].monthlyFinancialAgreements > 0 ||
-				employeeStats[i].monthlyFinancialPayments > 0) {
+				employeeStats[i].monthlyFinancialPayments > 0 ||
+				employeeStats[i].monthlyQuotesReviewed > 0) {
 
 				monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
@@ -103,6 +108,9 @@ module.exports.editEmbed = async (client) => {
 				}
 				if (employeeStats[i].monthlyFinancialPayments >= 1) {
 					monthlyDescList = monthlyDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}`);
+				}
+				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
+					monthlyDescList = monthlyDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
 				}
 			}
 		}

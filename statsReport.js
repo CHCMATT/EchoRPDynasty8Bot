@@ -8,32 +8,51 @@ module.exports.statsReport = async (client) => {
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
 
-		let realtorStatsArray = await dbCmds.monthlyRealtorStatsRep();
+		let employeeStats = await dbCmds.monthlyRealtorStatsRep();
 		let realtorStatsDescList = '';
 
-		for (i = 0; i < realtorStatsArray.length; i++) {
-			let charName = realtorStatsArray[i].charName;
-			let monthlyHousesSold = realtorStatsArray[i].monthlyHousesSold;
-			let monthlyWarehousesSold = realtorStatsArray[i].monthlyWarehousesSold;
-			let monthlyPropertiesQuoted = realtorStatsArray[i].monthlyPropertiesQuoted;
-			let monthlyPropertiesRepod = realtorStatsArray[i].monthlyPropertiesRepod;
-			let monthlyActivityChecks = realtorStatsArray[i].monthlyActivityChecks;
-			let monthlyMiscSales = realtorStatsArray[i].monthlyMiscSales;
-			let monthlyFinancialAgreements = realtorStatsArray[i].monthlyFinancialAgreements;
-			let monthlyFinancialPayments = realtorStatsArray[i].monthlyFinancialPayments;
-			let discordId = realtorStatsArray[i].discordId;
+		for (let i = 0; i < employeeStats.length; i++) {
+			if (employeeStats[i].monthlyHousesSold > 0 ||
+				employeeStats[i].monthlyWarehousesSold > 0 ||
+				employeeStats[i].monthlyPropertiesQuoted > 0 ||
+				employeeStats[i].monthlyPropertiesRepod > 0 ||
+				employeeStats[i].monthlyActivityChecks > 0 ||
+				employeeStats[i].monthlyMiscSales > 0 ||
+				employeeStats[i].monthlyFinancialAgreements > 0 ||
+				employeeStats[i].monthlyFinancialPayments > 0 ||
+				employeeStats[i].monthlyQuotesReviewed > 0) {
 
-			realtorStatsDescList = realtorStatsDescList.concat(`__${charName}__:
-• **Houses Sold:** ${monthlyHousesSold}
-• **Warehouses Sold:** ${monthlyWarehousesSold}
-• **Properties Quoted:** ${monthlyPropertiesQuoted}
-• **Properties Repossessed:** ${monthlyPropertiesRepod}
-• **Train Activities Checked:** ${monthlyActivityChecks}
-• **Misc. Sales Completed:** ${monthlyMiscSales}
-• **Financial Agreements Filed:** ${monthlyFinancialAgreements}
-• **Financial Payments Accepted:** ${monthlyFinancialPayments}\n\n`);
+				realtorStatsDescList = realtorStatsDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
-			await dbCmds.resetMonthlyRealtorStats(discordId);
+				if (employeeStats[i].monthlyHousesSold >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}`);
+				}
+				if (employeeStats[i].monthlyWarehousesSold >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}`);
+				}
+				if (employeeStats[i].monthlyPropertiesQuoted >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}`);
+				}
+				if (employeeStats[i].monthlyPropertiesRepod >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}`);
+				}
+				if (employeeStats[i].monthlyActivityChecks >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}`);
+				}
+				if (employeeStats[i].monthlyMiscSales >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}`);
+				}
+				if (employeeStats[i].monthlyFinancialAgreements >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
+				}
+				if (employeeStats[i].monthlyFinancialPayments >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}`);
+				}
+				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
+					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
+				}
+			}
+			await dbCmds.resetMonthlyRealtorStats(employeeStats[i].discordId);
 		}
 
 		await editEmbed.editEmbed(client);
@@ -49,8 +68,8 @@ module.exports.statsReport = async (client) => {
 
 		let countMonthlyHousesSold = await dbCmds.readSummValue("countMonthlyHousesSold");
 		let countMonthlyWarehousesSold = await dbCmds.readSummValue("countMonthlyWarehousesSold");
-		let countMonthlyPropertiesRepod = await dbCmds.readSummValue("countMonthlyPropertiesRepod");
 		let countMonthlyPropertiesQuoted = await dbCmds.readSummValue("countMonthlyPropertiesQuoted");
+		let countMonthlyPropertiesRepod = await dbCmds.readSummValue("countMonthlyPropertiesRepod");
 		let countMonthlyTrainActivitiesChecked = await dbCmds.readSummValue("countMonthlyTrainActivitiesChecked");
 		let countMonthlyMiscSales = await dbCmds.readSummValue("countMonthlyMiscSales");
 		let countMonthlyFinancialAgreements = await dbCmds.readSummValue("countMonthlyFinancialAgreements");
@@ -58,23 +77,53 @@ module.exports.statsReport = async (client) => {
 
 		await dbCmds.resetSummValue("countMonthlyHousesSold");
 		await dbCmds.resetSummValue("countMonthlyWarehousesSold");
-		await dbCmds.resetSummValue("countMonthlyPropertiesRepod");
 		await dbCmds.resetSummValue("countMonthlyPropertiesQuoted");
+		await dbCmds.resetSummValue("countMonthlyPropertiesRepod");
 		await dbCmds.resetSummValue("countMonthlyTrainActivitiesChecked");
 		await dbCmds.resetSummValue("countMonthlyMiscSales");
 		await dbCmds.resetSummValue("countMonthlyFinancialAgreements");
 		await dbCmds.resetSummValue("countMonthlyFinancialPayments");
 
+		// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
+
+		let mainFields = [];
+
+		if (countMonthlyHousesSold >= 1) {
+			countMonthlyHousesSold = countMonthlyHousesSold.toString();
+			mainFields.push({ name: `Houses Sold: `, value: `${countMonthlyHousesSold}` });
+		}
+		if (countMonthlyWarehousesSold >= 1) {
+			countMonthlyWarehousesSold = countMonthlyWarehousesSold.toString();
+			mainFields.push({ name: `Warehouses Sold:`, value: `${countMonthlyWarehousesSold}` });
+		}
+		if (countMonthlyPropertiesQuoted >= 1) {
+			countMonthlyPropertiesQuoted = countMonthlyPropertiesQuoted.toString();
+			mainFields.push({ name: `Properties Quoted:`, value: `${countMonthlyPropertiesQuoted}` });
+		}
+		if (countMonthlyPropertiesRepod >= 1) {
+			countMonthlyPropertiesRepod = countMonthlyPropertiesRepod.toString();
+			mainFields.push({ name: `Properties Repossessed:`, value: `${countMonthlyPropertiesRepod}` });
+		}
+		if (countMonthlyTrainActivitiesChecked >= 1) {
+			countMonthlyTrainActivitiesChecked = countMonthlyTrainActivitiesChecked.toString();
+			mainFields.push({ name: `Train Activities Checked:`, value: `${countMonthlyTrainActivitiesChecked}` });
+		}
+		if (countMonthlyMiscSales >= 1) {
+			countMonthlyMiscSales = countMonthlyMiscSales.toString();
+			mainFields.push({ name: `Misc. Sales Completed:`, value: `${countMonthlyMiscSales}` });
+		}
+		if (countMonthlyFinancialAgreements >= 1) {
+			countMonthlyFinancialAgreements = countMonthlyFinancialAgreements.toString();
+			mainFields.push({ name: `Financial Agreements Filed:`, value: `${countMonthlyFinancialAgreements}` });
+		}
+		if (countMonthlyFinancialPayments >= 1) {
+			countMonthlyFinancialPayments = countMonthlyFinancialPayments.toString();
+			mainFields.push({ name: `Financial Payments Accepted:`, value: `${countMonthlyFinancialPayments} ` });
+		}
+
 		let overallStatsEmbed = new EmbedBuilder()
 			.setTitle(`Monthly Dynasty 8 Stats Report for ${lastRep} through ${today}:`)
-			.setDescription(`• **Houses Sold:** ${countMonthlyHousesSold}
-			• **Warehouses Sold:** ${countMonthlyWarehousesSold}
-			• **Properties Quoted:** ${countMonthlyPropertiesRepod}
-			• **Properties Repossessed:** ${countMonthlyPropertiesQuoted}
-			• **Train Activities Checked:** ${countMonthlyTrainActivitiesChecked}
-			• **Misc. Sales Completed:** ${countMonthlyMiscSales}
-			• **Financial Agreements Filed:** ${countMonthlyFinancialAgreements}
-			• **Financial Payments Accepted:** ${countMonthlyFinancialPayments}`)
+			.addFields(mainFields)
 			.setColor('DBB42C');
 
 		let realtorStatsEmbed = new EmbedBuilder()
