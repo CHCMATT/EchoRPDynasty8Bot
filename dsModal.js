@@ -1814,6 +1814,14 @@ module.exports.modalSubmit = async (interaction) => {
 					let approvalMsgNotes;
 					let approvalMsgEmbed = [];
 
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
+					let currCommission = await dbCmds.readCommission(interaction.member.id);
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+					let formattedCurrCommission = formatter.format(currCommission);
+
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
 							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
@@ -1872,7 +1880,16 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
+					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					let notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+
+					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -1927,6 +1944,14 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let approvalMsgNotes;
 					let approvalMsgEmbed = [];
+
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
+					let currCommission = await dbCmds.readCommission(interaction.member.id);
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+					let formattedCurrCommission = formatter.format(currCommission);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -1986,7 +2011,16 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
+					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					let notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+
+					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -2029,6 +2063,14 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let denialMsgNotes;
 					let denialMsgEmbed = [];
+
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
+					let currCommission = await dbCmds.readCommission(interaction.member.id);
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+					let formattedCurrCommission = formatter.format(currCommission);
 
 					if (denialNotes) {
 						if (mainEmbedFields[5]) {
@@ -2087,7 +2129,16 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed });
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
+					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
+
+					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+					let notificationEmbed = new EmbedBuilder()
+						.setTitle('Commission Modified Automatically:')
+						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
+						.setColor('1EC276');
+					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+
+					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}

@@ -20,8 +20,8 @@ let d8PersonnelInfoSchema = new Schema({
 	activityChecks: reqNum,
 	miscSales: reqNum,
 	financialAgreements: reqNum,
-	embedColor: reqString,
-	embedMsgId: reqString,
+	financialPayments: reqNum,
+	quotesReviewed: reqNum,
 	currentCommission: reqNum,
 	bankAccount: reqString,
 	monthlyHousesSold: reqNum,
@@ -31,8 +31,8 @@ let d8PersonnelInfoSchema = new Schema({
 	monthlyActivityChecks: reqNum,
 	monthlyMiscSales: reqNum,
 	monthlyFinancialAgreements: reqNum,
-	financialPayments: reqNum,
 	monthlyFinancialPayments: reqNum,
+	monthlyQuotesReviewed: reqNum,
 	settingQuotePing: Boolean,
 });
 
