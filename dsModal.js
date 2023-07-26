@@ -1821,6 +1821,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
+					await editEmbed.editEmbed(interaction.client);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -1952,6 +1953,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
+					await editEmbed.editEmbed(interaction.client);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -2071,6 +2073,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
+					await editEmbed.editEmbed(interaction.client);
 
 					if (denialNotes) {
 						if (mainEmbedFields[5]) {
