@@ -224,6 +224,11 @@ function addBtnRows() {
 			.setStyle(ButtonStyle.Primary),
 
 		new ButtonBuilder()
+			.setCustomId('addFinancingAgreement')
+			.setLabel('Add Financing')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
 			.setCustomId('addYPAdvert')
 			.setLabel('Log a YP Ad')
 			.setStyle(ButtonStyle.Secondary),

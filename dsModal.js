@@ -1083,9 +1083,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var saleDate = `<t:${now}:d>`;
-				var nextPaymentDateTime = now + (86400 * 14); // 86400 seconds in a day times 14 days
-				var nextPaymentDate = `<t:${nextPaymentDateTime}:d>`;
-				var nextPaymentDateRelative = `<t:${nextPaymentDateTime}:R>`;
 				var latestFinanceNum = await dbCmds.readFinanceNum('financeNum');
 				var currentFinanceNum = latestFinanceNum + 1;
 				await dbCmds.setFinanceNum('financeNum', currentFinanceNum);
@@ -1106,6 +1103,39 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
+				let paidOffDays;
+
+				if (price <= 100000) {
+					paidOffDays = 20;
+				} else if (price > 100000 && price <= 200000) {
+					paidOffDays = 25;
+				} else if (price > 200000 && price <= 300000) {
+					paidOffDays = 30;
+				} else if (price > 300000 && price <= 400000) {
+					paidOffDays = 35;
+				} else if (price > 400000 && price <= 500000) {
+					paidOffDays = 40;
+				} else if (price > 500000 && price <= 600000) {
+					paidOffDays = 45;
+				} else if (price > 600000 && price <= 700000) {
+					paidOffDays = 50;
+				} else if (price > 700000 && price <= 800000) {
+					paidOffDays = 55;
+				} else if (price > 800000 && price <= 900000) {
+					paidOffDays = 60;
+				} else {
+					let formattedPrice = formatter.format(price);
+					await interaction.editReply({
+						content: `:exclamation: We are unable to finance for \`${formattedPrice}\` at this time, please be sure you're entering less than \`$900,000\` for the price.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				let paidOffDueDateTime = now + (86400 * paidOffDays); // 86400 seconds in a day times paidOffDays days
+				let paidOffDueDate = `<t:${paidOffDueDateTime}:d>`;
+				let paidOffDueDateRelative = `<t:${paidOffDueDateTime}:R>`;
+
 				var downPayment = (price * 0.1);
 				var interest = ((price - downPayment) * 0.1);
 				var amountOwed = (price - downPayment + interest);
@@ -1124,10 +1154,11 @@ module.exports.modalSubmit = async (interaction) => {
 				let documentLink = `https://docs.google.com/document/d/${newFile.data.id}`;
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, clientName, clientInfo, clientContact, lotNumStreetName, price, documentLink]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Agreements!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, paidOffDueDate, clientName, clientInfo, clientContact, lotNumStreetName, price, documentLink]] }
 				});
 
-				let todayDate = moment().format('MMMM DD, YYYY');
+				let todayDateString = moment().format('MMMM DD, YYYY');
+				let paidOffDateString = moment.unix(paidOffDueDateTime).format('MMMM DD, YYYY');
 
 				await interaction.client.googleDocs.batchUpdate({
 					auth: interaction.client.driveAuth, documentId: newFile.data.id, resource: {
@@ -1157,9 +1188,17 @@ module.exports.modalSubmit = async (interaction) => {
 							},
 						}, {
 							replaceAllText: {
-								replaceText: todayDate,
+								replaceText: todayDateString,
 								containsText: {
 									"text": "{today_date}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: paidOffDateString,
+								containsText: {
+									"text": "{paid_off_date}",
 									"matchCase": true
 								}
 							},
@@ -1220,8 +1259,7 @@ module.exports.modalSubmit = async (interaction) => {
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 						{ name: `Sale Date:`, value: `${saleDate}`, inline: true },
-						{ name: `Latest Payment:`, value: `${saleDate}`, inline: true },
-						{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
+						{ name: `Paid Off Due Date:`, value: `${paidOffDueDate} (${paidOffDueDateRelative})`, inline: true },
 						{ name: `Financing ID Number:`, value: `${financeNum}` },
 						{ name: `Client Name:`, value: `${clientName}`, inline: true },
 						{ name: `Client Info:`, value: `${clientInfo}`, inline: true },
@@ -1247,7 +1285,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
 
-				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Days to Pay Off: \`${paidOffDays}\` (${paidOffDueDate})\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
 				break;
 			case 'addFinancingPaymentModal':
 				var realtorName;
