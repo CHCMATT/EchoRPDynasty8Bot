@@ -1,5 +1,6 @@
 let d8SummaryInfo = require('./schemas/d8SummaryInfo');
 let d8PersonnelInfo = require('./schemas/d8PersonnelInfo');
+let d8PersonnelAssets = require('./schemas/d8PersonnelAssets');
 
 module.exports.readSummValue = async (summaryName) => {
 	let result = await d8SummaryInfo.findOne({ summaryName }, { value: 1, _id: 0 });
@@ -163,4 +164,17 @@ module.exports.readFinanceNum = async (summaryName) => {
 module.exports.currStats = async () => {
 	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, financialPayments: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyFinancialPayments: 1, quotesReviewed: 1, monthlyQuotesReviewed: 1, _id: 0 });
 	return result;
+};
+
+module.exports.readPersonnelAssets = async () => {
+	let result = await d8PersonnelAssets.find({ assetName: { $ne: null } }, { discordId: 1, assetName: 1, assetCost: 1, _id: 0 });
+	return result;
+};
+
+module.exports.addPersonnelAsset = async (uniqueId, assetOwner, assetName, assetCost) => {
+	await d8PersonnelAssets.findOneAndUpdate({ uniqueId: uniqueId }, { uniqueId: uniqueId, assetName: assetName, discordId: assetOwner, assetCost: assetCost }, { upsert: true });
+};
+
+module.exports.removePersonnelAsset = async (assetOwner, assetName) => {
+	await d8PersonnelAssets.findOneAndUpdate({ assetName: assetName }, { assetName: assetName, discordId: assetOwner, assetCost: 0 });
 };
