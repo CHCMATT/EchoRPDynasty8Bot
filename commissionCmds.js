@@ -9,6 +9,7 @@ let formatter = new Intl.NumberFormat('en-US', {
 
 module.exports.commissionReport = async (client) => {
 	try {
+
 		let lastRep;
 		lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
 		let lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
@@ -17,8 +18,10 @@ module.exports.commissionReport = async (client) => {
 		let dateTime = new Date().toString().slice(0, 24);
 		let lastRepDiff = (now - lastRepDt);
 
+		await client.channels.cache.get(process.env.BOT_LOG_CHANNEL_ID).send(`🕐 Attempting to run Automatic Commission report at ${today}.`)
+
 		if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 64800) {
-			console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff})`)
+			console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff}).`)
 			return "fail";
 		} else {
 
@@ -88,6 +91,8 @@ module.exports.addWeeklyAssets = async (client) => {
 	try {
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
+
+		await client.channels.cache.get(process.env.BOT_LOG_CHANNEL_ID).send(`🕐 Attempting to add Weekly Assets to commissions at ${today}.`)
 
 		let assetsArray = await dbCmds.readPersonnelAssets();
 

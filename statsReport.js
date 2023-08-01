@@ -8,6 +8,8 @@ module.exports.statsReport = async (client) => {
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
 
+		await client.channels.cache.get(process.env.BOT_LOG_CHANNEL_ID).send(`🕐 Attempting to run Statistics Report at ${today}.`)
+
 		let employeeStats = await dbCmds.monthlyRealtorStatsRep();
 		let realtorStatsDescList = '';
 
