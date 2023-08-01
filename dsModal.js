@@ -1880,9 +1880,9 @@ module.exports.modalSubmit = async (interaction) => {
 
 					} else {
 						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
 						} else {
-							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
 						}
 
 						approvalMsgEmbed = [new EmbedBuilder()
@@ -2011,9 +2011,9 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('FFA630')];
 					} else {
 						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
 						} else {
-							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} without notes.`;
+							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
 						}
 
 						approvalMsgEmbed = [new EmbedBuilder()
@@ -2131,9 +2131,9 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('B80600')];
 					} else {
 						if (mainEmbedFields[5]) {
-							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
+							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
 						} else {
-							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} without notes.`;
+							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
 						}
 
 						denialMsgEmbed = [new EmbedBuilder()
