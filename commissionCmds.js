@@ -9,7 +9,6 @@ let formatter = new Intl.NumberFormat('en-US', {
 
 module.exports.commissionReport = async (client) => {
 	try {
-
 		let lastRep;
 		lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
 		let lastRepDt = Number(lastRep.replaceAll('<t:', '').replaceAll(':d>', ''));
