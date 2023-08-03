@@ -14,7 +14,7 @@ module.exports = {
 		{
 			name: 'calctype',
 			description: 'The type of calculator you\'d like',
-			choices: [{ name: 'Regular Sale', value: 'regular' }, { name: 'Financing Sale', value: 'financing' }, { name: 'Taxes & Fees', value: 'assetfees' }],
+			choices: [{ name: 'Regular Sale', value: 'regular' }, { name: 'Financing Sale', value: 'financing' }],
 			type: 3,
 			required: true,
 		},
@@ -36,24 +36,28 @@ module.exports = {
 					let taxPrice = Math.round((salePrice * 0.052));
 					let totalPrice = (salePrice + taxPrice);
 					let d8Profit = salePrice - costPrice;
-					let realtorCommission = (d8Profit * 0.20);
+					let realtorCommission = (d8Profit * 0.30);
 					let assetFees = (salePrice * 0.01);
 
 					let formattedSalePrice = formatter.format(salePrice);
 					let formattedTotalPrice = formatter.format(totalPrice);
 					let formattedTaxPrice = formatter.format(taxPrice);
-					let formattedCostPrice = formatter.format(costPrice);
-					let formattedD8Profit = formatter.format(d8Profit);
 					let formattedRealtorCommission = formatter.format(realtorCommission);
 					let formattedAssetFees = formatter.format(assetFees);
 
-					await interaction.reply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
+					await interaction.reply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 				} else if (calcType == 'financing') {
+					let salePrice = interaction.options.getInteger('saleprice');
+
+					let costPrice = (salePrice * 0.85);
+					let d8Profit = salePrice - costPrice;
 					let downPayment = (salePrice * 0.1);
 					let taxPrice = Math.round((salePrice * 0.052));
 					let interestPrice = Math.round(((salePrice - downPayment) * 0.1));
 					let totalPrice = (salePrice + taxPrice + interestPrice);
 					let amountOwed = (totalPrice - downPayment);
+					let realtorCommission = (d8Profit * 0.30);
+					let assetFees = (salePrice * 0.01);
 
 					let formattedSalePrice = formatter.format(salePrice);
 					let formattedTotalPrice = formatter.format(totalPrice);
@@ -61,20 +65,10 @@ module.exports = {
 					let formattedInterestPrice = formatter.format(interestPrice);
 					let formattedDownPayment = formatter.format(downPayment);
 					let formattedAmountOwed = formatter.format(amountOwed);
-
-					await interaction.reply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`.`, ephemeral: true });
-
-				} else if (calcType == 'assetfees') {
-					let assetFees = (salePrice * 0.01);
-					let taxPrice = Math.round((salePrice * 0.052));
-					let totalPrice = (salePrice + taxPrice);
-
 					let formattedAssetFees = formatter.format(assetFees);
-					let formattedSalePrice = formatter.format(salePrice);
-					let formattedTotalPrice = formatter.format(totalPrice);
-					let formattedTaxPrice = formatter.format(taxPrice);
+					let formattedRealtorCommission = formatter.format(realtorCommission);
 
-					await interaction.reply({ content: `Asset Fees Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\``, ephemeral: true });
+					await interaction.reply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 
 				} else {
 					console.log(`Error: Unrecognized calculator type:  ${calctype}`)
