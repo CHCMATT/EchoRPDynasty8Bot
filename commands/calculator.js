@@ -52,8 +52,8 @@ module.exports = {
 					let downPayment = (salePrice * 0.1);
 					let taxPrice = Math.round((salePrice * 0.052));
 					let interestPrice = Math.round(((salePrice - downPayment) * 0.1));
-					let totalPrice = (salePrice + taxPrice);
-					let amountOwed = ((salePrice + taxPrice + interestPrice) - downPayment);
+					let totalPrice = (salePrice + taxPrice + interestPrice);
+					let amountOwed = (totalPrice - downPayment);
 
 					let formattedSalePrice = formatter.format(salePrice);
 					let formattedTotalPrice = formatter.format(totalPrice);
