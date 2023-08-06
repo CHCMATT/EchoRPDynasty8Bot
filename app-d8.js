@@ -2,7 +2,7 @@ let fs = require('fs');
 require("dotenv/config");
 const cron = require('node-cron');
 let mongoose = require("mongoose");
-let startup = require('./startup.js');
+let startUp = require('./startup.js');
 let { google } = require('googleapis');
 let interact = require('./dsInteractions.js');
 let statsReport = require('./statsReport.js');
@@ -101,7 +101,8 @@ client.once('ready', async () => {
 	}
 	console.log(`[${fileName}] Client is ready.`);
 
-	await startup.startUp(client);
+	await startUp.mainStartUp(client);
+	await startUp.frontDeskStartUp(client);
 
 	let now = Math.floor(new Date().getTime() / 1000.0);
 	let time = `<t:${now}:t>`;

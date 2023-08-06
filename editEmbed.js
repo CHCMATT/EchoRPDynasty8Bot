@@ -1,7 +1,7 @@
 let dbCmds = require('./dbCmds.js');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
-module.exports.editEmbed = async (client) => {
+module.exports.editMainEmbed = async (client) => {
 	try {
 		let employeeStats = await dbCmds.currStats();
 
@@ -124,15 +124,6 @@ module.exports.editEmbed = async (client) => {
 			.setDescription(monthlyDescList)
 			.setColor('926C15');
 
-		let embedChannel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-
-		let statsMsgId = await dbCmds.readMsgId("statsMsg");
-
-		let statsMsg = await embedChannel.messages.fetch(statsMsgId);
-
-		statsMsg.edit({ embeds: [overallStatsEmbed, monthlyStatsEmbed] });
-
-
 		let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 		let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
 		let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
@@ -187,13 +178,13 @@ module.exports.editEmbed = async (client) => {
 
 		let currEmbed = await dbCmds.readMsgId("embedMsg");
 
-		let embedChannel2 = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-		let currMsg = await embedChannel2.messages.fetch(currEmbed);
+		let embedChannel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
+		let currMsg = await embedChannel.messages.fetch(currEmbed);
 
-		let btnRows = addBtnRows();
+		let btnRows = addMainBtnRows();
 
 		currMsg.edit({
-			embeds: [mainEmbed], components: btnRows
+			embeds: [overallStatsEmbed, monthlyStatsEmbed, mainEmbed], components: btnRows
 		});
 
 	} catch (error) {
@@ -219,7 +210,48 @@ module.exports.editEmbed = async (client) => {
 	}
 };
 
-function addBtnRows() {
+module.exports.editFrontDeskEmbed = async (client) => {
+	try {
+		let frontDeskEmbed = new EmbedBuilder()
+			.setTitle(`Dynasty 8 Front Desk`)
+			.setDescription(`Press the relevant button below to log a YP ad or request reimbursement`)
+			.setColor('926C15');
+
+		let frontDeskMsg = await dbCmds.readMsgId("frontDeskMsg");
+
+		let embedChannel = await client.channels.fetch(process.env.FRONT_DESK_CHANNEL_ID)
+		let currMsg = await embedChannel.messages.fetch(frontDeskMsg);
+
+		let btnRows = addFrontDeskBtnRows();
+
+		currMsg.edit({
+			embeds: [frontDeskEmbed], components: btnRows
+		});
+	} catch (error) {
+		if (process.env.BOT_NAME == 'test') {
+			console.error(error);
+		} else {
+			console.error(error);
+
+			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+			let fileParts = __filename.split(/[\\/]/);
+			let fileName = fileParts[fileParts.length - 1];
+
+			console.log(`Error occured at ${errTime} at file ${fileName}!`);
+
+			let errorEmbed = [new EmbedBuilder()
+				.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+				.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+				.setColor('B80600')
+				.setFooter({ text: `${errTime}` })];
+
+			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+		}
+	}
+}
+
+
+function addMainBtnRows() {
 	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addSale')
@@ -244,6 +276,23 @@ function addBtnRows() {
 		new ButtonBuilder()
 			.setCustomId('addReimbursementReq')
 			.setLabel('Request Reimbursement')
+			.setStyle(ButtonStyle.Secondary),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function addFrontDeskBtnRows() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('addYPAdvert')
+			.setLabel('Log a YP Ad')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('addReimbursementReq')
+			.setLabel('Request a Reimbursement')
 			.setStyle(ButtonStyle.Secondary),
 	);
 

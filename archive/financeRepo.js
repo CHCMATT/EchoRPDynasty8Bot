@@ -105,7 +105,7 @@ module.exports = {
 								await dbCmds.subtractOneSumm("activeFinancialAgreements");
 								await dbCmds.subtractValueSumm("activeFinancialAmount", amtOwed);
 
-								await editEmbed.editEmbed(interaction.client);
+								await editEmbed.editMainEmbed(interaction.client);
 
 								await interaction.reply({ content: `Successfully marked property \`${financingNum}\` as repossessed!`, ephemeral: true });
 							}

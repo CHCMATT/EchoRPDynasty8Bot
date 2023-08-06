@@ -147,7 +147,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyHousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -295,7 +295,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyWarehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyWarehousesSold");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -461,7 +461,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyPropertiesQuoted");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesQuoted");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesQuoted");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 
 				var newPropertiesQuotedTotal = await dbCmds.readSummValue("countPropertiesQuoted");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
@@ -572,7 +572,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 
 				var realtorCommission = 4500;
 				var formattedCommission = formatter.format(realtorCommission);
@@ -696,7 +696,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyTrainActivitiesChecked");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "activityChecks");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyActivityChecks");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
@@ -756,7 +756,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -904,7 +904,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -1052,7 +1052,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -1282,7 +1282,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
 
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 
 				var newFinancialAgreementsTotal = await dbCmds.readSummValue("countFinancialAgreements");
 
@@ -1418,7 +1418,7 @@ module.exports.modalSubmit = async (interaction) => {
 									await dbCmds.subtractOneSumm("activeFinancialAgreements");
 									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
 
-									await editEmbed.editEmbed(interaction.client);
+									await editEmbed.editMainEmbed(interaction.client);
 
 									var embeds = [new EmbedBuilder()
 										.setTitle('A new Financing Payment has been submitted!')
@@ -1503,7 +1503,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
 
-									await editEmbed.editEmbed(interaction.client);
+									await editEmbed.editMainEmbed(interaction.client);
 
 									await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
@@ -1722,7 +1722,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countMonthlyHousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 				if (realtorCommission > 0) {
 					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
 				}
@@ -1860,7 +1860,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
-					await editEmbed.editEmbed(interaction.client);
+					await editEmbed.editMainEmbed(interaction.client);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -1992,7 +1992,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
-					await editEmbed.editEmbed(interaction.client);
+					await editEmbed.editMainEmbed(interaction.client);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -2112,7 +2112,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					let formattedCurrCommission = formatter.format(currCommission);
-					await editEmbed.editEmbed(interaction.client);
+					await editEmbed.editMainEmbed(interaction.client);
 
 					if (denialNotes) {
 						if (mainEmbedFields[5]) {
@@ -2191,6 +2191,11 @@ module.exports.modalSubmit = async (interaction) => {
 					requestorName = interaction.member.nickname;
 				} else {
 					requestorName = interaction.member.user.username;
+				}
+
+				var personnelStats = await dbCmds.readPersStats(interaction.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.user.id);
 				}
 
 				var now = Math.floor(new Date().getTime() / 1000.0);

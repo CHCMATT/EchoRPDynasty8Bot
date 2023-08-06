@@ -20,7 +20,7 @@ module.exports = {
 			if (personnelData !== null) {
 				await dbCmds.resetPersStats(user.id);
 
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 
 				await interaction.reply({ content: `Successfully reset statistics for <@${user.id}>.`, ephemeral: true });
 			}
