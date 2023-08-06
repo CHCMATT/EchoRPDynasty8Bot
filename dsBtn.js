@@ -815,6 +815,75 @@ module.exports.btnPressed = async (interaction) => {
 
 				}
 				break;
+			case 'addReimbursementReq':
+				var addReimbursementReqModal = new ModalBuilder()
+					.setCustomId('addReimbursementReqModal')
+					.setTitle('Request a Refund');
+				var reasonInput = new TextInputBuilder()
+					.setCustomId('reasonInput')
+					.setLabel('What are you requesting funds for?')
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('Repairs on Omnis')
+					.setRequired(true);
+				var amountInput = new TextInputBuilder()
+					.setCustomId('amountInput')
+					.setLabel('What is the amount you are requesting?')
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('5000')
+					.setRequired(true);
+				var proofInput = new TextInputBuilder()
+					.setCustomId('proofInput')
+					.setLabel('What proof do you have?')
+					.setStyle(TextInputStyle.Short)
+					.setPlaceholder('https://i.imgur.com/qtzNB2p.jpeg')
+					.setRequired(false);
+
+				var reasonInputRow = new ActionRowBuilder().addComponents(reasonInput);
+				var amountInputRow = new ActionRowBuilder().addComponents(amountInput);
+				var proofInputRow = new ActionRowBuilder().addComponents(proofInput);
+				addReimbursementReqModal.addComponents(reasonInputRow, amountInputRow, proofInputRow);
+				await interaction.showModal(addReimbursementReqModal);
+				break;
+			case 'approveReimbursement':
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let approveReimbursementModal = new ModalBuilder()
+						.setCustomId('approveReimbursementModal')
+						.setTitle('Approve a reimbursment request');
+					let approveNotesInput = new TextInputBuilder()
+						.setCustomId('approveNotesInput')
+						.setLabel('Any notes to submit with this approval?')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('Thanks for getting the Omnis repaired!')
+						.setRequired(false);
+
+					let approveNotesInputRow = new ActionRowBuilder().addComponents(approveNotesInput);
+
+					approveReimbursementModal.addComponents(approveNotesInputRow);
+					await interaction.showModal(approveReimbursementModal);
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'denyReimbursement':
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let denyReimbursementModal = new ModalBuilder()
+						.setCustomId('denyReimbursementModal')
+						.setTitle('Deny a reimbursment request');
+					let denyNotesInput = new TextInputBuilder()
+						.setCustomId('denyNotesInput')
+						.setLabel('Any notes to submit with this denial?')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('We aren\'t paying for your coke addiciton')
+						.setRequired(false);
+
+					let denyNotesInputRow = new ActionRowBuilder().addComponents(denyNotesInput);
+
+					denyReimbursementModal.addComponents(denyNotesInputRow);
+					await interaction.showModal(denyReimbursementModal);
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

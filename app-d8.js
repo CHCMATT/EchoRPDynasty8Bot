@@ -73,7 +73,7 @@ client.once('ready', async () => {
 	for (let file of commandFiles) { // For each file in command files group
 		let command = require(`./commands/${file}`); // Get the information that is in the file
 		console.log(`[${fileName}] Added ${file}!`); // Log that the command was added
-		cmdList.push(command); // push that command to the array
+		cmdList.push(command); // Push that command to the array
 		client.commands[command.name] = command; // Save the command name and command information to the client
 	}
 	console.log(`[${fileName}] Getting commands for guild ID ${process.env.DISCORD_SERVER_ID}.`);

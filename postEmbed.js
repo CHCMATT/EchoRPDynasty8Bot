@@ -232,6 +232,11 @@ function addBtnRows() {
 			.setCustomId('addYPAdvert')
 			.setLabel('Log a YP Ad')
 			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('addReimbursementReq')
+			.setLabel('Request a Reimbursement')
+			.setStyle(ButtonStyle.Secondary),
 	);
 
 	let rows = [row1];
