@@ -2193,6 +2193,11 @@ module.exports.modalSubmit = async (interaction) => {
 					requestorName = interaction.member.user.username;
 				}
 
+				var personnelStats = await dbCmds.readPersStats(interaction.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.user.id);
+				}
+
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var requestDate = `<t:${now}:d>`;
 
