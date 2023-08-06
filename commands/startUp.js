@@ -1,4 +1,4 @@
-let startup = require('../startup.js');
+let startUp = require('../startup.js');
 let { PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -7,8 +7,9 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				const postOrEdit = await startup.startUp(interaction.client);
-				await interaction.reply({ content: `Successfully ${postOrEdit} the embed to the <#${process.env.EMBED_CHANNEL_ID}> channel.`, ephemeral: true });
+				const postOrEditMain = await startUp.mainStartUp(interaction.client);
+				const postOrEditFrontDesk = await startUp.frontDeskStartUp(interaction.client);
+				await interaction.reply({ content: `Successfully ${postOrEditMain} the main embed in the <#${process.env.EMBED_CHANNEL_ID}> channel and ${postOrEditFrontDesk} the front desk embed in the <#${process.env.FRONT_DESK_CHANNEL_ID}>.`, ephemeral: true });
 			}
 			else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });

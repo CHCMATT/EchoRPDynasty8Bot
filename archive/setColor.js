@@ -29,7 +29,7 @@ module.exports = {
 
 				let charName = interaction.guild.members.cache.get(user.id).displayName;
 
-				await editEmbed.editEmbed(interaction.client);
+				await editEmbed.editMainEmbed(interaction.client);
 
 				await interaction.reply({ content: `Successfully changed the Discord embed color for \`${charName}\` to \`${randomColor}\`.`, ephemeral: true });
 
@@ -41,7 +41,7 @@ module.exports = {
 				if (isHexColor(newHex)) {
 					await dbCmds.setPersColor(user.id, newHex);
 
-					await editEmbed.editEmbed(interaction.client);
+					await editEmbed.editMainEmbed(interaction.client);
 
 					let charName = interaction.guild.members.cache.get(user.id).displayName;
 					await interaction.reply({ content: `Successfully changed the Discord embed color for \`${charName}\` to \`${newHex}\`.`, ephemeral: true });

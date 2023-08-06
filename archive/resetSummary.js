@@ -40,7 +40,7 @@ module.exports = {
 				let fixedName = "Train Activities Checked";
 			}
 
-			await editEmbed.editEmbed(interaction.client);
+			await editEmbed.editMainEmbed(interaction.client);
 			await interaction.reply({ content: `Successfully reset the value for the \`${fixedName}\` counter to \`${newValue}\`.`, ephemeral: true });
 
 		}

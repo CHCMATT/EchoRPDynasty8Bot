@@ -1,7 +1,7 @@
 let dbCmds = require('./dbCmds.js');
 let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 
-module.exports.postEmbed = async (client) => {
+module.exports.postMainEmbed = async (client) => {
 	try {
 		let employeeStats = await dbCmds.currStats();
 
@@ -179,7 +179,7 @@ module.exports.postEmbed = async (client) => {
 			.addFields(mainFields)
 			.setColor('926C15');
 
-		let btnRows = addBtnRows();
+		let btnRows = addMainBtnRows();
 
 		client.embedMsg = await client.channels.cache.get(process.env.EMBED_CHANNEL_ID).send({ embeds: [overallStatsEmbed, monthlyStatsEmbed, mainEmbed], components: btnRows });
 
@@ -207,7 +207,42 @@ module.exports.postEmbed = async (client) => {
 	}
 };
 
-function addBtnRows() {
+module.exports.postFrontDeskEmbed = async (client) => {
+	try {
+		let frontDeskEmbed = new EmbedBuilder()
+			.setTitle(`Dynasty 8 Front Desk`)
+			.setDescription(`Press the relevant button below to log a YP ad or request reimbursement`)
+			.setColor('926C15');
+
+		let btnRows = addFrontDeskBtnRows();
+
+		client.frontDeskMsg = await client.channels.cache.get(process.env.FRONT_DESK_CHANNEL_ID).send({ embeds: [frontDeskEmbed], components: btnRows });
+
+		await dbCmds.setMsgId("frontDeskMsg", client.frontDeskMsg.id);
+	} catch (error) {
+		if (process.env.BOT_NAME == 'test') {
+			console.error(error);
+		} else {
+			console.error(error);
+
+			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+			let fileParts = __filename.split(/[\\/]/);
+			let fileName = fileParts[fileParts.length - 1];
+
+			console.log(`Error occured at ${errTime} at file ${fileName}!`);
+
+			let errorEmbed = [new EmbedBuilder()
+				.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+				.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+				.setColor('B80600')
+				.setFooter({ text: `${errTime}` })];
+
+			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+		}
+	}
+}
+
+function addMainBtnRows() {
 	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('addSale')
@@ -233,6 +268,23 @@ function addBtnRows() {
 			.setCustomId('addReimbursementReq')
 			.setLabel('Request a Reimbursement')
 			.setStyle(ButtonStyle.Secondary),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function addFrontDeskBtnRows() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('addYPAdvert')
+			.setLabel('Log a YP Ad')
+			.setStyle(ButtonStyle.Primary),
+
+		new ButtonBuilder()
+			.setCustomId('addReimbursementReq')
+			.setLabel('Request a Reimbursement')
+			.setStyle(ButtonStyle.Primary),
 	);
 
 	let rows = [row1];

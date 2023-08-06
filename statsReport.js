@@ -57,7 +57,7 @@ module.exports.statsReport = async (client) => {
 			await dbCmds.resetMonthlyRealtorStats(employeeStats[i].discordId);
 		}
 
-		await editEmbed.editEmbed(client);
+		await editEmbed.editMainEmbed(client);
 
 		if (lastRep == null || lastRep.includes("Value not found")) {
 			let nowMinus7 = now - 604800;
