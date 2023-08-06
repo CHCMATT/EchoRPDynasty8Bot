@@ -275,7 +275,7 @@ function addMainBtnRows() {
 
 		new ButtonBuilder()
 			.setCustomId('addReimbursementReq')
-			.setLabel('Request a Reimbursement')
+			.setLabel('Request Reimbursement')
 			.setStyle(ButtonStyle.Secondary),
 	);
 
@@ -292,7 +292,7 @@ function addFrontDeskBtnRows() {
 
 		new ButtonBuilder()
 			.setCustomId('addReimbursementReq')
-			.setLabel('Request a Reimbursement')
+			.setLabel('Request Reimbursement')
 			.setStyle(ButtonStyle.Secondary),
 	);
 

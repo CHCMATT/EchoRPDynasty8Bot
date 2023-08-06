@@ -818,7 +818,7 @@ module.exports.btnPressed = async (interaction) => {
 			case 'addReimbursementReq':
 				var addReimbursementReqModal = new ModalBuilder()
 					.setCustomId('addReimbursementReqModal')
-					.setTitle('Request a Refund');
+					.setTitle('Request Reimbursement');
 				var reasonInput = new TextInputBuilder()
 					.setCustomId('reasonInput')
 					.setLabel('What are you requesting funds for?')
