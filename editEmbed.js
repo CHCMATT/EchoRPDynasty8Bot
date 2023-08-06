@@ -124,15 +124,6 @@ module.exports.editEmbed = async (client) => {
 			.setDescription(monthlyDescList)
 			.setColor('926C15');
 
-		let embedChannel = await client.channels.fetch(process.env.EMBED_CHANNEL_ID)
-
-		let statsMsgId = await dbCmds.readMsgId("statsMsg");
-
-		let statsMsg = await embedChannel.messages.fetch(statsMsgId);
-
-		statsMsg.edit({ embeds: [overallStatsEmbed, monthlyStatsEmbed] });
-
-
 		let countHousesSold = await dbCmds.readSummValue("countHousesSold");
 		let countWarehousesSold = await dbCmds.readSummValue("countWarehousesSold");
 		let countPropertiesQuoted = await dbCmds.readSummValue("countPropertiesQuoted");
@@ -193,7 +184,7 @@ module.exports.editEmbed = async (client) => {
 		let btnRows = addBtnRows();
 
 		currMsg.edit({
-			embeds: [mainEmbed], components: btnRows
+			embeds: [overallStatsEmbed, monthlyStatsEmbed, mainEmbed], components: btnRows
 		});
 
 	} catch (error) {
