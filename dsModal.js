@@ -174,7 +174,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
+				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
 
 				exports.originalHouseSaleReply = originalHouseSaleReply.interaction;
 				break;
@@ -322,7 +322,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
+				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
 
 				exports.originalWarehouseSaleReply = originalWarehouseSaleReply.interaction;
 				break;
@@ -589,7 +589,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`$4500\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`$4500\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
 			case 'addTrainCheckModal':
@@ -775,7 +775,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addHouseRemodelModal':
 				var realtorName;
@@ -923,7 +923,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully logged this \`House Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this \`House Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addWarehouseRemodelModal':
 				var realtorName;
@@ -1071,7 +1071,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
 			case 'addFinancingAgreementModal':
 				await interaction.deferReply({ ephemeral: true });
@@ -1749,7 +1749,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setStyle(ButtonStyle.Primary)
 				)];
 
-				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour weekly commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
+				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
 
 				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
@@ -1811,7 +1811,7 @@ module.exports.modalSubmit = async (interaction) => {
 					.setColor('1EC276');
 				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
-				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour weekly commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
 			case 'approveQuoteModal':

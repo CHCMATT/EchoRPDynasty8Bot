@@ -756,7 +756,7 @@ module.exports.btnPressed = async (interaction) => {
 						.addComponents(realtorSelectionOptions);
 
 					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your weekly commission is now:`) - 3));
+					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your commission is now:`) - 3));
 
 					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
@@ -782,7 +782,7 @@ module.exports.btnPressed = async (interaction) => {
 						.addComponents(realtorSelectionOptions);
 
 					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your weekly commission is now:`) - 3));
+					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your commission is now:`) - 3));
 
 					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;

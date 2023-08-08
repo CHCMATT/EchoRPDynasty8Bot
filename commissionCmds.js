@@ -47,7 +47,7 @@ module.exports.commissionReport = async (client) => {
 			}
 
 			let embed = new EmbedBuilder()
-				.setTitle(`Weekly Commission Report for ${lastRep} through ${today}:`)
+				.setTitle(`Commission Report for ${lastRep} through ${today}:`)
 				.setDescription(commissionDescList)
 				.setColor('EDC531');
 			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [embed] });
