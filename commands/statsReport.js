@@ -7,7 +7,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				await statsReport.statsReport(interaction.client);
+				await statsReport.statsReport(interaction.client, 'Manual');
 				await interaction.reply({ content: `Successfully ran the statistics report.`, ephemeral: true });
 			}
 			else {

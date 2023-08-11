@@ -1,4 +1,5 @@
-let checkOverduePayments = require('./checkOverduePayments.js');
+let moment = require('moment');
+let checkOverduePayments = require('../checkOverduePayments.js');
 let { PermissionsBitField } = require('discord.js');
 
 module.exports = {

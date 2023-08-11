@@ -1,3 +1,4 @@
+let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
 let { EmbedBuilder } = require('discord.js');
 
@@ -7,7 +8,7 @@ let formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
-module.exports.commissionReport = async (client) => {
+module.exports.commissionReport = async (client, commandType) => {
 	try {
 		let lastRep;
 		lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
@@ -17,10 +18,11 @@ module.exports.commissionReport = async (client) => {
 		let dateTime = new Date().toString().slice(0, 24);
 		let lastRepDiff = (now - lastRepDt);
 
-		await client.channels.cache.get(process.env.BOT_LOG_CHANNEL_ID).send(`🕐 Attempting to run Automatic Commission report at ${today}.`)
+		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+		console.log(`Running ${commandType} Commission Report on ${logTime}`);
 
 		if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 64800) {
-			console.log(`Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff}).`)
+			console.log(`${commandType} Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff}).`)
 			return "fail";
 		} else {
 
