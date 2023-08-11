@@ -18,7 +18,6 @@ module.exports.checkOverduePayments = async (client) => {
 					let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 					let paidOffDueDateStr = msgPaymentDueDate.substring(0, msgPaymentDueDate.indexOf(' ('))
 					let paidOffDueDate = Number(paidOffDueDateStr.replaceAll('<t:', '').replaceAll(':d>', ''));
-					console.log(now, paidOffDueDate);
 
 					if (now >= paidOffDueDate) {
 						let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
