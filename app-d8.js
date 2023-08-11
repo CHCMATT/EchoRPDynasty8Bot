@@ -7,6 +7,7 @@ let { google } = require('googleapis');
 let interact = require('./dsInteractions.js');
 let statsReport = require('./statsReport.js');
 let commissionCmds = require('./commissionCmds.js');
+let checkOverduePayments = require('./checkOverduePayments.js');
 let { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 let client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -23,6 +24,7 @@ cron.schedule('0 6 * * FRI', function () { commissionCmds.commissionReport(clien
 cron.schedule('0 6 * * TUE', function () { commissionCmds.commissionReport(client, 'Automatic'); }); // runs at 6:00am every Tuesday (TUE)
 cron.schedule('0 0 1 * *', function () { statsReport.statsReport(client, 'Automatic'); }); // runs at 12:00am on the first day of every month
 cron.schedule('55 5 * * FRI', function () { commissionCmds.addWeeklyAssets(client, 'Automatic'); }); // runs at 5:55am every Friday (FRI)
+cron.schedule('0 16 * * *', function () { checkOverduePayments.checkOverduePayments(client); }); // runs at 4:00pm every day
 
 client.once('ready', async () => {
 	console.log(`[${fileName}] The client is starting up!`);

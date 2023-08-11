@@ -421,8 +421,7 @@ module.exports.btnPressed = async (interaction) => {
 
 					var msgRealtor = currentMsg.embeds[0].data.fields[0].value;
 					var msgSaleDate = currentMsg.embeds[0].data.fields[1].value;
-					var msgPaymentDate = currentMsg.embeds[0].data.fields[2].value;
-					var msgNextPaymentDateString = currentMsg.embeds[0].data.fields[3].value;
+					var msgPaymentDueDate = currentMsg.embeds[0].data.fields[2].value;
 					var msgFinanceNum = currentMsg.embeds[0].data.fields[4].value;
 					var msgClientName = currentMsg.embeds[0].data.fields[5].value;
 					var msgClientInfo = currentMsg.embeds[0].data.fields[6].value;
@@ -519,8 +518,7 @@ module.exports.btnPressed = async (interaction) => {
 							.addFields(
 								{ name: `Realtor Name:`, value: `${msgRealtor}` },
 								{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-								{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
-								{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
+								{ name: `Paid Off Due Date:`, value: `${msgPaymentDueDate}`, inline: true },
 								{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
 								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
 								{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
