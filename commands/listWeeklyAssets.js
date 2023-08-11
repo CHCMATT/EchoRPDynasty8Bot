@@ -9,25 +9,13 @@ let formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'addweeklyasset',
-	description: 'Adds an asset to be reimbursed weekly to the specified user',
+	name: 'listweeklyassets',
+	description: 'Lists all of the assets that are assigned to the specified user',
 	options: [
 		{
 			name: 'assetowner',
-			description: 'The owner of the asset that will be reimbursed weekly',
+			description: 'The owner of the assets',
 			type: 6,
-			required: true,
-		},
-		{
-			name: 'assetname',
-			description: 'The name of the asset that will be reimbursed weekly',
-			type: 3,
-			required: true,
-		},
-		{
-			name: 'assetcost',
-			description: 'The cost of the asset that will be reimbursed weekly',
-			type: 4,
 			required: true,
 		},
 	],
@@ -35,15 +23,19 @@ module.exports = {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let assetOwner = interaction.options.getUser('assetowner');
-				let assetCost = Math.abs(interaction.options.getInteger('assetcost'));
-				let assetName = interaction.options.getString('assetname');
-				let assetUuid = uuidv4();
+				let assetsArray = await dbCmds.listPersonnelAssets(assetOwner.id);
 
-				await dbCmds.addPersonnelAsset(assetUuid, assetOwner, assetName, assetCost);
+				if (assetsArray.length < 1) {
+					await interaction.reply({ content: `${assetOwner} does not have any assigned assets yet.`, ephemeral: true });
+				} else {
+					let assetsList = '';
+					for (let i = 0; i < assetsArray.length; i++) {
+						assetsList = assetsList + `> \`${assetsArray[i].assetName}\`: ${formatter.format(assetsArray[i].assetCost)}\n`
+					}
+					await interaction.reply({ content: `${assetOwner} has the following asset(s):\n${assetsList}`, ephemeral: true });
+				}
 
-				let formattedAssetCost = formatter.format(assetCost);
-
-				await interaction.reply({ content: `Successfully added the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
+				//await interaction.reply({ content: `Successfully removed the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}

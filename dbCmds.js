@@ -175,6 +175,11 @@ module.exports.addPersonnelAsset = async (uniqueId, assetOwner, assetName, asset
 	await d8PersonnelAssets.findOneAndUpdate({ uniqueId: uniqueId }, { uniqueId: uniqueId, assetName: assetName, discordId: assetOwner, assetCost: assetCost }, { upsert: true });
 };
 
-module.exports.removePersonnelAsset = async (assetOwner, assetName) => {
-	await d8PersonnelAssets.findOneAndUpdate({ assetName: assetName }, { assetName: assetName, discordId: assetOwner, assetCost: 0 });
+module.exports.removePersonnelAsset = async (assetName) => {
+	await d8PersonnelAssets.findOneAndDelete({ assetName: assetName });
+};
+
+module.exports.listPersonnelAssets = async (assetOwner) => {
+	let result = await d8PersonnelAssets.find({ discordId: assetOwner }, { assetName: 1, assetCost: 1, _id: 0 });
+	return result;
 };

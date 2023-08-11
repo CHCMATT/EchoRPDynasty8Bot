@@ -9,25 +9,19 @@ let formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'addweeklyasset',
-	description: 'Adds an asset to be reimbursed weekly to the specified user',
+	name: 'removeweeklyasset',
+	description: 'Remove an asset from the specified user',
 	options: [
 		{
 			name: 'assetowner',
-			description: 'The owner of the asset that will be reimbursed weekly',
+			description: 'The owner of the asset that should be removed',
 			type: 6,
 			required: true,
 		},
 		{
 			name: 'assetname',
-			description: 'The name of the asset that will be reimbursed weekly',
+			description: 'The name of the asset that should be removed',
 			type: 3,
-			required: true,
-		},
-		{
-			name: 'assetcost',
-			description: 'The cost of the asset that will be reimbursed weekly',
-			type: 4,
 			required: true,
 		},
 	],
@@ -35,15 +29,11 @@ module.exports = {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let assetOwner = interaction.options.getUser('assetowner');
-				let assetCost = Math.abs(interaction.options.getInteger('assetcost'));
 				let assetName = interaction.options.getString('assetname');
-				let assetUuid = uuidv4();
 
-				await dbCmds.addPersonnelAsset(assetUuid, assetOwner, assetName, assetCost);
+				await dbCmds.removePersonnelAsset(assetName);
 
-				let formattedAssetCost = formatter.format(assetCost);
-
-				await interaction.reply({ content: `Successfully added the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully removed the \`${assetName}\` asset from ${assetOwner}'s weekly commission.`, ephemeral: true });
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
