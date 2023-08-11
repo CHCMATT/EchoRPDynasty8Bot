@@ -35,7 +35,6 @@ module.exports = {
 					await interaction.reply({ content: `${assetOwner} has the following asset(s):\n${assetsList}`, ephemeral: true });
 				}
 
-				//await interaction.reply({ content: `Successfully removed the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
 			} else {
 				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
