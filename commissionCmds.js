@@ -93,7 +93,8 @@ module.exports.addWeeklyAssets = async (client) => {
 		let now = Math.floor(new Date().getTime() / 1000.0);
 		let today = `<t:${now}:d>`;
 
-		await client.channels.cache.get(process.env.BOT_LOG_CHANNEL_ID).send(`🕐 Attempting to add Weekly Assets to commissions at ${today}.`)
+		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+		console.log(`Adding Weekly Assets on ${logTime}`);
 
 		let assetsArray = await dbCmds.readPersonnelAssets();
 
