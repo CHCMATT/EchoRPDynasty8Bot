@@ -836,6 +836,51 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
+			case 'markPaymentsComplete':
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var currentMsg = interaction.message;
+
+					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
+					if (currentMsg.embeds[0].data.fields[12]) {
+						var msgNotes = currentMsg.embeds[0].data.fields[12].value;
+					}
+
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var markCompletedDate = `<t:${now}:d>`;
+
+					if (currentMsg.embeds[0].data.fields[12]) {
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${msgNotes}\n- Payments marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+					} else {
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Payments marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+					}
+
+					let btnRows = addBtnRows();
+					await currentMsg.edit({ embeds: [currentMsg.embeds[0]], components: btnRows });
+
+					function addBtnRows() {
+						let row1 = new ActionRowBuilder().addComponents(
+							new ButtonBuilder()
+								.setCustomId('markPaymentsComplete')
+								.setLabel('Mark as Completed')
+								.setStyle(ButtonStyle.Success)
+								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('createEvictionNotice')
+								.setLabel('Create an Eviction Notice')
+								.setStyle(ButtonStyle.Secondary)
+								.setDisabled(true),
+						);
+
+						let rows = [row1];
+						return rows;
+					};
+
+					await interaction.reply({ content: `Successfully marked the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
