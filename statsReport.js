@@ -134,7 +134,7 @@ module.exports.statsReport = async (client, commandType) => {
 			.setTitle(`Monthly Realtor Stats Report for ${lastRep} through ${today}:`)
 			.setDescription(realtorStatsDescList)
 			.setColor('EDC531');
-		await client.channels.cache.get(process.env.CEO_COO_OFFICE_CHANNEL_ID).send({ embeds: [overallStatsEmbed, realtorStatsEmbed] });
+		await client.channels.cache.get(process.env.CEO_OFFICE_CHANNEL_ID).send({ embeds: [overallStatsEmbed, realtorStatsEmbed] });
 
 		// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 		await dbCmds.setRepDate("lastRealtorStatsReportDate", today);
