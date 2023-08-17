@@ -408,7 +408,6 @@ module.exports.btnPressed = async (interaction) => {
 				break;
 			case 'createEvictionNotice':
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-
 					await interaction.deferReply({ ephemeral: true });
 					var currentMsg = interaction.message;
 
@@ -421,22 +420,22 @@ module.exports.btnPressed = async (interaction) => {
 
 					var msgRealtor = currentMsg.embeds[0].data.fields[0].value;
 					var msgSaleDate = currentMsg.embeds[0].data.fields[1].value;
-					var msgPaymentDueDate = currentMsg.embeds[0].data.fields[2].value;
-					var msgFinanceNum = currentMsg.embeds[0].data.fields[4].value;
-					var msgClientName = currentMsg.embeds[0].data.fields[5].value;
-					var msgClientInfo = currentMsg.embeds[0].data.fields[6].value;
-					var msgclientContact = currentMsg.embeds[0].data.fields[7].value;
-					var msgStreetAddress = currentMsg.embeds[0].data.fields[8].value;
-					var msgSalePrice = currentMsg.embeds[0].data.fields[9].value;
-					var msgDownPayment = currentMsg.embeds[0].data.fields[10].value;
-					var msgAmtOwed = currentMsg.embeds[0].data.fields[11].value;
-					var msgFinancingAgreement = currentMsg.embeds[0].data.fields[12].value;
-					if (currentMsg.embeds[0].data.fields[13]) {
-						var msgNotes = currentMsg.embeds[0].data.fields[13].value;
+					var msgPaidOffDueDate = currentMsg.embeds[0].data.fields[2].value;
+					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
+					var msgClientName = currentMsg.embeds[0].data.fields[4].value;
+					var msgClientInfo = currentMsg.embeds[0].data.fields[5].value;
+					var msgclientContact = currentMsg.embeds[0].data.fields[6].value;
+					var msgStreetAddress = currentMsg.embeds[0].data.fields[7].value;
+					var msgSalePrice = currentMsg.embeds[0].data.fields[8].value;
+					var msgDownPayment = currentMsg.embeds[0].data.fields[9].value;
+					var msgAmtOwed = currentMsg.embeds[0].data.fields[10].value;
+					var msgFinancingAgreement = currentMsg.embeds[0].data.fields[11].value;
+					if (currentMsg.embeds[0].data.fields[12]) {
+						var msgNotes = currentMsg.embeds[0].data.fields[12].value;
 					}
 
 					let newFile = await interaction.client.driveFiles.copy({
-						auth: interaction.client.driveAuth, fileId: process.env.EVICTION_TEMPLATE_DOC_ID, resource: { name: `${msgClientName} | Dynasty 8 Eviction Notice` }
+						auth: interaction.client.driveAuth, fileId: process.env.EVICTION_TEMPLATE_DOC_ID, resource: { name: `${msgClientName} | Dynasty 8 Notice of Eviction` }
 					});
 
 					let todayDate = moment().format('MMMM DD, YYYY');
@@ -489,14 +488,6 @@ module.exports.btnPressed = async (interaction) => {
 								},
 							}, {
 								replaceAllText: {
-									replaceText: msgAmtOwed,
-									containsText: {
-										'text': '{past_due_amt}',
-										'matchCase': true
-									}
-								},
-							}, {
-								replaceAllText: {
 									replaceText: realtorName,
 									containsText: {
 										'text': '{realtor_name}',
@@ -512,56 +503,27 @@ module.exports.btnPressed = async (interaction) => {
 					var now = Math.floor(new Date().getTime() / 1000.0);
 					var evictionSentDate = `<t:${now}:d>`;
 
-					if (currentMsg.embeds[0].data.fields[13]) {
-						var currentEmbed = new EmbedBuilder()
-							.setTitle('A new Financing Agreement has been submitted!')
-							.addFields(
-								{ name: `Realtor Name:`, value: `${msgRealtor}` },
-								{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-								{ name: `Paid Off Due Date:`, value: `${msgPaymentDueDate}`, inline: true },
-								{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-								{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-								{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
-								{ name: `Street Address:`, value: `${msgStreetAddress}` },
-								{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-								{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-								{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
-								{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-								{ name: `Notes:`, value: `${msgNotes}\n- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` },
-							)
-							.setColor('FAD643');
+					if (currentMsg.embeds[0].data.fields[12]) {
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${msgNotes}\n- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` };
 					} else {
-						var currentEmbed = new EmbedBuilder()
-							.setTitle('A new Financing Agreement has been submitted!')
-							.addFields(
-								{ name: `Realtor Name:`, value: `${msgRealtor}` },
-								{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-								{ name: `Latest Payment:`, value: `${msgPaymentDate}`, inline: true },
-								{ name: `Next Payment Due:`, value: `${msgNextPaymentDateString}`, inline: true },
-								{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-								{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-								{ name: `Client Contact:`, value: `${msgclientContact}`, inline: true },
-								{ name: `Street Address:`, value: `${msgStreetAddress}` },
-								{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-								{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-								{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
-								{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-								{ name: `Notes:`, value: `- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` },
-							)
-							.setColor('FAD643');
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` };
 					}
 
 					let btnRows = addBtnRows();
-					await currentMsg.edit({ embeds: [currentEmbed], components: btnRows });
+					await currentMsg.edit({ embeds: [currentMsg.embeds[0]], components: btnRows });
 
 					function addBtnRows() {
 						let row1 = new ActionRowBuilder().addComponents(
 							new ButtonBuilder()
-								.setCustomId('addEvictionNotice')
-								.setLabel('Create an Eviction Notice')
+								.setCustomId('markPaymentsComplete')
+								.setLabel('Mark as Completed')
 								.setStyle(ButtonStyle.Secondary)
+								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('createEvictionNotice')
+								.setLabel('Create an Eviction Notice')
+								.setStyle(ButtonStyle.Primary)
 								.setDisabled(true),
 						);
 

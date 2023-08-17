@@ -19,7 +19,7 @@ module.exports.checkOverduePayments = async (client) => {
 					let paidOffDueDateStr = msgPaymentDueDate.substring(0, msgPaymentDueDate.indexOf(' ('))
 					let paidOffDueDate = Number(paidOffDueDateStr.replaceAll('<t:', '').replaceAll(':d>', ''));
 
-					if (now >= paidOffDueDate) {
+					if ((now + (30 * 86400)) >= paidOffDueDate) {
 						let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 						let msgFinanceNum = message.embeds[0].data.fields[3].value;
 						let msgClientName = message.embeds[0].data.fields[4].value;
@@ -85,7 +85,7 @@ function addBtnRows() {
 		new ButtonBuilder()
 			.setCustomId('createEvictionNotice')
 			.setLabel('Create an Eviction Notice')
-			.setStyle(ButtonStyle.Secondary),
+			.setStyle(ButtonStyle.Primary),
 	);
 
 	let rows = [row1];
