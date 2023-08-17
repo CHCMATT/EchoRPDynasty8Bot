@@ -35,13 +35,22 @@ module.exports = {
 			if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let user = interaction.options.getUser('user');
 				if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let personnelStats = await dbCmds.readPersStats(user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, user.id);
+					}
+
 					let amount = Math.abs(interaction.options.getInteger('amount'));
 					let reason = interaction.options.getString('reason');
-					let formattedAmt = formatter.format(amount);
+
 					await dbCmds.addCommission(user.id, amount)
-					let personnelData = await dbCmds.readPersStats(user.id)
+					let personnelData = await dbCmds.readPersStats(user.id);
+
 					let newCommission = personnelData.currentCommission;
+					let formattedAmt = formatter.format(amount);
 					let formattedNewCommission = formatter.format(newCommission);
+
 					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 					let notificationEmbed = new EmbedBuilder()
 						.setTitle('Commission Modified Manually:')
