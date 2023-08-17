@@ -418,18 +418,10 @@ module.exports.btnPressed = async (interaction) => {
 						realtorName = interaction.member.user.username;
 					}
 
-					var msgRealtor = currentMsg.embeds[0].data.fields[0].value;
 					var msgSaleDate = currentMsg.embeds[0].data.fields[1].value;
-					var msgPaidOffDueDate = currentMsg.embeds[0].data.fields[2].value;
 					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
 					var msgClientName = currentMsg.embeds[0].data.fields[4].value;
-					var msgClientInfo = currentMsg.embeds[0].data.fields[5].value;
-					var msgclientContact = currentMsg.embeds[0].data.fields[6].value;
 					var msgStreetAddress = currentMsg.embeds[0].data.fields[7].value;
-					var msgSalePrice = currentMsg.embeds[0].data.fields[8].value;
-					var msgDownPayment = currentMsg.embeds[0].data.fields[9].value;
-					var msgAmtOwed = currentMsg.embeds[0].data.fields[10].value;
-					var msgFinancingAgreement = currentMsg.embeds[0].data.fields[11].value;
 					if (currentMsg.embeds[0].data.fields[12]) {
 						var msgNotes = currentMsg.embeds[0].data.fields[12].value;
 					}
