@@ -10,7 +10,7 @@ let commissionCmds = require('./commissionCmds.js');
 let checkOverduePayments = require('./checkOverduePayments.js');
 let { Client, Collection, GatewayIntentBits } = require('discord.js');
 
-let client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+let client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessageReactions], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 client.commands = new Collection();
 client.buttons = new Collection();

@@ -891,6 +891,8 @@ module.exports.btnPressed = async (interaction) => {
 
 				currentMsg.components[0].components[3].data.disabled = true;
 
+				await currentMsg.react(await currentMsg.guild.emojis.cache.get('1141863689314652191'));
+
 				await currentMsg.edit({ embeds: [currentMsg.embeds[0], currentMsg.embeds[1]], components: [currentMsg.components[0]] });
 
 				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
