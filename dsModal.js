@@ -1848,6 +1848,11 @@ module.exports.modalSubmit = async (interaction) => {
 							.setLabel('Deny Quote')
 							.setStyle(ButtonStyle.Secondary)
 							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('setContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
 					)];
 
 					let approvalMsgNotes;
@@ -1980,6 +1985,11 @@ module.exports.modalSubmit = async (interaction) => {
 							.setLabel('Deny Quote')
 							.setStyle(ButtonStyle.Secondary)
 							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('setContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
 					)];
 
 					let approvalMsgNotes;
@@ -2100,6 +2110,11 @@ module.exports.modalSubmit = async (interaction) => {
 							.setLabel('Deny Quote')
 							.setStyle(ButtonStyle.Danger)
 							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('setContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
 					)];
 
 					let denialMsgNotes;

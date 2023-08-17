@@ -881,6 +881,21 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
+			case 'setContacted':
+				var currentMsg = interaction.message;
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var contactedDate = `<t:${now}:d>`;
+
+				currentMsg.embeds[0].data.fields[5].value = `${currentMsg.embeds[0].data.fields[5].value}\n- Client contacted by <@${interaction.user.id}> on ${contactedDate}.`
+
+				currentMsg.components[0].components[3].data.disabled = true;
+
+				await currentMsg.edit({ embeds: [currentMsg.embeds[0], currentMsg.embeds[1]], components: [currentMsg.components[0]] });
+
+				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
+
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
