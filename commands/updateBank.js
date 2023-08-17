@@ -22,7 +22,7 @@ module.exports = {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let user = interaction.options.getUser('user');
-				let bankNum = interaction.options.getString('accountnumber');
+				let bankNum = interaction.options.getString('accountnumber').replaceAll(' ', '');
 				await dbCmds.setBankAccount(user.id, bankNum)
 				await interaction.reply({ content: `Successfully set the bank account number for <@${user.id}> to \`${bankNum}\`.`, ephemeral: true });
 			}
