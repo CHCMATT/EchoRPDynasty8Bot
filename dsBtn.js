@@ -893,7 +893,7 @@ module.exports.btnPressed = async (interaction) => {
 
 				await currentMsg.react(process.env.PHONEHELLO_EMOJI_ID);
 
-				await currentMsg.edit({ embeds: [currentMsg.embeds[0], currentMsg.embeds[1]], components: [currentMsg.components[0]] });
+				await currentMsg.edit({ embeds: currentMsg.embeds, components: [currentMsg.components[0]] });
 
 				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 
