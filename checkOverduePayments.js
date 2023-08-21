@@ -19,7 +19,8 @@ module.exports.checkOverduePayments = async (client) => {
 					let paidOffDueDateStr = msgPaymentDueDate.substring(0, msgPaymentDueDate.indexOf(' ('))
 					let paidOffDueDate = Number(paidOffDueDateStr.replaceAll('<t:', '').replaceAll(':d>', ''));
 
-					if (now >= paidOffDueDate) {
+					if (paidOffDueDate <= now) {
+						console.log(`${message.id} is overdue`)
 						let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 						let msgFinanceNum = message.embeds[0].data.fields[3].value;
 						let msgClientName = message.embeds[0].data.fields[4].value;
@@ -34,7 +35,7 @@ module.exports.checkOverduePayments = async (client) => {
 						// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 
 						let overdueEmbed = new EmbedBuilder()
-							.setTitle('A Financing Agreement\'s Due Date Has Passed!')
+							.setTitle('A Financing Agreement\'s due date has passed!')
 							.addFields(
 								{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
 								{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
@@ -48,6 +49,8 @@ module.exports.checkOverduePayments = async (client) => {
 							.setColor('FFA630');
 
 						await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [overdueEmbed] });
+					} else {
+						console.log(`${message.id} is not overdue`)
 					}
 				}
 			}
