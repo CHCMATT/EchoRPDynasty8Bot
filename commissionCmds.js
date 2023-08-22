@@ -21,7 +21,7 @@ module.exports.commissionReport = async (client, commandType) => {
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 		console.log(`Running ${commandType} Commission Report on ${logTime}`);
 
-		if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 64800) {
+		if (lastRepDiff == null || isNaN(lastRepDiff) || lastRepDiff <= 172800) {
 			console.log(`${commandType} Commission report skipped at ${dateTime} (lastRepDiff: ${lastRepDiff}).`)
 			return "fail";
 		} else {
