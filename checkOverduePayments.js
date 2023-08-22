@@ -17,7 +17,7 @@ module.exports.checkOverduePayments = async (client) => {
 			let options = { limit: 100 };
 			if (beforeMessageID) options.before = beforeMessageID;
 
-			let channel = await client.channels.fetch(channel_id);
+			let channel = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
 			let messages = await channel.messages.fetch(options);
 
 			allMessages.push(...messages.values());
