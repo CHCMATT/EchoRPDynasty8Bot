@@ -9,6 +9,25 @@ module.exports.checkOverduePayments = async (client) => {
 		let channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
 		let messages = await channelAfter.messages.fetch();
 
+		//
+		let allMessages = [];
+		let beforeMessageID = null;
+
+		do {
+			let options = { limit: 100 };
+			if (beforeMessageID) options.before = beforeMessageID;
+
+			let channel = await client.channels.fetch(channel_id);
+			let messages = await channel.messages.fetch(options);
+
+			allMessages.push(...messages.values());
+			beforeMessageID = messages.last().id;
+		} while (beforeMessageID);
+		//
+		console.log(allMessages);
+		console.log(typeof allMessages);
+		console.log(allMessages.length);
+
 		let now = Math.floor(new Date().getTime() / 1000.0);
 
 		messages.forEach(async (message) => {
