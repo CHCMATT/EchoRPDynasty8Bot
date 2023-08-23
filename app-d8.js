@@ -36,7 +36,7 @@ client.once('ready', async () => {
 	let docsAuth = new google.auth.GoogleAuth({
 		keyFile: "./docs-creds.json",
 		scopes: "https://www.googleapis.com/auth/docs"
-	})
+	});
 	let docsClient = docsAuth.getClient();
 	let googleDocs = google.docs({ version: "v1", auth: docsClient });
 
@@ -49,7 +49,7 @@ client.once('ready', async () => {
 	let driveAuth = new google.auth.GoogleAuth({
 		keyFile: "./drive-creds.json",
 		scopes: "https://www.googleapis.com/auth/drive"
-	})
+	});
 	let driveClient = driveAuth.getClient();
 	let googleDrive = google.drive({ version: "v3", auth: driveClient });
 
@@ -62,7 +62,7 @@ client.once('ready', async () => {
 	let sheetsAuth = new google.auth.GoogleAuth({
 		keyFile: "./sheets-creds.json",
 		scopes: "https://www.googleapis.com/auth/spreadsheets"
-	})
+	});
 	let sheetClient = sheetsAuth.getClient();
 	let googleSheets = google.sheets({ version: "v4", auth: sheetClient });
 
