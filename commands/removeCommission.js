@@ -1,4 +1,5 @@
 let dbCmds = require('../dbCmds.js');
+let commissionCmds = require('../commissionCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
@@ -40,17 +41,8 @@ module.exports = {
 					let formattedAmt = formatter.format(amount);
 					let personnelData = await dbCmds.readPersStats(user.id)
 					if (personnelData.currentCommission != null && personnelData.currentCommission > 0) {
-						await dbCmds.removeCommission(user.id, amount)
-						let personnelData = await dbCmds.readPersStats(user.id)
-						let newCommission = personnelData.currentCommission;
-						let formattedNewCommission = formatter.format(newCommission);
-						// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-						let notificationEmbed = new EmbedBuilder()
-							.setTitle('Commission Modified Manually:')
-							.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-							.setColor('FFA630');
-						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-						await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
+						let newCommission = await commissionCmds.removeCommission(interaction.client, `<@${interaction.user.id}>`, amount, user.id, reason);
+						await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
 					} else {
 						await interaction.reply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
 					}

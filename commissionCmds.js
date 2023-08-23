@@ -1,6 +1,7 @@
 let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
 let { EmbedBuilder } = require('discord.js');
+let commissionCmds = require('./commissionCmds.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -110,22 +111,111 @@ module.exports.addWeeklyAssets = async (client) => {
 			let assetCost = assetsArray[i].assetCost;
 			let assetName = assetsArray[i].assetName;
 			let discordId = assetsArray[i].discordId;
-			let formattedAssetCost = formatter.format(assetCost);
-
-			await dbCmds.addCommission(discordId, assetCost);
-
-			var currCommission = await dbCmds.readCommission(discordId);
-			let formattedCurrCommission = formatter.format(currCommission);
 
 			let reason = `Weekly asset reimbursement for \`${assetName}\` on ${today}`;
+			await commissionCmds.addCommission(client, 'System', assetCost, discordId, reason);
+		}
 
+	} catch (error) {
+		if (process.env.BOT_NAME == 'test') {
+			console.error(error);
+		} else {
+			console.error(error);
+
+			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+			let fileParts = __filename.split(/[\\/]/);
+			let fileName = fileParts[fileParts.length - 1];
+
+			console.log(`Error occured at ${errTime} at file ${fileName}!`);
+
+			let errorEmbed = [new EmbedBuilder()
+				.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+				.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+				.setColor('B80600')
+				.setFooter({ text: `${errTime}` })];
+
+			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+		}
+	}
+};
+
+module.exports.addCommission = async (client, from, addAmount, userId, reason) => {
+	try {
+		let currCommission = formatter.format(await dbCmds.readCommission(userId));
+
+		if (addAmount > 0) {
+			await dbCmds.addCommission(userId, addAmount);
+			currCommission = formatter.format(await dbCmds.readCommission(userId));
+
+			let formattedCommission = formatter.format(addAmount);
 			// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-			let notificationEmbed = new EmbedBuilder()
-				.setTitle('Commission Modified Automatically:')
-				.setDescription(`\`System\` added \`${formattedAssetCost}\` to <@${discordId}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
-				.setColor('1EC276');
+
+			let notificationEmbed;
+			if (from == 'System') {
+				notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('1EC276');
+			} else {
+				notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Manually:')
+					.setDescription(`${from} added \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('FFA630');
+			}
 			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 		}
+		return currCommission;
+
+	} catch (error) {
+		if (process.env.BOT_NAME == 'test') {
+			console.error(error);
+		} else {
+			console.error(error);
+
+			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+			let fileParts = __filename.split(/[\\/]/);
+			let fileName = fileParts[fileParts.length - 1];
+
+			console.log(`Error occured at ${errTime} at file ${fileName}!`);
+
+			let errorEmbed = [new EmbedBuilder()
+				.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+				.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+				.setColor('B80600')
+				.setFooter({ text: `${errTime}` })];
+
+			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+		}
+	}
+};
+
+module.exports.removeCommission = async (client, from, removeAmount, userId, reason) => {
+	try {
+		let currCommission = formatter.format(await dbCmds.readCommission(userId));
+
+		if (removeAmount > 0) {
+			await dbCmds.removeCommission(userId, removeAmount);
+			currCommission = formatter.format(await dbCmds.readCommission(userId));
+			let formattedCommission = formatter.format(removeAmount);
+
+			let notificationEmbed;
+
+			// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+
+			if (from == 'System') {
+				notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Automatically:')
+					.setDescription(`\`System\` removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('1EC276');
+			} else {
+				notificationEmbed = new EmbedBuilder()
+					.setTitle('Commission Modified Manually:')
+					.setDescription(`${from} removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setColor('FFA630');
+			}
+			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+		}
+		return currCommission;
 
 	} catch (error) {
 		if (process.env.BOT_NAME == 'test') {

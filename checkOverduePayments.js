@@ -6,13 +6,13 @@ module.exports.checkOverduePayments = async (client) => {
 		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
 		console.log(`Checking for overdue payments on ${logTime}`);
 
-		let channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
-		let messages = await channelAfter.messages.fetch();
+		//let channelAfter = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
+		//let messages = await channelAfter.messages.fetch();
 
 		//
 		let allMessages = [];
 		let beforeMessageID = null;
-
+		let lastMsg = null;
 		do {
 			let options = { limit: 100 };
 			if (beforeMessageID) options.before = beforeMessageID;
@@ -21,14 +21,15 @@ module.exports.checkOverduePayments = async (client) => {
 			let messages = await channel.messages.fetch(options);
 
 			allMessages.push(...messages.values());
-			beforeMessageID = messages.last().id;
+			lastMsg = messages.last();
+			beforeMessageID = lastMsg.id;
 		} while (beforeMessageID);
 		//
 		console.log(allMessages);
 		console.log(typeof allMessages);
 		console.log(allMessages.length);
 
-		let now = Math.floor(new Date().getTime() / 1000.0);
+		/*let now = Math.floor(new Date().getTime() / 1000.0);
 
 		messages.forEach(async (message) => {
 			if (message.embeds[0]) {
@@ -73,7 +74,7 @@ module.exports.checkOverduePayments = async (client) => {
 					}
 				}
 			}
-		})
+		}) */
 	} catch (error) {
 		if (process.env.BOT_NAME == 'test') {
 			console.error(error);

@@ -1,8 +1,8 @@
 let moment = require('moment');
 let dsBtn = require('./dsBtn.js');
 let dsModal = require('./dsModal.js');
-let dbCmds = require('./dbCmds.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+let commissionCmds = require('./commissionCmds.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -489,30 +489,11 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
 					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionSplit);
-					await dbCmds.addCommission(toUserId, commissionSplit);
-
-					let fromUserCommission = await dbCmds.readCommission(fromUserId);
-					let toUserCommission = await dbCmds.readCommission(toUserId);
-
 					let formattedCommissionSwapped = formatter.format(commissionSplit);
-					let formattedFromUserCommission = formatter.format(fromUserCommission);
-					let formattedToUserCommission = formatter.format(toUserCommission);
 
 					let reason = `Commission Split for House Sale`;
-
-					let notificationEmbed1 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					let notificationEmbed2 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+					await commissionCmds.removeCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, fromUserId, reason);
+					await commissionCmds.addCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, toUserId, reason);
 
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalHouseSaleReply = dsModal.originalHouseSaleReply;
@@ -547,30 +528,11 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
 					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionSplit);
-					await dbCmds.addCommission(toUserId, commissionSplit);
-
-					let fromUserCommission = await dbCmds.readCommission(fromUserId);
-					let toUserCommission = await dbCmds.readCommission(toUserId);
-
 					let formattedCommissionSwapped = formatter.format(commissionSplit);
-					let formattedFromUserCommission = formatter.format(fromUserCommission);
-					let formattedToUserCommission = formatter.format(toUserCommission);
 
 					let reason = `Commission Split for Warehouse Sale`;
-
-					let notificationEmbed1 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					let notificationEmbed2 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+					await commissionCmds.removeCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, fromUserId, reason);
+					await commissionCmds.addCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, toUserId, reason);
 
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalWarehouseSaleReply = dsModal.originalWarehouseSaleReply;
@@ -605,30 +567,11 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
 					let commissionSplit = (commissionNumber * 0.50);
 
-					await dbCmds.removeCommission(fromUserId, commissionSplit);
-					await dbCmds.addCommission(toUserId, commissionSplit);
-
-					let fromUserCommission = await dbCmds.readCommission(fromUserId);
-					let toUserCommission = await dbCmds.readCommission(toUserId);
-
 					let formattedCommissionSwapped = formatter.format(commissionSplit);
-					let formattedFromUserCommission = formatter.format(fromUserCommission);
-					let formattedToUserCommission = formatter.format(toUserCommission);
 
 					let reason = `Commission Split for Office Sale`;
-
-					let notificationEmbed1 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedCommissionSwapped}\` from <@${fromUserId}>'s current commission for a new total of \`${formattedFromUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					let notificationEmbed2 = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> added \`${formattedCommissionSwapped}\` to <@${toUserId}>'s current commission for a new total of \`${formattedToUserCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('FFA630');
-
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed1] });
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed2] });
+					await commissionCmds.removeCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, fromUserId, reason);
+					await commissionCmds.addCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, toUserId, reason);
 
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalOfficeSaleReply = dsModal.originalOfficeSaleReply;

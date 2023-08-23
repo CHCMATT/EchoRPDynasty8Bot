@@ -3,7 +3,7 @@ var dbCmds = require('./dbCmds.js');
 var editEmbed = require('./editEmbed.js');
 var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
 var personnelCmds = require('./personnelCmds.js');
-const { db } = require('./schemas/d8SummaryInfo.js');
+var commissionCmds = require('./commissionCmds.js');
 
 var formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -51,6 +51,61 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`House Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, soldTo, locationNotes, photosString]] }
 				});
 
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var photos = [photosString];
+				if (photosString.includes(",")) {
+					photos = photosString.split(",")
+				} else if (photosString.includes(";")) {
+					photos = photosString.split(";")
+				} else if (photosString.includes(" ")) {
+					photos = photosString.split(" ")
+				} else if (photosString.includes("|")) {
+					photos = photosString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
@@ -66,104 +121,37 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedTotalPrice = formatter.format(totalPrice);
 				var formattedTaxPrice = formatter.format(taxPrice);
 
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.reply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new House has been sold!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}` },
+						{ name: `Street Address:`, value: `${lotNumStreetName}` },
+						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
+						{ name: `House Sold To:`, value: `${soldTo}` },
+						{ name: `Location/Notes:`, value: `${locationNotes}` }
+					)
+					.setColor('805B10')];
 
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
+				embeds = embeds.concat(photosEmbed);
 
-					if (photos.length >= 10) {
-						await interaction.reply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
+				let houseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+				exports.houseSaleMsg = houseSaleMsg;
 
-					var embeds = [new EmbedBuilder()
-						.setTitle('A new House has been sold!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Sale Date:`, value: `${saleDate}` },
-							{ name: `Street Address:`, value: `${lotNumStreetName}` },
-							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
-							{ name: `House Sold To:`, value: `${soldTo}` },
-							{ name: `Location/Notes:`, value: `${locationNotes}` }
-						)
-						.setColor('805B10')];
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
-					embeds = embeds.concat(photosEmbed);
-
-					let houseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
-					exports.houseSaleMsg = houseSaleMsg;
-				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
+
 				await dbCmds.addOneSumm("countHousesSold");
 				await dbCmds.addOneSumm("countMonthlyHousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
 				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `House Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
-
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
+				var reason = `House Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`;
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
@@ -221,97 +209,85 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					return;
 				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.reply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
 
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
-
-					if (photos.length >= 10) {
-						await interaction.reply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					var embeds = [new EmbedBuilder()
-						.setTitle('A new Warehouse has been sold!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Sale Date:`, value: `${saleDate}` },
-							{ name: `Street Address:`, value: `${lotNumStreetName}` },
-							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
-							{ name: `Warehouse Sold To:`, value: `${soldTo}` },
-							{ name: `Location/Notes:`, value: `${locationNotes}` }
-						)
-						.setColor('926C15')];
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
-					embeds = embeds.concat(photosEmbed);
-
-					let warehouseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
-					exports.warehouseSaleMsg = warehouseSaleMsg;
+				var photos = [photosString];
+				if (photosString.includes(",")) {
+					photos = photosString.split(",")
+				} else if (photosString.includes(";")) {
+					photos = photosString.split(";")
+				} else if (photosString.includes(" ")) {
+					photos = photosString.split(" ")
+				} else if (photosString.includes("|")) {
+					photos = photosString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
 				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new Warehouse has been sold!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}` },
+						{ name: `Street Address:`, value: `${lotNumStreetName}` },
+						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
+						{ name: `Warehouse Sold To:`, value: `${soldTo}` },
+						{ name: `Location/Notes:`, value: `${locationNotes}` }
+					)
+					.setColor('926C15')];
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
+				embeds = embeds.concat(photosEmbed);
+
+				let warehouseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+				exports.warehouseSaleMsg = warehouseSaleMsg;
+
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
+
 				await dbCmds.addOneSumm("countWarehousesSold");
 				await dbCmds.addOneSumm("countMonthlyWarehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "warehousesSold");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyWarehousesSold");
 				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Warehouse Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
-
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
+				var reason = `Warehouse Sale to \`${soldTo}\` costing \`${formattedPrice}\` on ${saleDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
@@ -325,6 +301,227 @@ module.exports.modalSubmit = async (interaction) => {
 				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
 
 				exports.originalWarehouseSaleReply = originalWarehouseSaleReply.interaction;
+				break;
+			case 'addOfficeSoldModal':
+				await interaction.deferReply({ ephemeral: true });
+
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var saleDate = `<t:${now}:d>`;
+
+				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
+				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Office Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, clientName, clientInfo, photosString]] }
+				});
+
+				let officeSaleNewFile = await interaction.client.driveFiles.copy({
+					auth: interaction.client.driveAuth, fileId: process.env.LIMITED_PROP_TEMPLATE_DOC_ID, resource: { name: `${clientName} | Dynasty 8 Limited Property Contract` }
+				});
+
+				let officeSaleDocumentLink = `https://docs.google.com/document/d/${officeSaleNewFile.data.id}`;
+
+				let officeSaleTodayDate = moment().format('MMMM DD, YYYY');
+
+				var costPrice = (price * 0.85);
+				var d8Profit = price - costPrice;
+				var realtorCommission = (d8Profit * 0.30);
+				var assetFees = (price * 0.01);
+				var taxPrice = Math.round((price * 0.052));
+				var totalPrice = (price + taxPrice);
+				var buybackPrice = (price * 0.75);
+
+				var formattedPrice = formatter.format(price);
+				var formattedCostPrice = formatter.format(costPrice);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
+				var formattedAssetFees = formatter.format(assetFees);
+				var formattedTotalPrice = formatter.format(totalPrice);
+				var formattedTaxPrice = formatter.format(taxPrice);
+				var formattedBuybackPrice = formatter.format(buybackPrice);
+
+				await interaction.client.googleDocs.batchUpdate({
+					auth: interaction.client.driveAuth, documentId: officeSaleNewFile.data.id, resource: {
+						requests: [{
+							replaceAllText: {
+								replaceText: clientName,
+								containsText: {
+									"text": "{client_name}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: clientInfo,
+								containsText: {
+									"text": "{client_info}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: officeSaleTodayDate,
+								containsText: {
+									"text": "{today_date}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: lotNumStreetName,
+								containsText: {
+									"text": "{street_address}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedPrice,
+								containsText: {
+									"text": "{purchase_price}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: formattedBuybackPrice,
+								containsText: {
+									"text": "{buyback_price}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: 'Office',
+								containsText: {
+									"text": "{property_type}",
+									"matchCase": true
+								}
+							},
+						}, {
+							replaceAllText: {
+								replaceText: realtorName,
+								containsText: {
+									"text": "{realtor_name}",
+									"matchCase": true
+								}
+							},
+						}]
+					}
+				});
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var photos = [photosString];
+				if (photosString.includes(",")) {
+					photos = photosString.split(",")
+				} else if (photosString.includes(";")) {
+					photos = photosString.split(";")
+				} else if (photosString.includes(" ")) {
+					photos = photosString.split(" ")
+				} else if (photosString.includes("|")) {
+					photos = photosString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new Office has been sold!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}` },
+						{ name: `Street Address:`, value: `${lotNumStreetName}` },
+						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
+						{ name: `Client Name:`, value: `${clientName}` },
+						{ name: `Client Info:`, value: `${clientInfo}` },
+						{ name: `Limited Prop. Contract:`, value: `[Click to view Contract](<${officeSaleDocumentLink}>)` }
+
+					)
+					.setColor('805B10')];
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
+				embeds = embeds.concat(photosEmbed);
+
+				let officeSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+
+				exports.officeSaleMsg = officeSaleMsg;
+
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+
+				await dbCmds.addOneSumm("countHousesSold");
+				await dbCmds.addOneSumm("countMonthlyHousesSold");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
+				await editEmbed.editMainEmbed(interaction.client);
+
+				var reason = `Office Sale to \`${clientName}\` costing \`${formattedPrice}\` on ${saleDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
+
+				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
+
+				let officeSaleBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('officeSwapSaleCommission')
+						.setLabel('Split Commission')
+						.setStyle(ButtonStyle.Primary)
+				)];
+
+				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
+
+				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;
@@ -568,6 +765,7 @@ module.exports.modalSubmit = async (interaction) => {
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
+
 				await dbCmds.addOneSumm("countPropertiesRepod");
 				await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
@@ -577,19 +775,12 @@ module.exports.modalSubmit = async (interaction) => {
 				var realtorCommission = 4500;
 				var formattedCommission = formatter.format(realtorCommission);
 
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 				var reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`$4500\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
 			case 'addTrainCheckModal':
@@ -757,22 +948,10 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
+				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
@@ -814,75 +993,70 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					return;
 				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.reply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
 
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
-
-					if (photos.length >= 10) {
-						await interaction.reply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					var houseSaleEmbed = [new EmbedBuilder()
-						.setTitle('A new House Remodel has been completed!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Remodel Date:`, value: `${remodelDate}` },
-							{ name: `Old Street Address/Notes:`, value: `${oldLotNum}` },
-							{ name: `New Street Address:`, value: `${newLotNumNotes}` },
-							{ name: `Remodel Completed For:`, value: `${remodelFor}` },
-							{ name: `Remodel Price:`, value: `${formattedPrice}` },
-						)
-						.setColor('DBB42C')];
-
-
-					var itemsSold = `House Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-
-					houseSaleEmbed = houseSaleEmbed.concat(photosEmbed);
-
-					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: houseSaleEmbed });
+				var photos = [photosString];
+				if (photosString.includes(",")) {
+					photos = photosString.split(",")
+				} else if (photosString.includes(";")) {
+					photos = photosString.split(";")
+				} else if (photosString.includes(" ")) {
+					photos = photosString.split(" ")
+				} else if (photosString.includes("|")) {
+					photos = photosString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
 				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var houseSaleEmbed = [new EmbedBuilder()
+					.setTitle('A new House Remodel has been completed!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Remodel Date:`, value: `${remodelDate}` },
+						{ name: `Old Street Address/Notes:`, value: `${oldLotNum}` },
+						{ name: `New Street Address:`, value: `${newLotNumNotes}` },
+						{ name: `Remodel Completed For:`, value: `${remodelFor}` },
+						{ name: `Remodel Price:`, value: `${formattedPrice}` },
+					)
+					.setColor('DBB42C')];
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
+				var itemsSold = `House Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
+				houseSaleEmbed = houseSaleEmbed.concat(photosEmbed);
+				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: houseSaleEmbed });
 
 				var miscSaleEmbed = [new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
@@ -900,27 +1074,16 @@ module.exports.modalSubmit = async (interaction) => {
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
 				}
+
 				await dbCmds.addOneSumm("countMiscSales");
 				await dbCmds.addOneSumm("countMonthlyMiscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `House Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
+				var reason = `House Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully logged this \`House Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
@@ -962,75 +1125,70 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					return;
 				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.reply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
 
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
-
-					if (photos.length >= 10) {
-						await interaction.reply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					var warehouseRemodelEmbed = [new EmbedBuilder()
-						.setTitle('A new Warehouse Remodel has been completed!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Remodel Date:`, value: `${remodelDate}` },
-							{ name: `Old Street Address:`, value: `${oldLotNum}` },
-							{ name: `New Street Address/Notes:`, value: `${newLotNumNotes}` },
-							{ name: `Remodel Completed For:`, value: `${remodelFor}` },
-							{ name: `Remodel Price:`, value: `${formattedPrice}` },
-						)
-						.setColor('DBB42C')];
-
-
-					var itemsSold = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-
-					warehouseRemodelEmbed = warehouseRemodelEmbed.concat(photosEmbed);
-
-					await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
+				var photos = [photosString];
+				if (photosString.includes(",")) {
+					photos = photosString.split(",")
+				} else if (photosString.includes(";")) {
+					photos = photosString.split(";")
+				} else if (photosString.includes(" ")) {
+					photos = photosString.split(" ")
+				} else if (photosString.includes("|")) {
+					photos = photosString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
 				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var warehouseRemodelEmbed = [new EmbedBuilder()
+					.setTitle('A new Warehouse Remodel has been completed!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Remodel Date:`, value: `${remodelDate}` },
+						{ name: `Old Street Address:`, value: `${oldLotNum}` },
+						{ name: `New Street Address/Notes:`, value: `${newLotNumNotes}` },
+						{ name: `Remodel Completed For:`, value: `${remodelFor}` },
+						{ name: `Remodel Price:`, value: `${formattedPrice}` },
+					)
+					.setColor('DBB42C')];
+
+				var itemsSold = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
+				warehouseRemodelEmbed = warehouseRemodelEmbed.concat(photosEmbed);
+				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
 
 				var miscSaleEmbed = [new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
@@ -1053,22 +1211,10 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
 				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Warehouse Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
+				var reason = `Warehouse Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
 				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
@@ -1520,239 +1666,6 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 				};
 				break;
-			case 'addOfficeSoldModal':
-				await interaction.deferReply({ ephemeral: true });
-
-				var realtorName;
-				if (interaction.member.nickname) {
-					realtorName = interaction.member.nickname;
-				} else {
-					realtorName = interaction.member.user.username;
-				}
-
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var saleDate = `<t:${now}:d>`;
-
-				var clientName = strCleanup(interaction.fields.getTextInputValue('clientNameInput'));
-				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInfoInput'));
-				var lotNumStreetName = strCleanup(interaction.fields.getTextInputValue('lotNumStreetNameInput'));
-				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
-				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Office Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, clientName, clientInfo, photosString]] }
-				});
-
-				let officeSaleNewFile = await interaction.client.driveFiles.copy({
-					auth: interaction.client.driveAuth, fileId: process.env.LIMITED_PROP_TEMPLATE_DOC_ID, resource: { name: `${clientName} | Dynasty 8 Limited Property Contract` }
-				});
-
-				let officeSaleDocumentLink = `https://docs.google.com/document/d/${officeSaleNewFile.data.id}`;
-
-				let officeSaleTodayDate = moment().format('MMMM DD, YYYY');
-
-				var costPrice = (price * 0.85);
-				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
-				var assetFees = (price * 0.01);
-				var taxPrice = Math.round((price * 0.052));
-				var totalPrice = (price + taxPrice);
-				var buybackPrice = (price * 0.75);
-
-				var formattedPrice = formatter.format(price);
-				var formattedCostPrice = formatter.format(costPrice);
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-				var formattedAssetFees = formatter.format(assetFees);
-				var formattedTotalPrice = formatter.format(totalPrice);
-				var formattedTaxPrice = formatter.format(taxPrice);
-				var formattedBuybackPrice = formatter.format(buybackPrice);
-
-				await interaction.client.googleDocs.batchUpdate({
-					auth: interaction.client.driveAuth, documentId: officeSaleNewFile.data.id, resource: {
-						requests: [{
-							replaceAllText: {
-								replaceText: clientName,
-								containsText: {
-									"text": "{client_name}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: clientInfo,
-								containsText: {
-									"text": "{client_info}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: officeSaleTodayDate,
-								containsText: {
-									"text": "{today_date}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: lotNumStreetName,
-								containsText: {
-									"text": "{street_address}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: formattedPrice,
-								containsText: {
-									"text": "{purchase_price}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: formattedBuybackPrice,
-								containsText: {
-									"text": "{buyback_price}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: 'Office',
-								containsText: {
-									"text": "{property_type}",
-									"matchCase": true
-								}
-							},
-						}, {
-							replaceAllText: {
-								replaceText: realtorName,
-								containsText: {
-									"text": "{realtor_name}",
-									"matchCase": true
-								}
-							},
-						}]
-					}
-				});
-
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.reply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
-
-					if (photos.length >= 10) {
-						await interaction.reply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					var embeds = [new EmbedBuilder()
-						.setTitle('A new Office has been sold!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Sale Date:`, value: `${saleDate}` },
-							{ name: `Street Address:`, value: `${lotNumStreetName}` },
-							{ name: `Final Sale Price:`, value: `${formattedPrice}` },
-							{ name: `Client Name:`, value: `${clientName}` },
-							{ name: `Client Info:`, value: `${clientInfo}` },
-							{ name: `Limited Prop. Contract:`, value: `[Click to view Contract](<${officeSaleDocumentLink}>)` }
-
-						)
-						.setColor('805B10')];
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
-					embeds = embeds.concat(photosEmbed);
-
-					let officeSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
-
-					exports.officeSaleMsg = officeSaleMsg;
-				}
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
-				}
-				await dbCmds.addOneSumm("countHousesSold");
-				await dbCmds.addOneSumm("countMonthlyHousesSold");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "housesSold");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyHousesSold");
-				await editEmbed.editMainEmbed(interaction.client);
-				if (realtorCommission > 0) {
-					await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				}
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
-
-				if (realtorCommission > 0) {
-					var formattedCommission = formatter.format(realtorCommission);
-					var reason = `Office Sale to \`${clientName}\` costing \`${formattedPrice}\` on ${saleDate}`
-
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-				}
-
-				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
-
-				let officeSaleBtns = [new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('officeSwapSaleCommission')
-						.setLabel('Split Commission')
-						.setStyle(ButtonStyle.Primary)
-				)];
-
-				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
-
-				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
-				break;
 			case 'addYPAdvertModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -1784,10 +1697,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var realtorCommission = 526;
 				var formattedCommission = formatter.format(realtorCommission);
-				var reason = `Yellow Pages ad listed on ${adDate}`;
-
-				await dbCmds.addCommission(interaction.member.user.id, realtorCommission);
-				var currCommission = formatter.format(await dbCmds.readCommission(interaction.member.user.id));
 
 				var embeds = new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
@@ -1804,12 +1713,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: [embeds, photosEmbed] });
 
-				// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-				var notificationEmbed = new EmbedBuilder()
-					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` added \`${formattedCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
-					.setColor('1EC276');
-				await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+				var reason = `Yellow Pages ad listed on ${adDate}`;
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
@@ -1861,10 +1766,8 @@ module.exports.modalSubmit = async (interaction) => {
 					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
-					let currCommission = await dbCmds.readCommission(interaction.member.id);
+
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
-					let formattedCurrCommission = formatter.format(currCommission);
 					await editEmbed.editMainEmbed(interaction.client);
 
 					if (approvalNotes) {
@@ -1926,15 +1829,9 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
 
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					let notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-
-					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -1998,10 +1895,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
-					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
-					let formattedCurrCommission = formatter.format(currCommission);
 					await editEmbed.editMainEmbed(interaction.client);
 
 					if (approvalNotes) {
@@ -2063,15 +1957,11 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
 
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					let notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
 					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
 
-					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -2123,10 +2013,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					await dbCmds.addCommission(interaction.member.id, reviewerCommission);
-					let currCommission = await dbCmds.readCommission(interaction.member.id);
 					let formattedReviewerCommission = formatter.format(reviewerCommission);
-					let formattedCurrCommission = formatter.format(currCommission);
 					await editEmbed.editMainEmbed(interaction.client);
 
 					if (denialNotes) {
@@ -2187,13 +2074,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
-
-					// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					let notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Automatically:')
-						.setDescription(`\`System\` added \`${formattedReviewerCommission}\` to <@${interaction.user.id}>'s current commission for a new total of \`${formattedCurrCommission}\`.\n\n**Reason:** ${reason}.`)
-						.setColor('1EC276');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
 
 					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
 				} else {
@@ -2290,7 +2171,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
 
-					let reimbursementReason = interaction.message.embeds[0].data.fields[2].value;
+					let reimbursementReason = `Reimbursement approved for \`${interaction.message.embeds[0].data.fields[2].value}\``;
 
 					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
 					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
@@ -2299,21 +2180,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let amountStr = interaction.message.embeds[0].data.fields[3].value;
 					let amount = Number(amountStr.replaceAll('$', '').replaceAll(',', ''));
 
-					await dbCmds.addCommission(originalUserId, amount);
-					let afterCommission = await dbCmds.readCommission(originalUserId);
-
-					let formattedAfterCommission = formatter.format(afterCommission);
-
-					if (amount > 0) {
-						var reason = `Reimbursement Request for \`${reimbursementReason}\` approved by <@${interaction.member.id}> on ${todayDate}`;
-
-						// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-						var notificationEmbed = new EmbedBuilder()
-							.setTitle('Commission Modified Automatically:')
-							.setDescription(`\`System\` added \`${amountStr}\` to <@${originalUserId}>'s current commission for a new total of \`${formattedAfterCommission}\`.\n\n**Reason:** ${reason}.`)
-							.setColor('1EC276');
-						await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-					}
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', amount, originalUserId, reimbursementReason);
 
 					function addReimbursementBtnsDisabled() {
 						let row1 = new ActionRowBuilder().addComponents(

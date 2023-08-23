@@ -1,5 +1,4 @@
 let dbCmds = require('../dbCmds.js');
-let { v4: uuidv4 } = require('uuid');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
