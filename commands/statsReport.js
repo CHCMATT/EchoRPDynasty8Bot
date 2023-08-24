@@ -1,5 +1,5 @@
-let { PermissionsBitField } = require('discord.js');
 let statsReport = require('../statsReport.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'statsreport',

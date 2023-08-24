@@ -1,12 +1,4 @@
-let dbCmds = require('../dbCmds.js');
-var editEmbed = require('../editEmbed.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
-
-let formatter = new Intl.NumberFormat('en-US', {
-	style: 'currency',
-	currency: 'USD',
-	maximumFractionDigits: 0
-});
 
 module.exports = {
 	name: 'adjustduedate',

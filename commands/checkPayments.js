@@ -1,6 +1,6 @@
 let moment = require('moment');
 let checkOverduePayments = require('../checkOverduePayments.js');
-let { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'checkpayments',

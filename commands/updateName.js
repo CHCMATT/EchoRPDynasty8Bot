@@ -1,6 +1,6 @@
 let dbCmds = require('../dbCmds.js');
-let { PermissionsBitField } = require('discord.js');
 const editEmbed = require('../editEmbed.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'updatename',

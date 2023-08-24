@@ -1,4 +1,5 @@
 let dbCmds = require('../dbCmds.js');
+let { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'togglesetting',

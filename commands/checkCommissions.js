@@ -1,5 +1,5 @@
 let dbCmds = require('../dbCmds.js');
-let { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',

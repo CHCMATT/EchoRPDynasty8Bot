@@ -1,5 +1,5 @@
 let dbCmds = require('../dbCmds.js');
-let { PermissionsBitField } = require('discord.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	name: 'updatebank',
