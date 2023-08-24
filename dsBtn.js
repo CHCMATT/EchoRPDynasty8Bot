@@ -854,7 +854,8 @@ module.exports.btnPressed = async (interaction) => {
 					}
 
 					let btnRows = addBtnRows();
-					await currentMsg.edit({ embeds: [currentMsg.embeds[0]], components: btnRows });
+					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: btnRows });
+					await currentMsg.delete();
 
 					function addBtnRows() {
 						let row1 = new ActionRowBuilder().addComponents(
@@ -875,7 +876,7 @@ module.exports.btnPressed = async (interaction) => {
 						return rows;
 					};
 
-					await interaction.reply({ content: `Successfully marked the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked the payments for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -896,6 +897,51 @@ module.exports.btnPressed = async (interaction) => {
 
 				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 
+				break;
+			case 'completeEviction':
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var currentMsg = interaction.message;
+
+					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
+
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var markCompletedDate = `<t:${now}:d>`;
+
+					currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+
+					let completedEvictionBtnRows = addCompletedEvictionBtnRows();
+					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: completedEvictionBtnRows });
+					await currentMsg.delete();
+
+					function addCompletedEvictionBtnRows() {
+						let row1 = new ActionRowBuilder().addComponents(
+							new ButtonBuilder()
+								.setCustomId('markPaymentsComplete')
+								.setLabel('Mark as Completed')
+								.setStyle(ButtonStyle.Success)
+								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('createEvictionNotice')
+								.setLabel('Create an Eviction Notice')
+								.setStyle(ButtonStyle.Secondary)
+								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('completeEviction')
+								.setLabel('Mark Eviction as Complete')
+								.setStyle(ButtonStyle.Danger)
+								.setDisabled(true),
+						);
+
+						let rows = [row1];
+						return rows;
+					};
+
+					await interaction.reply({ content: `Successfully marked the eviction for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
