@@ -853,6 +853,9 @@ module.exports.btnPressed = async (interaction) => {
 						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Payments marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
 					}
 
+					await dbCmds.subtractOneSumm("activeFinancialAgreements");
+					await editMainEmbed.editMainEmbed();
+
 					let btnRows = addBtnRows();
 					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: btnRows });
 					await currentMsg.delete();
@@ -908,6 +911,9 @@ module.exports.btnPressed = async (interaction) => {
 					var markCompletedDate = `<t:${now}:d>`;
 
 					currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+
+					await dbCmds.subtractOneSumm("activeFinancialAgreements");
+					await editMainEmbed.editMainEmbed();
 
 					let completedEvictionBtnRows = addCompletedEvictionBtnRows();
 					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: completedEvictionBtnRows });
