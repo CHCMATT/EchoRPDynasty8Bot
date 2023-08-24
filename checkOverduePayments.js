@@ -26,8 +26,6 @@ module.exports.checkOverduePayments = async (client) => {
 			}
 		}
 
-		console.log(`Found ${sum_messages.length} financial agreements`);
-
 		let now = Math.floor(new Date().getTime() / 1000.0);
 
 		sum_messages.forEach(async (message) => {
@@ -39,7 +37,6 @@ module.exports.checkOverduePayments = async (client) => {
 					let paidOffDueDate = Number(paidOffDueDateStr.replaceAll('<t:', '').replaceAll(':d>', ''));
 
 					if (now == now) {
-						console.log(`${message.id} is overdue`);
 						let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 						let msgFinanceNum = message.embeds[0].data.fields[3].value;
 						let msgClientName = message.embeds[0].data.fields[4].value;
@@ -68,8 +65,6 @@ module.exports.checkOverduePayments = async (client) => {
 							.setColor('FFA630');
 
 						await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [overdueEmbed] });
-					} else {
-						console.log(`${message.id} is not overdue`);
 					}
 				}
 			}
