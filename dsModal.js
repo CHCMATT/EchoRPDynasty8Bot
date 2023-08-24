@@ -1766,9 +1766,8 @@ module.exports.modalSubmit = async (interaction) => {
 					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					await editEmbed.editMainEmbed(interaction.client);
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -2076,7 +2075,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
 					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
 
-					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${formattedCurrCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
