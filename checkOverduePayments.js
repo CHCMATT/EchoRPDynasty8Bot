@@ -67,7 +67,7 @@ module.exports.checkOverduePayments = async (client) => {
 
 							await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [overdueEmbed] });
 						}
-					} else if (now >= (paidOffDueDate + 3)) { // eviction ready
+					} else if (now >= (paidOffDueDate + (86400 * 3))) { // eviction ready
 						if (message.components[0].components.length == 2) {
 							let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 							let msgFinanceNum = message.embeds[0].data.fields[3].value;
