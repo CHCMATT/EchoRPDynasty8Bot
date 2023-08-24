@@ -21,7 +21,7 @@ module.exports.checkOverduePayments = async (client) => {
 			sum_messages.push(...messages.values());
 			last_id = messages.last().id;
 
-			if (messages.size != 100 || sum_messages >= limit) {
+			if (messages.size != 100 || sum_messages >= options.limit) {
 				break;
 			}
 		}
