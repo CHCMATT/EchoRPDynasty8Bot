@@ -43,6 +43,7 @@ module.exports.checkOverduePayments = async (client) => {
 							let msgClientName = message.embeds[0].data.fields[4].value;
 							let msgClientInfo = message.embeds[0].data.fields[5].value;
 							let msgClientContact = message.embeds[0].data.fields[6].value;
+							let msgStreetAddr = message.embeds[0].data.fields[7].value;
 							let msgAmtOwed = message.embeds[0].data.fields[10].value;
 							let msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
@@ -59,6 +60,7 @@ module.exports.checkOverduePayments = async (client) => {
 									{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
 									{ name: `Paid Off Payment Date:`, value: `${msgPaymentDueDate}` },
 									{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
+									{ name: `Street Address:`, value: `${msgStreetAddr}` },
 									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
 									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 									{ name: `Message Link:`, value: `https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}` },
@@ -74,6 +76,7 @@ module.exports.checkOverduePayments = async (client) => {
 							let msgClientName = message.embeds[0].data.fields[4].value;
 							let msgClientInfo = message.embeds[0].data.fields[5].value;
 							let msgClientContact = message.embeds[0].data.fields[6].value;
+							let msgStreetAddr = message.embeds[0].data.fields[7].value;
 							let msgAmtOwed = message.embeds[0].data.fields[10].value;
 							let msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
@@ -90,6 +93,7 @@ module.exports.checkOverduePayments = async (client) => {
 									{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
 									{ name: `Paid Off Payment Date:`, value: `${msgPaymentDueDate}` },
 									{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
+									{ name: `Street Address:`, value: `${msgStreetAddr}` },
 									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
 									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
 									{ name: `Message Link:`, value: `https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}` },
