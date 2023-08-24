@@ -1958,8 +1958,6 @@ module.exports.modalSubmit = async (interaction) => {
 					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
 					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
 
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-
 					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
