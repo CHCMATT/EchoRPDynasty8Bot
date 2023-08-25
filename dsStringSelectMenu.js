@@ -623,5 +623,3 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 		}
 	}
 };
-
-
