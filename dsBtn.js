@@ -1,5 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
+var editEmbed = require('./editEmbed.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {
@@ -506,7 +507,7 @@ module.exports.btnPressed = async (interaction) => {
 					}
 
 					await dbCmds.subtractOneSumm("activeFinancialAgreements");
-					await editMainEmbed.editMainEmbed();
+					await editEmbed.editMainEmbed();
 
 					let btnRows = addBtnRows();
 					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: btnRows });
@@ -548,7 +549,7 @@ module.exports.btnPressed = async (interaction) => {
 					currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
 
 					await dbCmds.subtractOneSumm("activeFinancialAgreements");
-					await editMainEmbed.editMainEmbed();
+					await editEmbed.editMainEmbed();
 
 					let completedEvictionBtnRows = addCompletedEvictionBtnRows();
 					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: completedEvictionBtnRows });
