@@ -11,6 +11,7 @@ module.exports = {
 			choices: [
 				{ name: 'Quote Ping', value: 'settingQuotePing' },
 				{ name: 'Reimbursement Ping', value: 'settingReimbursementPing' },
+				{ name: 'Repossession Ping', value: 'settingRepossessionPing' },
 			],
 			type: 3,
 			required: true,
@@ -38,6 +39,14 @@ module.exports = {
 				} else {
 					dbCmds.setPersSetting(discordId, settingChoice, true);
 					await interaction.reply({ content: `Successfully toggled the \`Reimbursement Ping\` setting to \`on\`.`, ephemeral: true });
+				}
+			} else if (settingChoice == 'settingRepossessionPing') {
+				if (currentSettingOption) {
+					dbCmds.setPersSetting(discordId, settingChoice, false);
+					await interaction.reply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`off\`.`, ephemeral: true });
+				} else {
+					dbCmds.setPersSetting(discordId, settingChoice, true);
+					await interaction.reply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`on\`.`, ephemeral: true });
 				}
 			} else {
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

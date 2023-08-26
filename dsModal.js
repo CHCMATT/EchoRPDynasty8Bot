@@ -1,5 +1,6 @@
 var moment = require('moment');
 var dbCmds = require('./dbCmds.js');
+let { v4: uuidv4 } = require('uuid');
 var editEmbed = require('./editEmbed.js');
 var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
 var personnelCmds = require('./personnelCmds.js');
@@ -523,6 +524,72 @@ module.exports.modalSubmit = async (interaction) => {
 
 				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
+			case 'addMiscSaleModal':
+				var realtorName;
+				if (interaction.member.nickname) {
+					realtorName = interaction.member.nickname;
+				} else {
+					realtorName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var saleDate = `<t:${now}:d>`;
+
+				var itemsSold = strCleanup(interaction.fields.getTextInputValue('itemsSoldInput'));
+				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
+				});
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.reply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var formattedPrice = formatter.format(price);
+
+				var d8Cost = (price * 0.9);
+				var d8Profit = price - d8Cost;
+				var realtorCommission = (d8Profit * 0.5);
+
+				var formattedD8Cost = formatter.format(d8Cost);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('A new Misc. Sale has been submitted!')
+					.addFields(
+						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+						{ name: `Sale Date:`, value: `${saleDate}` },
+						{ name: `Items Sold:`, value: `${itemsSold}` },
+						{ name: `Sale Price:`, value: `${formattedPrice}` },
+					)
+					.setColor('DBB42C')];
+
+				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
+
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+				await dbCmds.addOneSumm("countMiscSales");
+				await dbCmds.addOneSumm("countMonthlyMiscSales");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+				await editEmbed.editMainEmbed(interaction.client);
+
+				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
+				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
+
+				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
+
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				break;
+
 			case 'addPropertyQuoteModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -663,6 +730,366 @@ module.exports.modalSubmit = async (interaction) => {
 				var newPropertiesQuotedTotal = await dbCmds.readSummValue("countPropertiesQuoted");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
 				break;
+			case 'approveQuoteModal':
+				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
+
+					let approvalNow = Math.floor(new Date().getTime() / 1000.0);
+					let approvalDate = `<t:${approvalNow}:d>`;
+
+					let msgEmbeds = interaction.message.embeds;
+
+					let mainEmbedFields = msgEmbeds[0].data.fields;
+
+					let originalRealtor = mainEmbedFields[0].value;
+					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
+
+					let newQuoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Success)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('markAsContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
+					)];
+
+					let approvalMsgNotes;
+					let approvalMsgEmbed = [];
+
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					await editEmbed.editMainEmbed(interaction.client);
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+
+					if (approvalNotes) {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						} else {
+							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Approval Notes:`, value: `${approvalNotes}` }
+							)
+							.setColor('1EC276')];
+
+					} else {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
+						} else {
+							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
+						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('1EC276')];
+					}
+
+					msgEmbeds[0] = new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+							{ name: `Notes:`, value: `${approvalMsgNotes}` }
+						)
+						.setColor('A47E1B');
+
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+
+					await interaction.message.react('✅');
+
+					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
+
+					if (quotePingSetting) {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
+					}
+
+					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
+
+					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'adjustQuoteModal':
+				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let adjustedPrice = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('adjustPriceInput')).replaceAll(',', '').replaceAll('$', '')));
+
+					if (isNaN(adjustedPrice)) { // validate quantity of money
+						await interaction.reply({
+							content: `:exclamation: \`${interaction.fields.getTextInputValue('adjustPriceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					var formattedAdjustedPrice = formatter.format(adjustedPrice);
+
+					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('adjustNotesInput'));
+
+					let approvalNow = Math.floor(new Date().getTime() / 1000.0);
+					let approvalDate = `<t:${approvalNow}:d>`;
+
+					let msgEmbeds = interaction.message.embeds;
+
+					let mainEmbedFields = msgEmbeds[0].data.fields;
+
+					let originalRealtor = mainEmbedFields[0].value;
+					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
+
+					let newQuoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('markAsContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
+					)];
+
+					let approvalMsgNotes;
+					let approvalMsgEmbed = [];
+
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+					await editEmbed.editMainEmbed(interaction.client);
+
+					if (approvalNotes) {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						} else {
+							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
+						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved with adjustments')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Adjustment Notes:`, value: `${approvalNotes}` }
+							)
+							.setColor('FFA630')];
+					} else {
+						if (mainEmbedFields[5]) {
+							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
+						} else {
+							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
+						}
+
+						approvalMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been approved with adjustments')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('FFA630')];
+					}
+
+					msgEmbeds[0] = new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+							{ name: `Notes:`, value: `${approvalMsgNotes}` }
+						)
+						.setColor('A47E1B');
+
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+
+					await interaction.message.react('⚠');
+					await interaction.message.react('✅');
+
+					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
+
+					if (quotePingSetting) {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
+					}
+
+					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
+
+					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'denyQuoteModal':
+				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+					let denialNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
+
+					let denialNow = Math.floor(new Date().getTime() / 1000.0);
+					let denialDate = `<t:${denialNow}:d>`;
+
+					let msgEmbeds = interaction.message.embeds;
+
+					let mainEmbedFields = msgEmbeds[0].data.fields;
+
+					let originalRealtor = mainEmbedFields[0].value;
+					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
+					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
+
+					let newQuoteBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveQuote')
+							.setLabel('Approve Quote')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('adjustQuote')
+							.setLabel('Adjust & Approve')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyQuote')
+							.setLabel('Deny Quote')
+							.setStyle(ButtonStyle.Danger)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('markAsContacted')
+							.setLabel('Contacted?')
+							.setStyle(ButtonStyle.Primary),
+					)];
+
+					let denialMsgNotes;
+					let denialMsgEmbed = [];
+
+					let reviewerCommission = 250;
+					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
+					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
+					let formattedReviewerCommission = formatter.format(reviewerCommission);
+					await editEmbed.editMainEmbed(interaction.client);
+
+					if (denialNotes) {
+						if (mainEmbedFields[5]) {
+							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
+						} else {
+							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
+						}
+
+						denialMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been denied')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Denied By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Denial Notes:`, value: `${denialNotes}` }
+							)
+							.setColor('B80600')];
+					} else {
+						if (mainEmbedFields[5]) {
+							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
+						} else {
+							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
+						}
+
+						denialMsgEmbed = [new EmbedBuilder()
+							.setTitle('A quote you submitted has been denied')
+							.addFields(
+								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
+								{ name: `Denied By:`, value: `<@${interaction.member.id}>` }
+							)
+							.setColor('B80600')];
+					}
+
+					msgEmbeds[0] = new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
+							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
+							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
+							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
+							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
+							{ name: `Notes:`, value: `${denialMsgNotes}` }
+						)
+						.setColor('A47E1B');
+
+					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
+
+					await interaction.message.react('❌');
+
+					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
+
+					if (quotePingSetting) {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed });
+					}
+
+					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
+					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
+
+					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+
 			case 'addPropertyRepodModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -852,7 +1279,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (notes) {
 					var embeds = [new EmbedBuilder()
-						.setTitle('A new Train Activity Check request has been submitted!')
+						.setTitle('A new Train Activity Check has been submitted!')
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
@@ -863,7 +1290,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('C9A227')];
 				} else {
 					var embeds = [new EmbedBuilder()
-						.setTitle('A new Train Activity Check request has been submitted!')
+						.setTitle('A new Train Activity Check has been submitted!')
 						.addFields(
 							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
@@ -874,10 +1301,27 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('C9A227').setURL('https://echorp.net/').setImage(x));
-
 				embeds = embeds.concat(photosEmbed);
 
-				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ embeds: embeds });
+				let trainActivityBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('approveRepo')
+						.setLabel('Approve Repo')
+						.setStyle(ButtonStyle.Success),
+
+					new ButtonBuilder()
+						.setCustomId('recheckRepo')
+						.setLabel('Mark for Recheck')
+						.setStyle(ButtonStyle.Primary),
+
+					new ButtonBuilder()
+						.setCustomId('denyRepo')
+						.setLabel('Deny Repo')
+						.setStyle(ButtonStyle.Danger),
+				)];
+
+				await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ embeds: embeds, components: trainActivityBtns });
+
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -891,334 +1335,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
-			case 'addMiscSaleModal':
-				var realtorName;
-				if (interaction.member.nickname) {
-					realtorName = interaction.member.nickname;
-				} else {
-					realtorName = interaction.member.user.username;
-				}
 
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var saleDate = `<t:${now}:d>`;
-
-				var itemsSold = strCleanup(interaction.fields.getTextInputValue('itemsSoldInput'));
-				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Misc. Sales!A:D", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, saleDate, itemsSold, price]] }
-				});
-
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var formattedPrice = formatter.format(price);
-
-				var d8Cost = (price * 0.9);
-				var d8Profit = price - d8Cost;
-				var realtorCommission = (d8Profit * 0.5);
-
-				var formattedD8Cost = formatter.format(d8Cost);
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-
-				var embeds = [new EmbedBuilder()
-					.setTitle('A new Misc. Sale has been submitted!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Sale Date:`, value: `${saleDate}` },
-						{ name: `Items Sold:`, value: `${itemsSold}` },
-						{ name: `Sale Price:`, value: `${formattedPrice}` },
-					)
-					.setColor('DBB42C')];
-
-				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
-
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
-				}
-				await dbCmds.addOneSumm("countMiscSales");
-				await dbCmds.addOneSumm("countMonthlyMiscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editMainEmbed(interaction.client);
-
-				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
-
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
-
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
-				break;
-			case 'addHouseRemodelModal':
-				var realtorName;
-				if (interaction.member.nickname) {
-					realtorName = interaction.member.nickname;
-				} else {
-					realtorName = interaction.member.user.username;
-				}
-
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var remodelDate = `<t:${now}:d>`;
-
-				var remodelFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
-				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
-				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
-				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
-				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`House Remodel`, `${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
-				});
-
-				var formattedPrice = formatter.format(price);
-
-				var costPrice = (price * 0.85);
-				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
-
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
-					await interaction.reply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.reply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var houseSaleEmbed = [new EmbedBuilder()
-					.setTitle('A new House Remodel has been completed!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Remodel Date:`, value: `${remodelDate}` },
-						{ name: `Old Street Address/Notes:`, value: `${oldLotNum}` },
-						{ name: `New Street Address:`, value: `${newLotNumNotes}` },
-						{ name: `Remodel Completed For:`, value: `${remodelFor}` },
-						{ name: `Remodel Price:`, value: `${formattedPrice}` },
-					)
-					.setColor('DBB42C')];
-
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-				var itemsSold = `House Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
-				houseSaleEmbed = houseSaleEmbed.concat(photosEmbed);
-				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: houseSaleEmbed });
-
-				var miscSaleEmbed = [new EmbedBuilder()
-					.setTitle('A new Misc. Sale has been submitted!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Sale Date:`, value: `${remodelDate}` },
-						{ name: `Items Sold:`, value: `${itemsSold}` },
-						{ name: `Sale Price:`, value: `${formattedPrice}` },
-					)
-					.setColor('DBB42C')];
-
-				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: miscSaleEmbed });
-
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
-				}
-
-				await dbCmds.addOneSumm("countMiscSales");
-				await dbCmds.addOneSumm("countMonthlyMiscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editMainEmbed(interaction.client);
-
-				var reason = `House Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
-
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
-
-				await interaction.reply({ content: `Successfully logged this \`House Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
-				break;
-			case 'addWarehouseRemodelModal':
-				var realtorName;
-				if (interaction.member.nickname) {
-					realtorName = interaction.member.nickname;
-				} else {
-					realtorName = interaction.member.user.username;
-				}
-
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var remodelDate = `<t:${now}:d>`;
-
-				var remodelFor = strCleanup(interaction.fields.getTextInputValue('remodelForInput'));
-				var oldLotNum = strCleanup(interaction.fields.getTextInputValue('oldLotNumInput'));
-				var newLotNumNotes = strCleanup(interaction.fields.getTextInputValue('newLotNumNotesInput'));
-				var price = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('priceInput')).replaceAll(',', '').replaceAll('$', '')));
-				var photosString = strCleanup(interaction.fields.getTextInputValue('photosInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Warehouse Remodel`, `${realtorName} (<@${interaction.user.id}>)`, remodelDate, remodelFor, oldLotNum, newLotNumNotes, price, photosString]] }
-				});
-
-				var formattedPrice = formatter.format(price);
-
-				var costPrice = (price * 0.85);
-				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
-
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
-					await interaction.reply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.reply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var warehouseRemodelEmbed = [new EmbedBuilder()
-					.setTitle('A new Warehouse Remodel has been completed!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Remodel Date:`, value: `${remodelDate}` },
-						{ name: `Old Street Address:`, value: `${oldLotNum}` },
-						{ name: `New Street Address/Notes:`, value: `${newLotNumNotes}` },
-						{ name: `Remodel Completed For:`, value: `${remodelFor}` },
-						{ name: `Remodel Price:`, value: `${formattedPrice}` },
-					)
-					.setColor('DBB42C')];
-
-				var itemsSold = `Warehouse Remodel of \`${oldLotNum}\` for \`${remodelFor}\``;
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-				warehouseRemodelEmbed = warehouseRemodelEmbed.concat(photosEmbed);
-				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: warehouseRemodelEmbed });
-
-				var miscSaleEmbed = [new EmbedBuilder()
-					.setTitle('A new Misc. Sale has been submitted!')
-					.addFields(
-						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-						{ name: `Sale Date:`, value: `${remodelDate}` },
-						{ name: `Items Sold:`, value: `${itemsSold}` },
-						{ name: `Sale Price:`, value: `${formattedPrice}` },
-					)
-					.setColor('DBB42C')];
-
-				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: miscSaleEmbed });
-
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
-				}
-				await dbCmds.addOneSumm("countMiscSales");
-				await dbCmds.addOneSumm("countMonthlyMiscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-				await editEmbed.editMainEmbed(interaction.client);
-
-				var reason = `Warehouse Remodel to \`${remodelFor}\` costing \`${formattedPrice}\` on ${remodelDate}`
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
-
-				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
-
-				await interaction.reply({ content: `Successfully logged this \`Warehouse Remodel\` and added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
-				break;
 			case 'addFinancingAgreementModal':
 				await interaction.deferReply({ ephemeral: true });
 				var realtorName;
@@ -1434,238 +1551,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Days to Pay Off: \`${paidOffDays}\` (${paidOffDueDate})\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
 				break;
-			case 'addFinancingPaymentModal':
-				var realtorName;
-				if (interaction.member.nickname) {
-					realtorName = interaction.member.nickname;
-				} else {
-					realtorName = interaction.member.user.username;
-				}
 
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var currPaymentDate = `<t:${now}:d>`;
-
-				var payersName = strCleanup(interaction.fields.getTextInputValue('payersNameInput'));
-				var financingNum = strCleanup(interaction.fields.getTextInputValue('financingNumInput')).toUpperCase();
-				var paymentAmt = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('paymentInput')).replaceAll(',', '').replaceAll('$', '')));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Finance Payments!A:E", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, currPaymentDate, payersName, financingNum, paymentAmt]] }
-				});
-
-				if (isNaN(paymentAmt)) { // validate quantity of money
-					await interaction.reply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('paymentInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var formattedPaymentAmt = formatter.format(paymentAmt);
-
-				var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
-				var messages = await channel.messages.fetch();
-
-				var formattedAfterPaymentAmt = '';
-
-				var nextPaymentDateTime = now + (86400 * 14); // 86400 seconds in a day times 14 days
-				var nextPaymentDate = `<t:${nextPaymentDateTime}:d>`;
-				var nextPaymentDateRelative = `<t:${nextPaymentDateTime}:R>`;
-				var agreementFound = false;
-
-				messages.forEach(async (message) => {
-					var msgId = message.id;
-					if (message.embeds[0]) {
-						var embedTitle = message.embeds[0].data.title;
-						if (embedTitle === 'A new Financing Agreement has been submitted!') {
-							var msgRealtor = message.embeds[0].data.fields[0].value;
-							var msgSaleDate = message.embeds[0].data.fields[1].value;
-							var msgFinanceNum = message.embeds[0].data.fields[4].value;
-							var msgClientName = message.embeds[0].data.fields[5].value;
-							var msgClientInfo = message.embeds[0].data.fields[6].value;
-							var msgClientContact = message.embeds[0].data.fields[7].value;
-							var msgStreetAddress = message.embeds[0].data.fields[8].value;
-							var msgSalePrice = message.embeds[0].data.fields[9].value;
-							var msgDownPayment = message.embeds[0].data.fields[10].value;
-							var msgAmtOwed = message.embeds[0].data.fields[11].value;
-							var msgFinancingAgreement = message.embeds[0].data.fields[12].value;
-							if (message.embeds[0].data.fields[13]) {
-								var msgNotes = message.embeds[0].data.fields[13].value;
-							}
-
-							var amtOwed = Number(msgAmtOwed.replaceAll('$', '').replaceAll(',', ''));
-
-							if (msgFinanceNum === financingNum) {
-								var afterPaymentAmt = amtOwed - paymentAmt;
-								agreementFound = true;
-								if (afterPaymentAmt < 0) { // if attempting to pay more than they owe
-									var afterPaymentAmt = amtOwed - paymentAmt;
-									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
-									await interaction.reply({
-										content: `:exclamation: A payment of \`${formattedPaymentAmt}\` will result in a negative balance on agreement \`${msgFinanceNum}\`. The maximum payment allowed should be \`${msgAmtOwed}\`.`,
-										ephemeral: true
-									});
-									return;
-								} else if (afterPaymentAmt == 0) { // if payments are no longer due ($0 balance)
-									var afterPaymentAmt = amtOwed - paymentAmt;
-									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
-
-									if (message.embeds[0].data.fields[13]) {
-										var agreementEmbed = [new EmbedBuilder()
-											.setTitle('A new Financing Agreement has been submitted!')
-											.addFields(
-												{ name: `Realtor Name:`, value: `${msgRealtor}` },
-												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
-												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-												{ name: `Street Address:`, value: `${msgStreetAddress}` },
-												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
-												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `${msgNotes}\n- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
-											)
-											.setColor('1EC276')];
-									} else {
-										var agreementEmbed = [new EmbedBuilder()
-											.setTitle('A new Financing Agreement has been submitted!')
-											.addFields(
-												{ name: `Realtor Name:`, value: `${msgRealtor}` },
-												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `N/A`, inline: true },
-												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-												{ name: `Street Address:`, value: `${msgStreetAddress}` },
-												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
-												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.\n- Financing Payments completed on ${currPaymentDate}.` }
-											)
-											.setColor('1EC276')];
-									}
-
-									await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: agreementEmbed });
-
-									await message.delete();
-
-									await dbCmds.addOneSumm("countFinancialPayments");
-									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
-									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
-									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
-
-									await dbCmds.subtractOneSumm("activeFinancialAgreements");
-									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
-
-									await editEmbed.editMainEmbed(interaction.client);
-
-									var embeds = [new EmbedBuilder()
-										.setTitle('A new Financing Payment has been submitted!')
-										.addFields(
-											{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-											{ name: `Payment Date:`, value: `${currPaymentDate}` },
-											{ name: `Financing ID Number:`, value: `${financingNum}` },
-											{ name: `Payer's Name:`, value: `${payersName}` },
-											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
-										)
-										.setColor('FFE169')];
-
-									await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
-
-									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement and moved the agreement to the Completed Financing section.`, ephemeral: true });
-								} else { // if payments are still due
-									var afterPaymentAmt = amtOwed - paymentAmt;
-									formattedAfterPaymentAmt = formatter.format(afterPaymentAmt);
-
-									if (message.embeds[0].data.fields[13]) {
-										var agreementEmbed = [new EmbedBuilder()
-											.setTitle('A new Financing Agreement has been submitted!')
-											.addFields(
-												{ name: `Realtor Name:`, value: `${msgRealtor}` },
-												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
-												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-												{ name: `Street Address:`, value: `${msgStreetAddress}` },
-												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
-												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `${msgNotes}\n- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.` }
-											)
-											.setColor('FAD643')];
-									} else {
-										var agreementEmbed = [new EmbedBuilder()
-											.setTitle('A new Financing Agreement has been submitted!')
-											.addFields(
-												{ name: `Realtor Name:`, value: `${msgRealtor}` },
-												{ name: `Sale Date:`, value: `${msgSaleDate}`, inline: true },
-												{ name: `Latest Payment:`, value: `${currPaymentDate}`, inline: true },
-												{ name: `Next Payment Due:`, value: `${nextPaymentDate} (${nextPaymentDateRelative})`, inline: true },
-												{ name: `Financing ID Number:`, value: `${msgFinanceNum}` },
-												{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-												{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-												{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-												{ name: `Street Address:`, value: `${msgStreetAddress}` },
-												{ name: `Sale Price:`, value: `${msgSalePrice}`, inline: true },
-												{ name: `Down Payment:`, value: `${msgDownPayment}`, inline: true },
-												{ name: `Amount Owed:`, value: `${formattedAfterPaymentAmt}`, inline: true },
-												{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-												{ name: `Notes:`, value: `- Payment of ${formattedPaymentAmt} submitted on ${currPaymentDate}.` }
-											)
-											.setColor('FAD643')];
-									}
-
-									var channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID)
-									var currMsg = await channel.messages.fetch(msgId);
-									currMsg.edit({ embeds: agreementEmbed, components: [] });
-
-									var embeds = [new EmbedBuilder()
-										.setTitle('A new Financing Payment has been submitted!')
-										.addFields(
-											{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-											{ name: `Payment Date:`, value: `${currPaymentDate}` },
-											{ name: `Financing ID Number:`, value: `${financingNum}` },
-											{ name: `Payer's Name:`, value: `${payersName}` },
-											{ name: `Payment Amount:`, value: `${formattedPaymentAmt}` },
-										)
-										.setColor('FFE169')];
-
-									await dbCmds.addOneSumm("countFinancialPayments");
-									await dbCmds.addOneSumm("countMonthlyFinancialPayments");
-
-									await dbCmds.addOnePersStat(interaction.member.user.id, "financialPayments");
-									await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialPayments");
-
-									await dbCmds.subtractValueSumm("activeFinancialAmount", paymentAmt);
-
-									await editEmbed.editMainEmbed(interaction.client);
-
-									await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
-
-									await interaction.reply({ content: `Successfully submitted a payment of \`${formattedPaymentAmt}\` to the \`${financingNum}\` Financing Agreement - the new amount owed is \`${formattedAfterPaymentAmt}\`.`, ephemeral: true });
-								}
-							}
-						}
-					}
-				});
-				if (!agreementFound) {
-					await interaction.reply({
-						content: `:exclamation: Unable to locate any agreements with the ID number \`${financingNum}\`. Please try again!`,
-						ephemeral: true
-					});
-				};
-				break;
 			case 'addYPAdvertModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -1719,365 +1605,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
-			case 'approveQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
-					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
-
-					let approvalNow = Math.floor(new Date().getTime() / 1000.0);
-					let approvalDate = `<t:${approvalNow}:d>`;
-
-					let msgEmbeds = interaction.message.embeds;
-
-					let mainEmbedFields = msgEmbeds[0].data.fields;
-
-					let originalRealtor = mainEmbedFields[0].value;
-					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
-					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
-
-					let newQuoteBtns = [new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId('approveQuote')
-							.setLabel('Approve Quote')
-							.setStyle(ButtonStyle.Success)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('adjustQuote')
-							.setLabel('Adjust & Approve')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('denyQuote')
-							.setLabel('Deny Quote')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('setContacted')
-							.setLabel('Contacted?')
-							.setStyle(ButtonStyle.Primary),
-					)];
-
-					let approvalMsgNotes;
-					let approvalMsgEmbed = [];
-
-					let reviewerCommission = 250;
-					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
-					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					await editEmbed.editMainEmbed(interaction.client);
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
-
-					if (approvalNotes) {
-						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
-						} else {
-							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
-						}
-
-						approvalMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been approved')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
-								{ name: `Approval Notes:`, value: `${approvalNotes}` }
-							)
-							.setColor('1EC276')];
-
-					} else {
-						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
-						} else {
-							approvalMsgNotes = `- Quote approved by <@${interaction.member.id}> on ${approvalDate}.`;
-						}
-
-						approvalMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been approved')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
-							)
-							.setColor('1EC276')];
-					}
-
-					msgEmbeds[0] = new EmbedBuilder()
-						.setTitle('A new Property Quote request has been submitted!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
-							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
-							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
-							{ name: `Notes:`, value: `${approvalMsgNotes}` }
-						)
-						.setColor('A47E1B');
-
-					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
-
-					await interaction.message.react('✅');
-
-					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
-
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
-					}
-
-					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
-				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
-				}
-				break;
-			case 'adjustQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-
-					let adjustedPrice = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('adjustPriceInput')).replaceAll(',', '').replaceAll('$', '')));
-
-					if (isNaN(adjustedPrice)) { // validate quantity of money
-						await interaction.reply({
-							content: `:exclamation: \`${interaction.fields.getTextInputValue('adjustPriceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					var formattedAdjustedPrice = formatter.format(adjustedPrice);
-
-					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('adjustNotesInput'));
-
-					let approvalNow = Math.floor(new Date().getTime() / 1000.0);
-					let approvalDate = `<t:${approvalNow}:d>`;
-
-					let msgEmbeds = interaction.message.embeds;
-
-					let mainEmbedFields = msgEmbeds[0].data.fields;
-
-					let originalRealtor = mainEmbedFields[0].value;
-					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
-					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
-
-					let newQuoteBtns = [new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId('approveQuote')
-							.setLabel('Approve Quote')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('adjustQuote')
-							.setLabel('Adjust & Approve')
-							.setStyle(ButtonStyle.Primary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('denyQuote')
-							.setLabel('Deny Quote')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('setContacted')
-							.setLabel('Contacted?')
-							.setStyle(ButtonStyle.Primary),
-					)];
-
-					let approvalMsgNotes;
-					let approvalMsgEmbed = [];
-
-					let reviewerCommission = 250;
-					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
-					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
-					await editEmbed.editMainEmbed(interaction.client);
-
-					if (approvalNotes) {
-						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
-						} else {
-							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate} with the following note \`${approvalNotes}\`.`;
-						}
-
-						approvalMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been approved with adjustments')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
-								{ name: `Adjustment Notes:`, value: `${approvalNotes}` }
-							)
-							.setColor('FFA630')];
-					} else {
-						if (mainEmbedFields[5]) {
-							approvalMsgNotes = `${mainEmbedFields[5].value}\n- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
-						} else {
-							approvalMsgNotes = `- Quote approved for purchase at \`${formattedAdjustedPrice}\` by <@${interaction.member.id}> on ${approvalDate}.`;
-						}
-
-						approvalMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been approved with adjustments')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` }
-							)
-							.setColor('FFA630')];
-					}
-
-					msgEmbeds[0] = new EmbedBuilder()
-						.setTitle('A new Property Quote request has been submitted!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
-							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
-							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
-							{ name: `Notes:`, value: `${approvalMsgNotes}` }
-						)
-						.setColor('A47E1B');
-
-					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
-
-					await interaction.message.react('⚠');
-					await interaction.message.react('✅');
-
-					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
-
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
-					}
-
-					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
-				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
-				}
-				break;
-			case 'denyQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-
-					let denialNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
-
-					let denialNow = Math.floor(new Date().getTime() / 1000.0);
-					let denialDate = `<t:${denialNow}:d>`;
-
-					let msgEmbeds = interaction.message.embeds;
-
-					let mainEmbedFields = msgEmbeds[0].data.fields;
-
-					let originalRealtor = mainEmbedFields[0].value;
-					let originalRealtorId = originalRealtor.substring((originalRealtor.indexOf(`(`) + 1), originalRealtor.indexOf(`)`));
-					let originalRealtorName = originalRealtor.substring(0, (originalRealtor.indexOf(`(`) - 1));
-
-					let newQuoteBtns = [new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId('approveQuote')
-							.setLabel('Approve Quote')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('adjustQuote')
-							.setLabel('Adjust & Approve')
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('denyQuote')
-							.setLabel('Deny Quote')
-							.setStyle(ButtonStyle.Danger)
-							.setDisabled(true),
-
-						new ButtonBuilder()
-							.setCustomId('setContacted')
-							.setLabel('Contacted?')
-							.setStyle(ButtonStyle.Primary),
-					)];
-
-					let denialMsgNotes;
-					let denialMsgEmbed = [];
-
-					let reviewerCommission = 250;
-					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
-					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
-					await editEmbed.editMainEmbed(interaction.client);
-
-					if (denialNotes) {
-						if (mainEmbedFields[5]) {
-							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
-						} else {
-							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate} with the following note \`${denialNotes}\`.`;
-						}
-
-						denialMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been denied')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Denied By:`, value: `<@${interaction.member.id}>` },
-								{ name: `Denial Notes:`, value: `${denialNotes}` }
-							)
-							.setColor('B80600')];
-					} else {
-						if (mainEmbedFields[5]) {
-							denialMsgNotes = `${mainEmbedFields[5].value}\n- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
-						} else {
-							denialMsgNotes = `- Quote denied by <@${interaction.member.id}> on ${denialDate}.`;
-						}
-
-						denialMsgEmbed = [new EmbedBuilder()
-							.setTitle('A quote you submitted has been denied')
-							.addFields(
-								{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-								{ name: `Quote Link:`, value: `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}` },
-								{ name: `Denied By:`, value: `<@${interaction.member.id}>` }
-							)
-							.setColor('B80600')];
-					}
-
-					msgEmbeds[0] = new EmbedBuilder()
-						.setTitle('A new Property Quote request has been submitted!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${mainEmbedFields[0].value}` },
-							{ name: `Request Date:`, value: `${mainEmbedFields[1].value}` },
-							{ name: `Client Information:`, value: `${mainEmbedFields[2].value}` },
-							{ name: `Estimated Price:`, value: `${mainEmbedFields[3].value}` },
-							{ name: `Interior Type:`, value: `${mainEmbedFields[4].value}` },
-							{ name: `Notes:`, value: `${denialMsgNotes}` }
-						)
-						.setColor('A47E1B');
-
-					await interaction.message.edit({ embeds: msgEmbeds, components: newQuoteBtns })
-
-					await interaction.message.react('❌');
-
-					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
-
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed });
-					}
-
-					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
-				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
-				}
-				break;
 			case 'addReimbursementReqModal':
 				var requestorName;
 				if (interaction.member.nickname) {
@@ -2116,7 +1644,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				if (refundProof) {
 					embeds = [new EmbedBuilder()
-						.setTitle('A reimbusement request has been submitted!')
+						.setTitle('A new reimbusement request has been submitted!')
 						.addFields(
 							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${requestDate}` },
@@ -2127,7 +1655,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('DBB42C')];
 				} else {
 					embeds = [new EmbedBuilder()
-						.setTitle('A reimbusement request has been submitted!')
+						.setTitle('A new reimbusement request has been submitted!')
 						.addFields(
 							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${requestDate}` },
@@ -2338,6 +1866,345 @@ module.exports.modalSubmit = async (interaction) => {
 
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+
+			case 'approveRepoModal':
+				await interaction.deferReply({ ephemeral: true });
+
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let todayDate = `<t:${now}:d>`;
+
+					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
+					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+
+					let approveNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
+					let oldEmbeds = interaction.message.embeds;
+					let alertEmbed = [];
+					let notes;
+
+					if (approveNotes) {
+						notes = `Repossession approved by <@${interaction.member.id}> on ${todayDate} with note \`${approveNotes}\`.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been approved!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Approval Notes:`, value: `${approveNotes}` }
+							)
+							.setColor('1EC276')];
+					} else {
+						notes = `Repossession approved by <@${interaction.member.id}> on ${todayDate}.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been approved!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+							)
+							.setColor('1EC276')];
+					}
+
+					if (oldEmbeds[0].data.fields[4]) {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
+					} else {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+					}
+
+					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveRepo')
+							.setLabel('Approve Repo')
+							.setStyle(ButtonStyle.Success)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('recheckRepo')
+							.setLabel('Mark for Recheck')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyRepo')
+							.setLabel('Deny Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('markAsRepod')
+							.setLabel('Repo Completed?')
+							.setStyle(ButtonStyle.Primary),
+					)];
+
+					await interaction.message.edit({ embeds: oldEmbeds, components: trainActivityBtnsDisabled });
+
+					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
+
+					if (settingRepossessionPing) {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+					}
+
+					await interaction.editReply({ content: `Successfully approved the repossession request for \`${oldEmbeds[0].data.fields[2].value}\`.`, ephemeral: true });
+
+				} else {
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'recheckRepoModal':
+				await interaction.deferReply({ ephemeral: true });
+
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let todayDate = `<t:${now}:d>`;
+
+					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
+					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+
+					let recheckNotes = strCleanup(interaction.fields.getTextInputValue('recheckNotesInput'));
+					let recheckDaysInput = Number(strCleanup(interaction.fields.getTextInputValue('recheckDaysInput')));
+					let oldEmbeds = interaction.message.embeds;
+					let alertEmbed = [];
+					let notes;
+
+					if (isNaN(recheckDaysInput)) { // validate quantity of days
+						await interaction.reply({
+							content: `:exclamation: \`${interaction.fields.getTextInputValue('recheckDaysInput')}\` is not a valid number, please be sure to only enter numbers.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					let recheckDateTime = (now + (recheckDaysInput * 86400));
+
+					if (recheckNotes) {
+						notes = `Repossession marked for recheck in ${recheckDaysInput} days by <@${interaction.member.id}> on ${todayDate} with note \`${recheckNotes}\`.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been marked for recheck!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Recheck Available On:`, value: `<t:${recheckDateTime}:d>` },
+								{ name: `Marked for Recheck By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Recheck Notes:`, value: `${recheckNotes}` }
+							)
+							.setColor('FFA630')];
+					} else {
+						notes = `Repossession marked for recheck in ${recheckDaysInput} days by <@${interaction.member.id}> on ${todayDate}.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been marked for recheck!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Recheck Available On:`, value: `<t:${recheckDateTime}:d>` },
+								{ name: `Marked for Recheck By:`, value: `<@${interaction.member.id}>` },
+							)
+							.setColor('FFA630')];
+					}
+
+					if (oldEmbeds[0].data.fields[4]) {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
+					} else {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+					}
+
+					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveRepo')
+							.setLabel('Approve Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('recheckRepo')
+							.setLabel('Mark for Recheck')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyRepo')
+							.setLabel('Deny Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+					)];
+
+					let uniqueId = uuidv4();
+
+					let msgLink = `https://discord.com/channels/${interaction.message.guildId}/${interaction.message.channelId}/${interaction.message.id}`;
+
+					await dbCmds.addRepoRecheck(uniqueId, oldEmbeds[0].data.fields[2].value, oldEmbeds[0].data.fields[3].value, recheckDateTime, msgLink);
+
+					await interaction.message.edit({ embeds: oldEmbeds, components: trainActivityBtnsDisabled });
+
+					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
+
+					if (settingRepossessionPing) {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+					}
+
+					await interaction.editReply({ content: `Successfully marked the repossession request for \`${oldEmbeds[0].data.fields[2].value}\` for recheck in \`${recheckDaysInput}\` days.`, ephemeral: true });
+
+				} else {
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'denyRepoModal':
+				await interaction.deferReply({ ephemeral: true });
+
+				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let todayDate = `<t:${now}:d>`;
+
+					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
+					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+
+					let denyNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
+					let oldEmbeds = interaction.message.embeds;
+					let alertEmbed = [];
+					let notes;
+
+					if (denyNotes) {
+						notes = `Repossession denied by <@${interaction.member.id}> on ${todayDate} with note \`${denyNotes}\`.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been denied!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Denial By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Denial Notes:`, value: `${denyNotes}` }
+							)
+							.setColor('B80600')];
+					} else {
+						notes = `Repossession denied by <@${interaction.member.id}> on ${todayDate}.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A train activity check you submitted has been denied!')
+							.addFields(
+								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
+								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
+								{ name: `Denial By:`, value: `<@${interaction.member.id}>` },
+							)
+							.setColor('B80600')];
+					}
+
+					if (oldEmbeds[0].data.fields[4]) {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
+					} else {
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+					}
+
+					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveRepo')
+							.setLabel('Approve Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('recheckRepo')
+							.setLabel('Mark for Recheck')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyRepo')
+							.setLabel('Deny Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+					)];
+
+					await interaction.message.edit({ embeds: oldEmbeds, components: trainActivityBtnsDisabled });
+
+					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
+
+					if (settingRepossessionPing) {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+					} else {
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+					}
+
+					await interaction.editReply({ content: `Successfully denied the repossession request for \`${oldEmbeds[0].data.fields[2].value}\`.`, ephemeral: true });
+
+				} else {
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'completeRepoModal':
+				if (1 == 1) {
+					let realtorName;
+					if (interaction.member.nickname) {
+						realtorName = interaction.member.nickname;
+					} else {
+						realtorName = interaction.member.user.username;
+					}
+
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let repoDate = `<t:${now}:d>`;
+
+					let prevOwner = interaction.message.embeds[0].data.fields[2].value;
+					let lotNumStreetName = interaction.message.embeds[0].data.fields[3].value;
+					let repoReason = strCleanup(interaction.fields.getTextInputValue('completeRepoReasonInput'));
+
+					let repoEmbeds = [new EmbedBuilder()
+						.setTitle('A new property repossession has been completed!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Repossession Date:`, value: `${repoDate}` },
+							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
+							{ name: `Street Address:`, value: `${lotNumStreetName}` },
+							{ name: `Reason for Repossession:`, value: `${repoReason}` },
+						)
+						.setColor('B69121')];
+
+					repoEmbeds = repoEmbeds.concat(interaction.message.embeds[1]);
+
+					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('approveRepo')
+							.setLabel('Approve Repo')
+							.setStyle(ButtonStyle.Success)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('recheckRepo')
+							.setLabel('Mark for Recheck')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('denyRepo')
+							.setLabel('Deny Repo')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('markAsRepod')
+							.setLabel('Repo Completed?')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+					)];
+
+					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: repoEmbeds, components: trainActivityBtnsDisabled });
+
+					await interaction.message.delete();
+
+					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed. `, ephemeral: true });
 				}
 				break;
 			default:

@@ -1,6 +1,7 @@
 let d8SummaryInfo = require('./schemas/d8SummaryInfo');
 let d8PersonnelInfo = require('./schemas/d8PersonnelInfo');
 let d8PersonnelAssets = require('./schemas/d8PersonnelAssets');
+let d8RepoRechecks = require('./schemas/d8RepoRechecks');
 
 module.exports.readSummValue = async (summaryName) => {
 	let result = await d8SummaryInfo.findOne({ summaryName }, { value: 1, _id: 0 });
@@ -181,5 +182,20 @@ module.exports.removePersonnelAsset = async (assetName) => {
 
 module.exports.listPersonnelAssets = async (assetOwner) => {
 	let result = await d8PersonnelAssets.find({ discordId: assetOwner }, { assetName: 1, assetCost: 1, _id: 0 });
+	return result;
+};
+
+
+// repossession rechecks
+module.exports.addRepoRecheck = async (uniqueId, owner, strAddr, recheckDt, origMsg) => {
+	await d8RepoRechecks.findOneAndUpdate({ uniqueId: uniqueId }, { uniqueId: uniqueId, ownerName: owner, streetAddress: strAddr, recheckDate: recheckDt, originalMsg: origMsg }, { upsert: true });
+};
+
+module.exports.removeRepoRecheck = async (uniqueId) => {
+	await d8RepoRechecks.findOneAndDelete({ uniqueId: uniqueId });
+};
+
+module.exports.readAllRechecks = async () => {
+	let result = await d8RepoRechecks.find({ uniqueId: { $ne: null } }, { uniqueId: 1, ownerName: 1, streetAddress: 1, recheckDate: 1, originalMsg: 1, _id: 0 });
 	return result;
 };

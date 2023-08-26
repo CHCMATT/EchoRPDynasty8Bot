@@ -321,9 +321,9 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the property Street Address?')
+						.setLabel('What is the Property Street Address?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('3456')
+						.setPlaceholder('3456 Cougar Avenue')
 						.setRequired(true);
 					let repoReasonInput = new TextInputBuilder()
 						.setCustomId('repoReasonInput')
@@ -453,7 +453,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('lotNumStreetNameInput')
 						.setLabel('What is the property Street Address?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('4567')
+						.setPlaceholder('4567 Richman Street')
 						.setRequired(true);
 					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
