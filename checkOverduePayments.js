@@ -3,7 +3,7 @@ let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 
 module.exports.checkOverduePayments = async (client) => {
 	try {
-		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+		let logTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 		console.log(`Checking for overdue payments on ${logTime}`);
 
 		let channel = await client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
@@ -146,7 +146,6 @@ function addOverdueBtnRows() {
 	let rows = [row1];
 	return rows;
 };
-
 
 function addEvictionBtnRows() {
 	let row1 = new ActionRowBuilder().addComponents(
