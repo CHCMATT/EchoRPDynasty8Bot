@@ -1,4 +1,5 @@
 let dbCmds = require('../dbCmds.js');
+let personnelCmds = require('../personnelCmds.js');
 let commissionCmds = require('../commissionCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
