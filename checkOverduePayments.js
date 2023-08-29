@@ -53,7 +53,7 @@ module.exports.checkOverduePayments = async (client) => {
 							// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 
 							let overdueEmbed = new EmbedBuilder()
-								.setTitle('A Financing Agreement\'s Due Date Has Passed!')
+								.setTitle('A Financing Agreement has a past due date!')
 								.addFields(
 									{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
 									{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
@@ -68,45 +68,45 @@ module.exports.checkOverduePayments = async (client) => {
 								.setColor('FFA630');
 
 							await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [overdueEmbed] });
-						}
-					} else if (now >= (paidOffDueDate + (86400 * 3))) { // eviction ready
-						if (message.components[0].components.length == 2) {
-							let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
-							let msgFinanceNum = message.embeds[0].data.fields[3].value;
-							let msgClientName = message.embeds[0].data.fields[4].value;
-							let msgClientInfo = message.embeds[0].data.fields[5].value;
-							let msgClientContact = message.embeds[0].data.fields[6].value;
-							let msgStreetAddr = message.embeds[0].data.fields[7].value;
-							let msgAmtOwed = message.embeds[0].data.fields[10].value;
-							let msgFinancingAgreement = message.embeds[0].data.fields[11].value;
+						} else if (message.components[0].components.length == 2) {
+							if (now >= (paidOffDueDate + (86400 * 3))) { // eviction ready
 
-							let evictionBtnRows = addEvictionBtnRows();
-							await message.edit({ embeds: message.embeds, components: evictionBtnRows });
+								let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
+								let msgFinanceNum = message.embeds[0].data.fields[3].value;
+								let msgClientName = message.embeds[0].data.fields[4].value;
+								let msgClientInfo = message.embeds[0].data.fields[5].value;
+								let msgClientContact = message.embeds[0].data.fields[6].value;
+								let msgStreetAddr = message.embeds[0].data.fields[7].value;
+								let msgAmtOwed = message.embeds[0].data.fields[10].value;
+								let msgFinancingAgreement = message.embeds[0].data.fields[11].value;
 
-							// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
+								let evictionBtnRows = addEvictionBtnRows();
+								await message.edit({ embeds: message.embeds, components: evictionBtnRows });
 
-							let evictionEmbed = new EmbedBuilder()
-								.setTitle('A Financing Agreement Is Ready For Eviction!')
-								.addFields(
-									{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
-									{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
-									{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
-									{ name: `Paid Off Payment Date:`, value: `${msgPaymentDueDate}` },
-									{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
-									{ name: `Street Address:`, value: `${msgStreetAddr}`, inline: true },
-									{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
-									{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
-									{ name: `Message Link:`, value: `https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}` },
-								)
-								.setColor('B80600');
+								// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
 
-							await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [evictionEmbed] });
+								let evictionEmbed = new EmbedBuilder()
+									.setTitle('A Financing Agreement is ready for eviction!')
+									.addFields(
+										{ name: `Client Name:`, value: `${msgClientName}`, inline: true },
+										{ name: `Client Info:`, value: `${msgClientInfo}`, inline: true },
+										{ name: `Client Contact:`, value: `${msgClientContact}`, inline: true },
+										{ name: `Paid Off Payment Date:`, value: `${msgPaymentDueDate}` },
+										{ name: `Financing ID Number:`, value: `${msgFinanceNum}`, inline: true },
+										{ name: `Street Address:`, value: `${msgStreetAddr}`, inline: true },
+										{ name: `Amount Owed:`, value: `${msgAmtOwed}`, inline: true },
+										{ name: `Financing Agreement:`, value: `${msgFinancingAgreement}` },
+										{ name: `Message Link:`, value: `https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}` },
+									)
+									.setColor('B80600');
+
+								await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [evictionEmbed] });
+							}
 						}
 					}
 				}
 			}
-		})
-
+		});
 	} catch (error) {
 		if (process.env.BOT_NAME == 'test') {
 			console.error(error);

@@ -1946,10 +1946,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (settingRepossessionPing) {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					}
 
 					await interaction.editReply({ content: `Successfully approved the repossession request for \`${oldEmbeds[0].data.fields[2].value}\`.`, ephemeral: true });
@@ -2049,10 +2051,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (settingRepossessionPing) {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					}
 
 					await interaction.editReply({ content: `Successfully marked the repossession request for \`${oldEmbeds[0].data.fields[2].value}\` for recheck in \`${recheckDaysInput}\` days.`, ephemeral: true });
@@ -2133,10 +2137,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let settingRepossessionPing = await dbCmds.readPersSetting(originalUserId, 'settingRepossessionPing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (settingRepossessionPing) {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					}
 
 					await interaction.editReply({ content: `Successfully denied the repossession request for \`${oldEmbeds[0].data.fields[2].value}\`.`, ephemeral: true });
@@ -2237,4 +2243,17 @@ module.exports.modalSubmit = async (interaction) => {
 			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
+};
+
+function getAckAlertBtn() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('acknowledgeAlert')
+			.setLabel('Acknowledge Alert')
+			.setStyle(ButtonStyle.Primary),
+
+	);
+
+	let rows = [row1];
+	return rows;
 };

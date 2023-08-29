@@ -669,7 +669,16 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(completeRepoModal);
 				break;
 			case 'acknowledgeAlert':
-				interaction.reply('Alert has been successfully acknowledged and will be deleted in 15 seconds.')
+				if (1 == 1) {
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let waitSeconds = 15;
+					let deletionTime = now + waitSeconds;
+					interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+
+					setTimeout(() => {
+						interaction.message.delete();
+					}, (waitSeconds * 1000));
+				}
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
