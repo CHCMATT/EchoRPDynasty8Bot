@@ -589,7 +589,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 				break;
-
 			case 'addPropertyQuoteModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -1089,7 +1088,6 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
-
 			case 'addPropertyRepodModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -1335,7 +1333,6 @@ module.exports.modalSubmit = async (interaction) => {
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
-
 			case 'addFinancingAgreementModal':
 				await interaction.deferReply({ ephemeral: true });
 				var realtorName;
@@ -1551,7 +1548,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.editReply({ content: `Successfully added \`1\` to the \`Financial Agreements\` counter and added this sale to the <#${process.env.FINANCING_AGREEMENTS_CHANNEL_ID}> channel - the new total is \`${newFinancialAgreementsTotal}\`.\n\nDetails about this agreement:\n> Sale Price: \`${formattedPrice}\`\n> Down Payment: \`${formattedDownPayment}\`\n> Interest Cost: \`${formattedInterest}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Days to Pay Off: \`${paidOffDays}\` (${paidOffDueDate})\n> Financing Agreement: [Click to view Financing Agreement](<${documentLink}>)`, ephemeral: true });
 				break;
-
 			case 'addYPAdvertModal':
 				var realtorName;
 				if (interaction.member.nickname) {
@@ -1605,7 +1601,6 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
-
 			case 'addReimbursementReqModal':
 				var requestorName;
 				if (interaction.member.nickname) {
@@ -1868,7 +1863,6 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
-
 			case 'approveRepoModal':
 				await interaction.deferReply({ ephemeral: true });
 
