@@ -1,3 +1,4 @@
+let moment = require('moment');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {

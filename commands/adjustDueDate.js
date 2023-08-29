@@ -1,3 +1,4 @@
+let moment = require('moment');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {

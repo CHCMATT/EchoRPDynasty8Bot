@@ -1,3 +1,4 @@
+let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
 let { EmbedBuilder } = require('discord.js');
 
