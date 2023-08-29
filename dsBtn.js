@@ -55,7 +55,6 @@ module.exports.btnPressed = async (interaction) => {
 
 				await interaction.reply({ content: `What type of **property action** are you taking?`, components: [addPropActionSelectionsComponent], ephemeral: true });
 				break;
-
 			case 'addFinancingAgreement':
 				var addFinancingAgreementModal = new ModalBuilder()
 					.setCustomId('addFinancingAgreementModal')
@@ -114,7 +113,6 @@ module.exports.btnPressed = async (interaction) => {
 				addYPAdvertModal.addComponents(screenshotInputRow);
 				await interaction.showModal(addYPAdvertModal);
 				break;
-
 			case 'approveQuote':
 				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let approveQuoteModal = new ModalBuilder()
@@ -216,7 +214,6 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 
 				break;
-
 			case 'houseSwapSaleCommission':
 				if (0 == 0) {
 					let allRealtors = await dbCmds.readAllRealtors();
@@ -295,7 +292,6 @@ module.exports.btnPressed = async (interaction) => {
 
 				}
 				break;
-
 			case 'addReimbursementReq':
 				var addReimbursementReqModal = new ModalBuilder()
 					.setCustomId('addReimbursementReqModal')
@@ -365,7 +361,6 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
-
 			case 'createEvictionNotice':
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.deferReply({ ephemeral: true });
@@ -585,7 +580,6 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
-
 			case 'approveRepo':
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let approveRepoModal = new ModalBuilder()
@@ -673,6 +667,9 @@ module.exports.btnPressed = async (interaction) => {
 
 				completeRepoModal.addComponents(completeRepoReasonInputRow);
 				await interaction.showModal(completeRepoModal);
+				break;
+			case 'acknowledgeAlert':
+				interaction.reply('Alert has been successfully acknowledged and will be deleted in 15 seconds.')
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

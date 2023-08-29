@@ -1890,7 +1890,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession approved by <@${interaction.member.id}> on ${todayDate} with note \`${approveNotes}\`.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been approved!')
+							.setTitle('A repossession request you submitted has been approved!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -1902,7 +1902,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession approved by <@${interaction.member.id}> on ${todayDate}.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been approved!')
+							.setTitle('A repossession request you submitted has been approved!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -1990,7 +1990,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession marked for recheck in ${recheckDaysInput} days by <@${interaction.member.id}> on ${todayDate} with note \`${recheckNotes}\`.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been marked for recheck!')
+							.setTitle('A repossession request you submitted has been marked for recheck!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -2003,7 +2003,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession marked for recheck in ${recheckDaysInput} days by <@${interaction.member.id}> on ${todayDate}.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been marked for recheck!')
+							.setTitle('A repossession request you submitted has been marked for recheck!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -2082,7 +2082,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession denied by <@${interaction.member.id}> on ${todayDate} with note \`${denyNotes}\`.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been denied!')
+							.setTitle('A repossession request you submitted has been denied!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -2094,7 +2094,7 @@ module.exports.modalSubmit = async (interaction) => {
 						notes = `Repossession denied by <@${interaction.member.id}> on ${todayDate}.`
 
 						alertEmbed = [new EmbedBuilder()
-							.setTitle('A train activity check you submitted has been denied!')
+							.setTitle('A repossession request you submitted has been denied!')
 							.addFields(
 								{ name: `Property Owner:`, value: `${oldEmbeds[0].data.fields[2].value}`, inline: true },
 								{ name: `Street Address:`, value: `${oldEmbeds[0].data.fields[3].value}`, inline: true },
@@ -2172,7 +2172,9 @@ module.exports.modalSubmit = async (interaction) => {
 						)
 						.setColor('B69121')];
 
-					repoEmbeds = repoEmbeds.concat(interaction.message.embeds[1]);
+					for (let i = 1; i < interaction.message.embeds.length; i++) {
+						repoEmbeds = repoEmbeds.concat(interaction.message.embeds[i]);
+					}
 
 					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
