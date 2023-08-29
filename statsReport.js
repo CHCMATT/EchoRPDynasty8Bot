@@ -23,7 +23,6 @@ module.exports.statsReport = async (client, commandType) => {
 				employeeStats[i].monthlyActivityChecks > 0 ||
 				employeeStats[i].monthlyMiscSales > 0 ||
 				employeeStats[i].monthlyFinancialAgreements > 0 ||
-				employeeStats[i].monthlyFinancialPayments > 0 ||
 				employeeStats[i].monthlyQuotesReviewed > 0) {
 
 				realtorStatsDescList = realtorStatsDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
@@ -48,9 +47,6 @@ module.exports.statsReport = async (client, commandType) => {
 				}
 				if (employeeStats[i].monthlyFinancialAgreements >= 1) {
 					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
-				}
-				if (employeeStats[i].monthlyFinancialPayments >= 1) {
-					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}`);
 				}
 				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
 					realtorStatsDescList = realtorStatsDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
@@ -77,7 +73,6 @@ module.exports.statsReport = async (client, commandType) => {
 		let countMonthlyTrainActivitiesChecked = await dbCmds.readSummValue("countMonthlyTrainActivitiesChecked");
 		let countMonthlyMiscSales = await dbCmds.readSummValue("countMonthlyMiscSales");
 		let countMonthlyFinancialAgreements = await dbCmds.readSummValue("countMonthlyFinancialAgreements");
-		let countMonthlyFinancialPayments = await dbCmds.readSummValue("countMonthlyFinancialPayments");
 
 		await dbCmds.resetSummValue("countMonthlyHousesSold");
 		await dbCmds.resetSummValue("countMonthlyWarehousesSold");
@@ -86,7 +81,6 @@ module.exports.statsReport = async (client, commandType) => {
 		await dbCmds.resetSummValue("countMonthlyTrainActivitiesChecked");
 		await dbCmds.resetSummValue("countMonthlyMiscSales");
 		await dbCmds.resetSummValue("countMonthlyFinancialAgreements");
-		await dbCmds.resetSummValue("countMonthlyFinancialPayments");
 
 		// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
@@ -119,10 +113,6 @@ module.exports.statsReport = async (client, commandType) => {
 		if (countMonthlyFinancialAgreements >= 1) {
 			countMonthlyFinancialAgreements = countMonthlyFinancialAgreements.toString();
 			mainFields.push({ name: `Financial Agreements Filed:`, value: `${countMonthlyFinancialAgreements}` });
-		}
-		if (countMonthlyFinancialPayments >= 1) {
-			countMonthlyFinancialPayments = countMonthlyFinancialPayments.toString();
-			mainFields.push({ name: `Financial Payments Accepted:`, value: `${countMonthlyFinancialPayments} ` });
 		}
 
 		let overallStatsEmbed = new EmbedBuilder()

@@ -27,7 +27,6 @@ module.exports.editMainEmbed = async (client) => {
 				employeeStats[i].activityChecks > 0 ||
 				employeeStats[i].miscSales > 0 ||
 				employeeStats[i].financialAgreements > 0 ||
-				employeeStats[i].financialPayments > 0 ||
 				employeeStats[i].quotesReviewed > 0) {
 
 				overallDescList = overallDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
@@ -52,9 +51,6 @@ module.exports.editMainEmbed = async (client) => {
 				}
 				if (employeeStats[i].financialAgreements >= 1) {
 					overallDescList = overallDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].financialAgreements}`);
-				}
-				if (employeeStats[i].financialPayments >= 1) {
-					overallDescList = overallDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].financialPayments}`);
 				}
 				if (employeeStats[i].quotesReviewed >= 1) {
 					overallDescList = overallDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].quotesReviewed}`);
@@ -81,7 +77,6 @@ module.exports.editMainEmbed = async (client) => {
 				employeeStats[i].monthlyActivityChecks > 0 ||
 				employeeStats[i].monthlyMiscSales > 0 ||
 				employeeStats[i].monthlyFinancialAgreements > 0 ||
-				employeeStats[i].monthlyFinancialPayments > 0 ||
 				employeeStats[i].monthlyQuotesReviewed > 0) {
 
 				monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
@@ -107,9 +102,6 @@ module.exports.editMainEmbed = async (client) => {
 				if (employeeStats[i].monthlyFinancialAgreements >= 1) {
 					monthlyDescList = monthlyDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
 				}
-				if (employeeStats[i].monthlyFinancialPayments >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Financial Payments Accepted:** ${employeeStats[i].monthlyFinancialPayments}`);
-				}
 				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
 					monthlyDescList = monthlyDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
 				}
@@ -133,7 +125,6 @@ module.exports.editMainEmbed = async (client) => {
 		let countMiscSales = await dbCmds.readSummValue("countMiscSales");
 		let countFinancialAgreements = await dbCmds.readSummValue("countFinancialAgreements");
 		let activeFinancialAgreements = await dbCmds.readSummValue("activeFinancialAgreements");
-		let countFinancialPayments = await dbCmds.readSummValue("countFinancialPayments");
 
 		// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
@@ -166,10 +157,6 @@ module.exports.editMainEmbed = async (client) => {
 		if (countFinancialAgreements >= 1) {
 			countFinancialAgreements = countFinancialAgreements.toString();
 			mainFields.push({ name: `Financial Agreements Filed:`, value: `${countFinancialAgreements} (${activeFinancialAgreements} active)` });
-		}
-		if (countFinancialPayments >= 1) {
-			countFinancialPayments = countFinancialPayments.toString();
-			mainFields.push({ name: `Financial Payments Accepted:`, value: `${countFinancialPayments} ` });
 		}
 
 		let mainEmbed = new EmbedBuilder()
