@@ -1,4 +1,5 @@
 require('discord.js');
+let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
 
 module.exports.initPersonnel = async (client, userId) => {
