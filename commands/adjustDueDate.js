@@ -21,7 +21,7 @@ module.exports = {
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let financingNum = interaction.options.getString('financingnumber').toUpperCase();
-				let totalDays = interaction.options.getInteger('totaldays');
+				let totalDays = Math.abs(interaction.options.getInteger('totaldays'));
 
 				let now = Math.floor(new Date().getTime() / 1000.0);
 				let today = `<t:${now}:d>`
