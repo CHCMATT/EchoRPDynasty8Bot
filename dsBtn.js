@@ -541,7 +541,11 @@ module.exports.btnPressed = async (interaction) => {
 					var now = Math.floor(new Date().getTime() / 1000.0);
 					var markCompletedDate = `<t:${now}:d>`;
 
-					currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+					if (currentMsg.embeds[0].data.fields[12]) {
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+					} else {
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+					}
 
 					await dbCmds.subtractOneSumm("activeFinancialAgreements");
 					await editEmbed.editMainEmbed(interaction.client);
