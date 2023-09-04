@@ -1,12 +1,12 @@
-var moment = require('moment');
-var dbCmds = require('./dbCmds.js');
+let moment = require('moment');
+let dbCmds = require('./dbCmds.js');
 let { v4: uuidv4 } = require('uuid');
-var editEmbed = require('./editEmbed.js');
-var { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
-var personnelCmds = require('./personnelCmds.js');
-var commissionCmds = require('./commissionCmds.js');
+let editEmbed = require('./editEmbed.js');
+let { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
+let personnelCmds = require('./personnelCmds.js');
+let commissionCmds = require('./commissionCmds.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0

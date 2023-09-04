@@ -1,6 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
-var editEmbed = require('./editEmbed.js');
+let editEmbed = require('./editEmbed.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
 module.exports.btnPressed = async (interaction) => {

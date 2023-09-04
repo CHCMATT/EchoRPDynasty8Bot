@@ -1,7 +1,7 @@
 let d8SummaryInfo = require('./schemas/d8SummaryInfo');
+let d8RepoRechecks = require('./schemas/d8RepoRechecks');
 let d8PersonnelInfo = require('./schemas/d8PersonnelInfo');
 let d8PersonnelAssets = require('./schemas/d8PersonnelAssets');
-let d8RepoRechecks = require('./schemas/d8RepoRechecks');
 
 module.exports.readSummValue = async (summaryName) => {
 	let result = await d8SummaryInfo.findOne({ summaryName }, { value: 1, _id: 0 });

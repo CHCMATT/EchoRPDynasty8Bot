@@ -1,6 +1,6 @@
 let fs = require('fs');
 require("dotenv/config");
-const cron = require('node-cron');
+let cron = require('node-cron');
 let mongoose = require("mongoose");
 let startUp = require('./startup.js');
 let { google } = require('googleapis');
@@ -10,7 +10,6 @@ let commissionCmds = require('./commissionCmds.js');
 let checkRepoRechecks = require('./checkRepoRechecks.js');
 let checkOverduePayments = require('./checkOverduePayments.js');
 let { Client, Collection, GatewayIntentBits } = require('discord.js');
-
 let client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessageReactions], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 client.commands = new Collection();

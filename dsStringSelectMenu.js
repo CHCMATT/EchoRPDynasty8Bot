@@ -1,8 +1,8 @@
 let moment = require('moment');
 let dsBtn = require('./dsBtn.js');
 let dsModal = require('./dsModal.js');
-let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 let commissionCmds = require('./commissionCmds.js');
+let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
