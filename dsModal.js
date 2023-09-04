@@ -2202,11 +2202,17 @@ module.exports.modalSubmit = async (interaction) => {
 							.setDisabled(true),
 					)];
 
+					let realtorCommission = 1000;
+					let formattedCommission = formatter.format(realtorCommission);
+
+					let reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`;
+					let currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
+
 					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: repoEmbeds, components: trainActivityBtnsDisabled });
 
 					await interaction.message.delete();
 
-					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed. `, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed.\n\nDetails about this repossession:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 				}
 				break;
 			default:
