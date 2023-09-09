@@ -773,11 +773,9 @@ module.exports.modalSubmit = async (interaction) => {
 					let approvalMsgNotes;
 					let approvalMsgEmbed = [];
 
-					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
 					await editEmbed.editMainEmbed(interaction.client);
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
 
 					if (approvalNotes) {
 						if (mainEmbedFields[5]) {
@@ -839,10 +837,7 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
-					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as approved and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -903,10 +898,8 @@ module.exports.modalSubmit = async (interaction) => {
 					let approvalMsgNotes;
 					let approvalMsgEmbed = [];
 
-					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					await editEmbed.editMainEmbed(interaction.client);
 
 					if (approvalNotes) {
@@ -969,10 +962,7 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
-					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
@@ -1021,10 +1011,8 @@ module.exports.modalSubmit = async (interaction) => {
 					let denialMsgNotes;
 					let denialMsgEmbed = [];
 
-					let reviewerCommission = 250;
 					await dbCmds.addOnePersStat(interaction.member.id, 'quotesReviewed');
 					await dbCmds.addOnePersStat(interaction.member.id, 'monthlyQuotesReviewed');
-					let formattedReviewerCommission = formatter.format(reviewerCommission);
 					await editEmbed.editMainEmbed(interaction.client);
 
 					if (denialNotes) {
@@ -1086,10 +1074,7 @@ module.exports.modalSubmit = async (interaction) => {
 						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
-					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', reviewerCommission, interaction.member.user.id, reason);
-
-					await interaction.reply({ content: `Successfully marked this quote as denied and added \`${formattedReviewerCommission}\` to your commission for a new total of \`${currCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
 				} else {
 					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
