@@ -28,7 +28,7 @@ module.exports.checkRepoRechecks = async (client) => {
 					)
 					.setColor('1CA3C4');
 
-				await client.channels.cache.get(process.env.TRAIN_ACTIVITY_CHANNEL_ID).send({ embeds: [alertEmbed] });
+				await client.channels.cache.get(process.env.REPO_REQUEST_CHANNEL_ID).send({ embeds: [alertEmbed] });
 
 				await dbCmds.removeRepoRecheck(uniqueId);
 			}

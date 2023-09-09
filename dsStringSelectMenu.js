@@ -439,10 +439,10 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 					addWarehouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
 					await interaction.showModal(addWarehouseRemodelModal);
-				} else if (interaction.values[0] == 'trainCheck') {
-					let addTrainCheckModal = new ModalBuilder()
-						.setCustomId('addTrainCheckModal')
-						.setTitle('Request a train activity check');
+				} else if (interaction.values[0] == 'repoRequest') {
+					let addRepoRequestModal = new ModalBuilder()
+						.setCustomId('addRepoRequestModal')
+						.setTitle('Request a property repossession');
 					let currentOwnerInput = new TextInputBuilder()
 						.setCustomId('currentOwnerInput')
 						.setLabel('What is the name & CID of the current owner?')
@@ -451,13 +451,13 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
-						.setLabel('What is the property Street Address?')
+						.setLabel('What is the property street address?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('4567 Richman Street')
 						.setRequired(true);
 					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
-						.setLabel('Any notes about the train activity check?')
+						.setLabel('Any notes about the repossession request?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Neighbor stated saw the owner with a moving truck')
 						.setRequired(false);
@@ -472,8 +472,8 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let lotNumStreetNameInputRow = new ActionRowBuilder().addComponents(lotNumStreetNameInput);
 					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
-					addTrainCheckModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
-					await interaction.showModal(addTrainCheckModal);
+					addRepoRequestModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
+					await interaction.showModal(addRepoRequestModal);
 				}
 				else {
 					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

@@ -45,9 +45,9 @@ module.exports.btnPressed = async (interaction) => {
 							.setEmoji('🏡')
 							.setValue('propQuote'),
 						new StringSelectMenuOptionBuilder()
-							.setLabel('Train Check')
-							.setEmoji('🚄')
-							.setValue('trainCheck'),
+							.setLabel('Repossession Request')
+							.setEmoji('🦵')
+							.setValue('repoRequest'),
 					);
 
 				let addPropActionSelectionsComponent = new ActionRowBuilder()
