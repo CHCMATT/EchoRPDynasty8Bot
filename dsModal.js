@@ -1188,7 +1188,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 				await editEmbed.editMainEmbed(interaction.client);
 
-				var realtorCommission = 4500;
+				var realtorCommission = 1000;
 				var formattedCommission = formatter.format(realtorCommission);
 
 				var reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`
@@ -2198,6 +2198,10 @@ module.exports.modalSubmit = async (interaction) => {
 					)];
 
 					let realtorCommission = 1000;
+					await dbCmds.addOneSumm("countPropertiesRepod");
+					await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 					let formattedCommission = formatter.format(realtorCommission);
 
 					let reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`;
