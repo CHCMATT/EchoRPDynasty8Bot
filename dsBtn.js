@@ -673,15 +673,43 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(completeRepoModal);
 				break;
 			case 'acknowledgeAlert':
-				if (1 == 1) {
-					let now = Math.floor(new Date().getTime() / 1000.0);
-					let waitSeconds = 15;
-					let deletionTime = now + waitSeconds;
-					interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+				let disabledAckBtns = getDisabledAckAlertBtn();
 
-					setTimeout(() => {
-						interaction.message.delete();
-					}, (waitSeconds * 1000));
+				await interaction.message.edit({ content: interaction.message.content, embeds: interaction.message.embeds, components: disabledAckBtns });
+
+				let origMsgContent = interaction.message.content;
+				let origRealtor = '';
+				if (origMsgContent.startsWith("<")) { //check if msgContent is a user's @ (they had pings enabled)
+					origRealtor = origMsgContent.replaceAll('<@', '').replaceAll('>', '');
+					console.log(interaction.user.id, origRealtor);
+
+					if (interaction.user.id == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+						let now = Math.floor(new Date().getTime() / 1000.0);
+						let waitSeconds = 15;
+						let deletionTime = now + waitSeconds;
+						interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+
+						setTimeout(() => {
+							interaction.message.delete();
+						}, (waitSeconds * 1000));
+					} else {
+						interaction.reply({ content: `:x: Unable to acknowledge message, you must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+					}
+				} else { // assume msgContent is a nickname (they had pings disabled)
+					origRealtor = origMsgContent.replaceAll(':', '');
+
+					if (interaction.message.nickname == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+						let now = Math.floor(new Date().getTime() / 1000.0);
+						let waitSeconds = 15;
+						let deletionTime = now + waitSeconds;
+						interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+
+						setTimeout(() => {
+							interaction.message.delete();
+						}, (waitSeconds * 1000));
+					} else {
+						interaction.reply({ content: `:x: Unable to acknowledge message, you must be ${origRealtor} or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+					}
 				}
 				break;
 			default:
@@ -709,4 +737,18 @@ module.exports.btnPressed = async (interaction) => {
 			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
+};
+
+function getDisabledAckAlertBtn() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('acknowledgeAlert')
+			.setLabel('Acknowledge Alert')
+			.setStyle(ButtonStyle.Primary)
+			.setDisabled(true),
+
+	);
+
+	let rows = [row1];
+	return rows;
 };
