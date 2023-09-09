@@ -362,7 +362,7 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'createEvictionNotice':
-				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.deferReply({ ephemeral: true });
 					var currentMsg = interaction.message;
 
@@ -484,7 +484,7 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'markPaymentsComplete':
-				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var currentMsg = interaction.message;
 
 					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
@@ -533,7 +533,7 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'completeEviction':
-				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var currentMsg = interaction.message;
 
 					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
