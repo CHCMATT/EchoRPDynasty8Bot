@@ -831,10 +831,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
 					let reason = `Quote Approval for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
@@ -959,10 +961,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
 					let reason = `Quote Adjustment for \`${mainEmbedFields[2].value}\` on ${approvalDate}`
@@ -1074,10 +1078,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let quotePingSetting = await dbCmds.readPersSetting(interaction.member.id, 'settingQuotePing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed });
+						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
 					}
 
 					let reason = `Quote Denial for \`${mainEmbedFields[2].value}\` on ${denialDate}`
@@ -1764,10 +1770,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let settingReimbursementPing = await dbCmds.readPersSetting(originalUserId, 'settingReimbursementPing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (settingReimbursementPing) {
-						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					}
 
 					await interaction.editReply({ content: `Successfully approved the reimbursement request for \`${amountStr}\` for <@${originalUserId}>.`, ephemeral: true });
@@ -1851,10 +1859,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let settingReimbursementPing = await dbCmds.readPersSetting(originalUserId, 'settingReimbursementPing');
 
+					let acknowledgeAlertBtn = getAckAlertBtn();
+
 					if (settingReimbursementPing) {
-						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUser}`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					} else {
-						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed });
+						await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ content: `${originalUserName}:`, embeds: alertEmbed, components: acknowledgeAlertBtn });
 					}
 
 					await interaction.editReply({ content: `Successfully denied the reimbursement request for \`${amountStr}\` for <@${originalUserId}>.`, ephemeral: true });
