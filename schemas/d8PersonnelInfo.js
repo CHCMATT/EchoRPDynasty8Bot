@@ -31,6 +31,7 @@ let d8PersonnelInfoSchema = new Schema({
 	monthlyMiscSales: reqNum,
 	monthlyFinancialAgreements: reqNum,
 	monthlyQuotesReviewed: reqNum,
+	monthlyCommission: reqNum,
 	settingQuotePing: Boolean,
 	settingReimbursementPing: Boolean,
 	settingRepossessionPing: Boolean,
