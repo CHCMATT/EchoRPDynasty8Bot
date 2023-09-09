@@ -681,7 +681,6 @@ module.exports.btnPressed = async (interaction) => {
 				let origRealtor = '';
 				if (origMsgContent.startsWith("<")) { //check if msgContent is a user's @ (they had pings enabled)
 					origRealtor = origMsgContent.replaceAll('<@', '').replaceAll('>', '');
-					console.log(interaction.user.id, origRealtor);
 
 					if (interaction.user.id == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 						let now = Math.floor(new Date().getTime() / 1000.0);

@@ -575,7 +575,6 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 					let prevInteraction = dsBtn.commissionSwapInteraction;
 					let originalOfficeSaleReply = dsModal.originalOfficeSaleReply;
-					console.log(originalOfficeSaleReply);
 
 					await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
 
