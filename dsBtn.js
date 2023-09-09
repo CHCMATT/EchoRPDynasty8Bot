@@ -480,56 +480,28 @@ module.exports.btnPressed = async (interaction) => {
 
 					await interaction.editReply({ content: `Successfully created an Eviction Notice document for \`${msgClientName}\` for the \`${msgFinanceNum}\` Financing Agreement.\nDetails about this eviction:\n> Eviction Notice: [Click to view Eviction Notice](<${documentLink}>)`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'markPaymentsComplete':
 				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-					var currentMsg = interaction.message;
+					let markPaymentsCompleteModal = new ModalBuilder()
+						.setCustomId('markPaymentsCompleteModal')
+						.setTitle('Mark Financing Payment Completed');
 
-					var msgFinanceNum = currentMsg.embeds[0].data.fields[3].value;
-					if (currentMsg.embeds[0].data.fields[12]) {
-						var msgNotes = currentMsg.embeds[0].data.fields[12].value;
-					}
+					let completedNotesInput = new TextInputBuilder()
+						.setCustomId('completedNotesInput')
+						.setLabel('Any notes to submit with this completion?')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('Yeet \'em cowboy 🤠')
+						.setRequired(false);
 
-					var now = Math.floor(new Date().getTime() / 1000.0);
-					var markCompletedDate = `<t:${now}:d>`;
+					let completedNotesInputRow = new ActionRowBuilder().addComponents(completedNotesInput);
 
-					if (currentMsg.embeds[0].data.fields[12]) {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${msgNotes}\n- Payments marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
-					} else {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Payments marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
-					}
-
-					await dbCmds.subtractOneSumm("activeFinancialAgreements");
-					await editEmbed.editMainEmbed(interaction.client);
-
-					let btnRows = addBtnRows();
-					await interaction.client.channels.cache.get(process.env.COMPLETED_FINANCING_CHANNEL_ID).send({ embeds: currentMsg.embeds, components: btnRows });
-					await currentMsg.delete();
-
-					function addBtnRows() {
-						let row1 = new ActionRowBuilder().addComponents(
-							new ButtonBuilder()
-								.setCustomId('markPaymentsComplete')
-								.setLabel('Mark as Completed')
-								.setStyle(ButtonStyle.Success)
-								.setDisabled(true),
-
-							new ButtonBuilder()
-								.setCustomId('createEvictionNotice')
-								.setLabel('Create an Eviction Notice')
-								.setStyle(ButtonStyle.Secondary)
-								.setDisabled(true),
-						);
-
-						let rows = [row1];
-						return rows;
-					};
-
-					await interaction.reply({ content: `Successfully marked the payments for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+					markPaymentsCompleteModal.addComponents(completedNotesInputRow);
+					await interaction.showModal(markPaymentsCompleteModal);
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'completeEviction':
