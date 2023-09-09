@@ -87,7 +87,7 @@ module.exports.monthlyRealtorStatsRep = async () => {
 };
 
 module.exports.resetMonthlyRealtorStats = async (discordId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyQuotesReviewed: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyQuotesReviewed: 0, monthlyCommission: 0 }, { upsert: true });
 };
 
 
@@ -100,7 +100,7 @@ module.exports.removeCommission = async (discordId, commission) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentCommission: -commission } }, { upsert: true });
 };
 
-module.exports.resetCommission = async (discordId) => {
+module.exports.resetCurrCommission = async (discordId) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { currentCommission: 0 });
 };
 
