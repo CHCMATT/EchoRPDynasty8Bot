@@ -146,6 +146,20 @@ module.exports.addCommission = async (client, from, addAmount, userId, reason) =
 		if (addAmount > 0) {
 			await dbCmds.addCommission(userId, addAmount);
 			currCommission = formatter.format(await dbCmds.readCommission(userId));
+			let monthlyCommission = await dbCmds.readMonthlyCommission(userId);
+			let currMonthlyCommission = formatter.format(monthlyCommission);
+
+			if (monthlyCommission >= 300000) {
+				let commissionCapEmbed = new EmbedBuilder()
+					.setTitle(`A realtor has surpassed their commission cap for this month!`)
+					.addFields(
+						{ name: `Realtor Name:`, value: `<@${userId}>`, inline: true },
+						{ name: `Currently Monthly Commission:`, value: `${currMonthlyCommission}`, inline: true },
+					)
+					.setColor('B80600');
+
+				await client.channels.cache.get(process.env.EMAIL_INBOX_CHANNEL_ID).send({ embeds: [commissionCapEmbed] });
+			}
 
 			let formattedCommission = formatter.format(addAmount);
 			// success/failure color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
