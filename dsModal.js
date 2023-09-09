@@ -2202,6 +2202,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
+					await editEmbed.editMainEmbed(interaction.client);
 					let formattedCommission = formatter.format(realtorCommission);
 
 					let reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`;
