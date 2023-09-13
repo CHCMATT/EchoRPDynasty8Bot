@@ -552,14 +552,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var formattedPrice = formatter.format(price);
 
-				var d8Cost = (price * 0.9);
-				var d8Profit = price - d8Cost;
-				var realtorCommission = (d8Profit * 0.5);
-
-				var formattedD8Cost = formatter.format(d8Cost);
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-
 				var embeds = [new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
 					.addFields(
@@ -583,11 +575,10 @@ module.exports.modalSubmit = async (interaction) => {
 				await editEmbed.editMainEmbed(interaction.client);
 
 				var reason = `Miscellaneous Sale of \`${itemsSold}\` costing \`${formattedPrice}\` on ${saleDate}`
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Misc. Sales\` counter - the new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Dynasty 8 Cost: \`${formattedD8Cost}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this Miscellaneous Sale. The new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\``, ephemeral: true });
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;
@@ -1587,9 +1578,9 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: [embeds, photosEmbed] });
 
 				var reason = `Yellow Pages ad listed on ${adDate}`;
-				var currCommission = await commissionCmds.addMiscPay(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
+				var currMiscPay = await commissionCmds.addMiscPay(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Misc. Pay: \`${formattedCommission}\`\n\nYour miscellaneous pay is now: \`${currMiscPay}\`.`, ephemeral: true });
 
 				break;
 			case 'addReimbursementReqModal':
