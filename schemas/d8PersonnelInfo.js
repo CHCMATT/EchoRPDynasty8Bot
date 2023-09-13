@@ -22,6 +22,7 @@ let d8PersonnelInfoSchema = new Schema({
 	financialAgreements: reqNum,
 	quotesReviewed: reqNum,
 	currentCommission: reqNum,
+	currentMiscPay: reqNum,
 	bankAccount: reqString,
 	monthlyHousesSold: reqNum,
 	monthlyWarehousesSold: reqNum,

@@ -18,7 +18,7 @@ module.exports = {
 				let now = Math.floor(new Date().getTime() / 1000.0);
 				let today = `<t:${now}:d>`;
 
-				let peopleArray = await dbCmds.commissionRep();
+				let peopleArray = await dbCmds.payReport();
 
 				peopleArray.sort((a, b) => {
 					return b.currentCommission - a.currentCommission;

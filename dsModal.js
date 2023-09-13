@@ -1691,7 +1691,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let amountStr = interaction.message.embeds[0].data.fields[3].value;
 					let amount = Number(amountStr.replaceAll('$', '').replaceAll(',', ''));
 
-					var currCommission = await commissionCmds.addCommission(interaction.client, 'System', amount, originalUserId, reimbursementReason);
+					var currCommission = await commissionCmds.addMiscPay(interaction.client, 'System', amount, originalUserId, reimbursementReason);
 
 					function addReimbursementBtnsDisabled() {
 						let row1 = new ActionRowBuilder().addComponents(

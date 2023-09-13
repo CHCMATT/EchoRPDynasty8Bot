@@ -101,13 +101,26 @@ module.exports.removeCommission = async (discordId, commission) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentCommission: -commission } }, { upsert: true });
 };
 
-module.exports.resetCurrCommission = async (discordId) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { currentCommission: 0 });
+module.exports.addMiscPay = async (discordId, payAmt) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentMiscPay: payAmt } }, { upsert: true });
 };
 
-module.exports.readCommission = async (discordId) => {
+module.exports.removeMiscPay = async (discordId, payAmt) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentMiscPay: -payAmt } }, { upsert: true });
+};
+
+module.exports.resetCurrPay = async (discordId) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { currentCommission: 0, currentMiscPay: 0 });
+};
+
+module.exports.readCurrentCommission = async (discordId) => {
 	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentCommission: 1, _id: 0 });
 	return result.currentCommission;
+};
+
+module.exports.readCurrentMiscPay = async (discordId) => {
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentMiscPay: 1, _id: 0 });
+	return result.currentMiscPay;
 };
 
 module.exports.readMonthlyCommission = async (discordId) => {
@@ -115,8 +128,8 @@ module.exports.readMonthlyCommission = async (discordId) => {
 	return result.monthlyCommission;
 };
 
-module.exports.commissionRep = async () => {
-	let result = await d8PersonnelInfo.find({ currentCommission: { $gt: 0 } }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, _id: 0 });
+module.exports.payReport = async () => {
+	let result = await d8PersonnelInfo.find({ $or: [{ currentCommission: { $gt: 0 } }, { currentMiscPay: { $gt: 0 } }] }, { discordId: 1, bankAccount: 1, charName: 1, currentCommission: 1, currentMiscPay: 1, _id: 0 });
 	return result;
 };
 
