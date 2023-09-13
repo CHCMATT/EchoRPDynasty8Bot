@@ -1587,7 +1587,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: [embeds, photosEmbed] });
 
 				var reason = `Yellow Pages ad listed on ${adDate}`;
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
+				var currCommission = await commissionCmds.addMiscPay(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
