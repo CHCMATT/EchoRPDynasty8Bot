@@ -19,9 +19,26 @@ module.exports = {
 				let countFound = 0;
 
 				let channel = await interaction.client.channels.fetch(process.env.FINANCING_AGREEMENTS_CHANNEL_ID);
-				let messages = await channel.messages.fetch();
 
-				messages.forEach(async (message) => {
+				let sum_messages = [];
+				let last_id;
+
+				while (true) {
+					const options = { limit: 100 };
+					if (last_id) {
+						options.before = last_id;
+					}
+
+					let messages = await channel.messages.fetch(options);
+					sum_messages.push(...messages.values());
+					last_id = messages.last().id;
+
+					if (messages.size != 100 || sum_messages >= options.limit) {
+						break;
+					}
+				}
+
+				sum_messages.forEach(async (message) => {
 					if (message.embeds[0]) {
 						if (message.embeds[0].data.title === 'A new Financing Agreement has been submitted!') {
 							let msgFinanceNum = message.embeds[0].data.fields[3].value;
