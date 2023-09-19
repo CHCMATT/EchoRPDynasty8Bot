@@ -645,42 +645,64 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(completeRepoModal);
 				break;
 			case 'acknowledgeAlert':
-				let disabledAckBtns = getDisabledAckAlertBtn();
+				if (1 == 1) {
+					let disabledAckBtns = getDisabledAckAlertBtn();
 
-				await interaction.message.edit({ content: interaction.message.content, embeds: interaction.message.embeds, components: disabledAckBtns });
+					await interaction.message.edit({ content: interaction.message.content, embeds: interaction.message.embeds, components: disabledAckBtns });
 
-				let origMsgContent = interaction.message.content;
-				let origRealtor = '';
-				if (origMsgContent.startsWith("<")) { //check if msgContent is a user's @ (they had pings enabled)
-					origRealtor = origMsgContent.replaceAll('<@', '').replaceAll('>', '');
+					let origMsgContent = interaction.message.content;
+					let origRealtor = '';
+					if (origMsgContent.startsWith("<")) { //check if msgContent is a user's @ (they had pings enabled)
+						origRealtor = origMsgContent.replaceAll('<@', '').replaceAll('>', '');
 
-					if (interaction.user.id == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						let now = Math.floor(new Date().getTime() / 1000.0);
-						let waitSeconds = 15;
-						let deletionTime = now + waitSeconds;
-						interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+						if (interaction.user.id == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+							let now = Math.floor(new Date().getTime() / 1000.0);
+							let waitSeconds = 15;
+							let deletionTime = now + waitSeconds;
+							interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
 
-						setTimeout(() => {
-							interaction.message.delete();
-						}, (waitSeconds * 1000));
-					} else {
-						interaction.reply({ content: `:x: Unable to acknowledge message, you must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+							setTimeout(() => {
+								interaction.message.delete();
+							}, (waitSeconds * 1000));
+						} else {
+							interaction.reply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+						}
+					} else { // assume msgContent is a nickname (they had pings disabled)
+						origRealtor = origMsgContent.replaceAll(':', '');
+
+						if (interaction.message.nickname == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+							let now = Math.floor(new Date().getTime() / 1000.0);
+							let waitSeconds = 15;
+							let deletionTime = now + waitSeconds;
+							interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+
+							setTimeout(() => {
+								interaction.message.delete();
+							}, (waitSeconds * 1000));
+						} else {
+							interaction.reply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+						}
 					}
-				} else { // assume msgContent is a nickname (they had pings disabled)
-					origRealtor = origMsgContent.replaceAll(':', '');
+				}
+				break;
+			case 'setGarageSlots':
+				var originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+				let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+				let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+				if (interaction.user.id == origRealtor) {
 
-					if (interaction.message.nickname == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						let now = Math.floor(new Date().getTime() / 1000.0);
-						let waitSeconds = 15;
-						let deletionTime = now + waitSeconds;
-						interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+				}
+				break;
+			case 'toggleSmartLock':
+				var origRealtorField = interaction.message.embeds[0].fields[0].data
+				if (interaction.user.id == origRealtor) {
 
-						setTimeout(() => {
-							interaction.message.delete();
-						}, (waitSeconds * 1000));
-					} else {
-						interaction.reply({ content: `:x: Unable to acknowledge message, you must be ${origRealtor} or have the \`Administrator\` permission to take this action.`, ephemeral: true });
-					}
+				}
+				break;
+			case 'splitSaleCommission':
+				var origRealtorField = interaction.message.embeds[0].fields[0].data
+				if (interaction.user.id == origRealtor) {
+
 				}
 				break;
 			default:

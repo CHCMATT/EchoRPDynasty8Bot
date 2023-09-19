@@ -137,8 +137,9 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
-				let houseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
-				exports.houseSaleMsg = houseSaleMsg;
+				var salesBtns = getSaleBtns();
+
+				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds, components: salesBtns });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -156,16 +157,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				let houseSaleBtns = [new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('houseSwapSaleCommission')
-						.setLabel('Split Commission')
-						.setStyle(ButtonStyle.Primary)
-				)];
+				await interaction.reply({ content: `Successfully logged this House Sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
-				let originalHouseSaleReply = await interaction.reply({ content: `Successfully logged this House sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, components: houseSaleBtns, ephemeral: true });
-
-				exports.originalHouseSaleReply = originalHouseSaleReply.interaction;
 				break;
 			case 'addWarehouseSoldModal':
 				var realtorName;
@@ -273,8 +266,9 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
-				let warehouseSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
-				exports.warehouseSaleMsg = warehouseSaleMsg;
+				var salesBtns = getSaleBtns();
+
+				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds, components: salesBtns });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -292,16 +286,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
-				let warehouseSaleBtns = [new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('warehouseSwapSaleCommission')
-						.setLabel('Split Commission')
-						.setStyle(ButtonStyle.Primary)
-				)];
+				await interaction.reply({ content: `Successfully logged this Warehouse Sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
-				let originalWarehouseSaleReply = await interaction.reply({ content: `Successfully logged this Warehouse sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, components: warehouseSaleBtns, ephemeral: true });
-
-				exports.originalWarehouseSaleReply = originalWarehouseSaleReply.interaction;
 				break;
 			case 'addOfficeSoldModal':
 				await interaction.deferReply({ ephemeral: true });
@@ -493,9 +479,9 @@ module.exports.modalSubmit = async (interaction) => {
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
-				let officeSaleMsg = await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds });
+				var salesBtns = getSaleBtns();
 
-				exports.officeSaleMsg = officeSaleMsg;
+				await interaction.client.channels.cache.get(process.env.PROPERTY_SALES_CHANNEL_ID).send({ embeds: embeds, components: salesBtns });
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
@@ -513,16 +499,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				let officeSaleBtns = [new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('officeSwapSaleCommission')
-						.setLabel('Split Commission')
-						.setStyle(ButtonStyle.Primary)
-				)];
+				await interaction.editReply({ content: `Successfully logged this Office Sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
-				let originalOfficeSaleReply = await interaction.editReply({ content: `Successfully logged this Office sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n> Limited Property Contract: [Click to view Contract](<${officeSaleDocumentLink}>)\n\nYour commission is now: \`${currCommission}\`.`, components: officeSaleBtns, ephemeral: true });
-
-				exports.originalOfficeSaleReply = originalOfficeSaleReply.interaction;
 				break;
 			case 'addMiscSaleModal':
 				var realtorName;
@@ -1179,15 +1157,11 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 				await editEmbed.editMainEmbed(interaction.client);
 
-				var realtorCommission = 1000;
-				var formattedCommission = formatter.format(realtorCommission);
-
 				var reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`
-				var currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.\n\nDetails about this repossession:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.`, ephemeral: true });
 
 				break;
 			case 'addRepoRequestModal':
@@ -2188,22 +2162,19 @@ module.exports.modalSubmit = async (interaction) => {
 							.setDisabled(true),
 					)];
 
-					let realtorCommission = 1000;
 					await dbCmds.addOneSumm("countPropertiesRepod");
 					await dbCmds.addOneSumm("countMonthlyPropertiesRepod");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "propertiesRepod");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 					await editEmbed.editMainEmbed(interaction.client);
-					let formattedCommission = formatter.format(realtorCommission);
 
 					let reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`;
-					let currCommission = await commissionCmds.addCommission(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
 					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: repoEmbeds, components: trainActivityBtnsDisabled });
 
 					await interaction.message.delete();
 
-					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed.\n\nDetails about this repossession:\n> Your Commission: \`${formattedCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed.`, ephemeral: true });
 				}
 				break;
 			case 'markPaymentsCompleteModal':
@@ -2303,6 +2274,28 @@ function getAckAlertBtn() {
 			.setLabel('Acknowledge Alert')
 			.setStyle(ButtonStyle.Primary),
 
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function getSaleBtns() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('setGarageSlots')
+			.setLabel('Set Garage Slots')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('toggleSmartLock')
+			.setLabel('Toggle Smart Locks')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('splitSaleCommission')
+			.setLabel('Split Commission')
+			.setStyle(ButtonStyle.Secondary),
 	);
 
 	let rows = [row1];
