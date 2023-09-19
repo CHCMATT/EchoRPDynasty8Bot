@@ -43,8 +43,9 @@ module.exports.commissionReport = async (client, commandType) => {
 				if (peopleArray[i].currentMiscPay == null) {
 					peopleArray[i].currentMiscPay = 0
 				}
+				let totalPay = peopleArray[i].currentMiscPay + peopleArray[i].currentCommission;
 
-				commissionDescList = commissionDescList.concat(`<@${peopleArray[i].discordId}> (\`${peopleArray[i].bankAccount}\`):\n> **Commission:** ${formatter.format(peopleArray[i].currentCommission)}\n> **Misc:** ${formatter.format(peopleArray[i].currentMiscPay)}\n\n`);
+				commissionDescList = commissionDescList.concat(`<@${peopleArray[i].discordId}> (\`${peopleArray[i].bankAccount}\`): ${formatter.format(totalPay)}\n> **Commission:** ${formatter.format(peopleArray[i].currentCommission)}\n> **Misc:** ${formatter.format(peopleArray[i].currentMiscPay)}\n\n`);
 				await dbCmds.resetCurrPay(peopleArray[i].discordId);
 			}
 
