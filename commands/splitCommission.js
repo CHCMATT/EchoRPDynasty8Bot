@@ -27,7 +27,7 @@ module.exports = {
 		},
 		{
 			name: 'amount',
-			description: 'The amount of commission you\'d like to remove',
+			description: 'The total amount of commission you\'d like to split (this number will be divided in half)',
 			type: 4,
 			required: true,
 		},
