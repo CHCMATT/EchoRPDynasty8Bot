@@ -2243,6 +2243,58 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
+			case 'garageSlotsModal':
+				if (1 == 1) {
+					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let today = `<t:${now}:d>`;
+					let newGarageSlotsNumInput = Math.abs(strCleanup(interaction.fields.getTextInputValue('garageSlotsNumInput')));
+					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+
+						if (isNaN(newGarageSlotsNumInput)) { // validate quantity of garage slots
+							await interaction.reply({
+								content: `:exclamation: \`${interaction.fields.getTextInputValue('garageSlotsNumInput')}\` is not a valid number, please be sure to only enter numbers.`,
+								ephemeral: true
+							});
+							return;
+						}
+
+						let embedTitle = interaction.message.embeds[0].data.title;
+						if (embedTitle.toLowerCase().includes("office")) {
+							interaction.message.embeds[0].data.fields[7].value = newGarageSlotsNumInput;
+
+							if (interaction.message.embeds[0].data.fields[9]) {
+								interaction.message.embeds[0].data.fields[9].value = `${interaction.message.embeds[0].data.fields[9].value}\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.`;
+							} else {
+								interaction.message.embeds[0].data.fields[9] = { name: `Notes:`, value: `\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.` };
+							}
+						} else if (embedTitle.toLowerCase().includes("warehouse")) {
+							interaction.message.embeds[0].data.fields[6].value = newGarageSlotsNumInput;
+
+							if (interaction.message.embeds[0].data.fields[7]) {
+								interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.`;
+							} else {
+								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.` };
+							}
+						} else if (embedTitle.toLowerCase().includes("house")) {
+							interaction.message.embeds[0].data.fields[6].value = newGarageSlotsNumInput;
+
+							if (interaction.message.embeds[0].data.fields[7]) {
+								interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.`;
+							} else {
+								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.` };
+							}
+						}
+						await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
+						await interaction.reply({
+							content: `Successfully set the Garage Slots to \`${newGarageSlotsNumInput}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
+						});
+					}
+				}
+				break;
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,
