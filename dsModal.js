@@ -27,6 +27,41 @@ function isValidUrl(string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
+function getAckAlertBtn() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('acknowledgeAlert')
+			.setLabel('Acknowledge Alert')
+			.setStyle(ButtonStyle.Primary),
+
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function getSaleBtns() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('setGarageSlots')
+			.setLabel('Set Garage Slots')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('toggleSmartLock')
+			.setLabel('Toggle Smart Locks')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('splitSaleCommission')
+			.setLabel('Split Commission')
+			.setStyle(ButtonStyle.Secondary),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
 module.exports.modalSubmit = async (interaction) => {
 	try {
 		var modalID = interaction.customId;
@@ -2337,39 +2372,4 @@ module.exports.modalSubmit = async (interaction) => {
 			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
-};
-
-function getAckAlertBtn() {
-	let row1 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('acknowledgeAlert')
-			.setLabel('Acknowledge Alert')
-			.setStyle(ButtonStyle.Primary),
-
-	);
-
-	let rows = [row1];
-	return rows;
-};
-
-function getSaleBtns() {
-	let row1 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('setGarageSlots')
-			.setLabel('Set Garage Slots')
-			.setStyle(ButtonStyle.Secondary),
-
-		new ButtonBuilder()
-			.setCustomId('toggleSmartLock')
-			.setLabel('Toggle Smart Locks')
-			.setStyle(ButtonStyle.Secondary),
-
-		new ButtonBuilder()
-			.setCustomId('splitSaleCommission')
-			.setLabel('Split Commission')
-			.setStyle(ButtonStyle.Secondary),
-	);
-
-	let rows = [row1];
-	return rows;
 };
