@@ -806,10 +806,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let acknowledgeAlertBtn = getAckAlertBtn();
 
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+					if (originalRealtorId.substring(2, (originalRealtorId.length - 1)) != interaction.user.id) {
+						if (quotePingSetting) {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+						} else {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+						}
 					}
 
 					await interaction.reply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
@@ -931,10 +933,13 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let acknowledgeAlertBtn = getAckAlertBtn();
 
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+					if (originalRealtorId.substring(2, (originalRealtorId.length - 1)) != interaction.user.id) {
+
+						if (quotePingSetting) {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+						} else {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: approvalMsgEmbed, components: acknowledgeAlertBtn });
+						}
 					}
 
 					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
@@ -1043,10 +1048,12 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let acknowledgeAlertBtn = getAckAlertBtn();
 
-					if (quotePingSetting) {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
-					} else {
-						await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
+					if (originalRealtorId.substring(2, (originalRealtorId.length - 1)) != interaction.user.id) {
+						if (quotePingSetting) {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorId}`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
+						} else {
+							await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ content: `${originalRealtorName}:`, embeds: denialMsgEmbed, components: acknowledgeAlertBtn });
+						}
 					}
 
 					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
