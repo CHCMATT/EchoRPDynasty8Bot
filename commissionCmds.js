@@ -182,7 +182,7 @@ module.exports.addCommission = async (client, from, addAmount, userId, reason) =
 			} else {
 				notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Manually:')
-					.setDescription(`${from} added \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setDescription(`${from} added \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 					.setColor('FFA630');
 			}
 			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
@@ -233,7 +233,7 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 			} else {
 				notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Manually:')
-					.setDescription(`${from} removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setDescription(`${from} removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 					.setColor('FFA630');
 			}
 			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
