@@ -760,6 +760,13 @@ module.exports.btnPressed = async (interaction) => {
 								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
 							}
 						}
+
+						await dbCmds.addOneSumm("countMiscSales");
+						await dbCmds.addOneSumm("countMonthlyMiscSales");
+						await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
+						await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+						await editEmbed.editMainEmbed(interaction.client);
+
 						await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
 						await interaction.reply({
 							content: `Successfully toggled the smart locks status to \`${newSlStatus}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
@@ -773,7 +780,24 @@ module.exports.btnPressed = async (interaction) => {
 					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
 					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
 					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+						let allRealtors = await dbCmds.readAllRealtors();
+						let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
 
+						allRealtorsArray = allRealtorsArray.filter(function (realtor) {
+							return realtor.data.label !== interaction.member.nickname;
+						});
+
+						let realtorSelectionOptions = new StringSelectMenuBuilder()
+							.setCustomId('swapCommissionRealtorDropdown')
+							.setPlaceholder('Select a Realtor')
+							.addOptions(allRealtorsArray);
+
+						let realtorSelectionComponent = new ActionRowBuilder()
+							.addComponents(realtorSelectionOptions);
+
+						let commissionString = interaction.message.embeds[0].data.fields[3].value;
+
+						await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 					}
 				}
 				break;

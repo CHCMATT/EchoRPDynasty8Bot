@@ -2288,6 +2288,13 @@ module.exports.modalSubmit = async (interaction) => {
 								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Garage Slots set to \`${newGarageSlotsNumInput}\` by <@${interaction.user.id}> on ${today}.` };
 							}
 						}
+
+						await dbCmds.addOneSumm("countMiscSales");
+						await dbCmds.addOneSumm("countMonthlyMiscSales");
+						await dbCmds.addOnePersStat(interaction.user.id, "miscSales");
+						await dbCmds.addOnePersStat(interaction.user.id, "monthlyMiscSales");
+						await editEmbed.editMainEmbed(interaction.client);
+
 						await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
 						await interaction.reply({
 							content: `Successfully set the Garage Slots to \`${newGarageSlotsNumInput}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
