@@ -27,7 +27,7 @@ module.exports = {
 	],
 	async execute(interaction) {
 		try {
-			if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let calcType = interaction.options.getString('calctype');
 				let salePrice = interaction.options.getInteger('saleprice');
 

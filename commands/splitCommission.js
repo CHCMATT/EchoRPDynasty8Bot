@@ -40,7 +40,7 @@ module.exports = {
 	],
 	async execute(interaction) {
 		try {
-			if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let fromUser = interaction.options.getUser('fromuser');
 				let toUser = interaction.options.getUser('touser');
 				if (interaction.user.id == fromUser.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {

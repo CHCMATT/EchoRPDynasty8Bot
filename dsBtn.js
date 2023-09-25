@@ -3,6 +3,12 @@ let dbCmds = require('./dbCmds.js');
 let editEmbed = require('./editEmbed.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports.btnPressed = async (interaction) => {
 	try {
 		var buttonID = interaction.customId;
@@ -795,9 +801,15 @@ module.exports.btnPressed = async (interaction) => {
 						let realtorSelectionComponent = new ActionRowBuilder()
 							.addComponents(realtorSelectionOptions);
 
-						let commissionString = interaction.message.embeds[0].data.fields[3].value;
+						let salePriceStr = interaction.message.embeds[0].data.fields[3].value;
+						let salePriceNum = Number(salePriceStr.replaceAll('$', '').replaceAll(',', ''));
+						let d8CostPrice = (salePriceNum * 0.85);
+						let d8Profit = salePriceNum - d8CostPrice;
+						let realtorCommission = (d8Profit * 0.30);
 
-						await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						let formattedRealtorCommission = formatter.format(realtorCommission);
+
+						await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 					}
 				}
 				break;

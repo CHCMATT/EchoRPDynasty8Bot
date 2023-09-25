@@ -596,6 +596,41 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					await officeSaleMsg.edit({ embeds: officeSaleMsgEmbeds })
 				}
 				break;
+			case 'swapCommissionRealtorDropdown':
+				console.log(interaction.message.reference.messageId);
+
+				let channel = await interaction.client.channels.fetch(process.env.PROPERTY_SALES_CHANNEL_ID);
+				let messages = await channel.messages.fetch();
+
+				messages.forEach(async (message) => {
+					if (message.id == interaction.message.reference.messageId) {
+						let originalUserStr = message.embeds[0].data.fields[0].value;
+						let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
+						let fromUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+						let toUserId = interaction.values[0];
+
+						let messageContent = interaction.message.content;
+						let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be split with?`)));
+						let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
+						let commissionSplit = (commissionNumber * 0.50);
+						let origHouseAddr = message.embeds[0].data.fields[3].value
+						let reason = `Commission split for sale to ${origHouseAddr}`;
+
+						let formattedCommissionSwapped = formatter.format(commissionSplit);
+
+						console.log(commissionSplit);
+
+						await commissionCmds.removeCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, fromUserId, reason);
+						await commissionCmds.addCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, toUserId, reason);
+
+						console.log(interaction);
+
+						await interaction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
+
+					}
+				});
+
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized string select ID: ${interaction.customId}`);
