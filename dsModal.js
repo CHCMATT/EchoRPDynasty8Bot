@@ -165,8 +165,8 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Street Address:`, value: `${lotNumStreetName}` },
 						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
 						{ name: `House Sold To:`, value: `${soldTo}` },
-						{ name: `Smart Locks?:`, value: `No` },
-						{ name: `Garage Slots #:`, value: `0` },
+						{ name: `Smart Locks?:`, value: `No`, inline: true },
+						{ name: `Garage Slots #:`, value: `0`, inline: true },
 						{ name: `Location/Notes:`, value: `${locationNotes}` }
 					)
 					.setColor('805B10')];
@@ -296,8 +296,8 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Street Address:`, value: `${lotNumStreetName}` },
 						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
 						{ name: `Warehouse Sold To:`, value: `${soldTo}` },
-						{ name: `Smart Locks?:`, value: `No` },
-						{ name: `Garage Slots #:`, value: `0` },
+						{ name: `Smart Locks?:`, value: `No`, inline: true },
+						{ name: `Garage Slots #:`, value: `0`, inline: true },
 						{ name: `Location/Notes:`, value: `${locationNotes}` }
 					)
 					.setColor('926C15')];
@@ -510,8 +510,8 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Final Sale Price:`, value: `${formattedPrice}` },
 						{ name: `Client Name:`, value: `${clientName}` },
 						{ name: `Client Info:`, value: `${clientInfo}` },
-						{ name: `Smart Locks?:`, value: `No` },
-						{ name: `Garage Slots #:`, value: `0` },
+						{ name: `Smart Locks?:`, value: `No`, inline: true },
+						{ name: `Garage Slots #:`, value: `0`, inline: true },
 						{ name: `Limited Prop. Contract:`, value: `[Click to view Contract](<${officeSaleDocumentLink}>)` }
 
 					)
