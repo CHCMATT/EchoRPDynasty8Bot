@@ -297,7 +297,7 @@ async function disableOldSaleCommissionSplitButtons(client) {
 	let countFound = 0;
 
 	while (true) {
-		const options = { limit: 100, after = '1153406168786554971' }; // actual message id on live: '1153406168786554971'
+		const options = { limit: 100, after: '1153406168786554971' }; // actual message id on live: '1153406168786554971'
 		if (last_id) {
 			options.before = last_id;
 			options.after = '1153406168786554971';
