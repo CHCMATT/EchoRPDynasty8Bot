@@ -809,7 +809,9 @@ module.exports.btnPressed = async (interaction) => {
 
 						let formattedRealtorCommission = formatter.format(realtorCommission);
 
-						await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						let commissionSplitReply = await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						exports.commissionSplitReply = commissionSplitReply.interaction;
+
 					}
 				}
 				break;

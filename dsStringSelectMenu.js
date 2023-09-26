@@ -597,8 +597,6 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				}
 				break;
 			case 'swapCommissionRealtorDropdown':
-				console.log(interaction.message.reference.messageId);
-
 				let channel = await interaction.client.channels.fetch(process.env.PROPERTY_SALES_CHANNEL_ID);
 				let messages = await channel.messages.fetch();
 
@@ -610,22 +608,34 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						let toUserId = interaction.values[0];
 
 						let messageContent = interaction.message.content;
-						let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` be split with?`)));
+						let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` from sale be split with?`)));
 						let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
 						let commissionSplit = (commissionNumber * 0.50);
-						let origHouseAddr = message.embeds[0].data.fields[3].value
-						let reason = `Commission split for sale to ${origHouseAddr}`;
-
 						let formattedCommissionSwapped = formatter.format(commissionSplit);
 
-						console.log(commissionSplit);
+						let origHouseAddr = message.embeds[0].data.fields[2].value;
+
+						let msgTitle = message.embeds[0].data.title;
+						let msgTitleSplit = msgTitle.split(" ");
+						let saleType = msgTitleSplit[2];
+
+						let reason = `Commission Split for ${saleType} Sale at ${origHouseAddr}`;
 
 						await commissionCmds.removeCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, fromUserId, reason);
 						await commissionCmds.addCommission(interaction.client, `<@${fromUserId}>`, commissionSplit, toUserId, reason);
 
-						console.log(interaction);
+						let prevInteraction = dsBtn.commissionSplitReply;
 
-						await interaction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission to <@${toUserId}>.`, components: [], ephemeral: true })
+						await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission from sale of \`${origHouseAddr}\` to <@${toUserId}>.`, components: [], ephemeral: true })
+
+						if (saleType === "House" || saleType === "Warehouse") {
+							message.embeds[0].data.fields[7].value = `${message.embeds[0].data.fields[7].value}\n- Commission split with <@${toUserId}>.`;
+						} else if (saleType === "Office") {
+							message.embeds[0].data.fields[9] = { name: `Notes:`, value: `- Commission split with <@${toUserId}>.` };
+						}
+						message.components[0].components[2].data.disabled = true;
+
+						await message.edit({ embeds: message.embeds, components: message.components })
 
 					}
 				});
@@ -636,7 +646,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				console.log(`Error: Unrecognized string select ID: ${interaction.customId}`);
 		}
 	} catch (error) {
-		if (process.env.BOT_NAME == 'test') {
+		if (process.env.BOT_NAME === 'test') {
 			console.error(error);
 		} else {
 			console.error(error);
