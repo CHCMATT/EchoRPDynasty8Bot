@@ -4,7 +4,6 @@ let { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('di
 
 module.exports.editMainEmbed = async (client) => {
 	try {
-		disableOldSaleCommissionSplitButtons(client);
 		let employeeStats = await dbCmds.currStats();
 
 		let overallDescList = '';
@@ -286,44 +285,4 @@ function addFrontDeskBtnRows() {
 
 	let rows = [row1];
 	return rows;
-};
-
-async function disableOldSaleCommissionSplitButtons(client) {
-	let channel = await client.channels.fetch(process.env.PROPERTY_SALES_CHANNEL_ID);
-
-	let sum_messages = [];
-	let last_id;
-	let countChanged = 0;
-	let countFound = 0;
-
-	while (true) {
-		const options = { limit: 100, after: '1153406168786554971' }; // actual message id on live: '1153406168786554971'
-		if (last_id) {
-			options.before = last_id;
-			options.after = '1153406168786554971';
-			countFound = countFound + 100;
-		}
-
-		let messages = await channel.messages.fetch(options);
-		sum_messages.push(...messages.values());
-		last_id = messages.last().id;
-
-		if (messages.size != 100 || sum_messages >= options.limit) {
-			countFound = messages.size;
-			break;
-		}
-	}
-
-	console.log(`found ${countFound} messages to disable`);
-
-	sum_messages.forEach(async (message) => {
-		if (message.embeds[0] && message.components[0]) {
-			message.components[0].components[2].data.disabled = true;
-			await message.edit({ embeds: message.embeds, components: message.components })
-			countChanged = countChanged + 1;
-		}
-	});
-
-	console.log(`changed ${countChanged} buttons to disabled`);
-
 };
