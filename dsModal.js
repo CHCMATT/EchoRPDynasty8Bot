@@ -740,7 +740,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
 				break;
 			case 'approveQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
 					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
 
@@ -851,11 +851,11 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.reply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'adjustQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
 					let adjustedPrice = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('adjustPriceInput')).replaceAll(',', '').replaceAll('$', '')));
 
@@ -979,11 +979,11 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'denyQuoteModal':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
 					let denialNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
 
@@ -1093,7 +1093,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'addPropertyRepodModal':

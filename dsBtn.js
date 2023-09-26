@@ -120,7 +120,7 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(addYPAdvertModal);
 				break;
 			case 'approveQuote':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let approveQuoteModal = new ModalBuilder()
 						.setCustomId('approveQuoteModal')
 						.setTitle('Approve a submitted quote');
@@ -136,11 +136,11 @@ module.exports.btnPressed = async (interaction) => {
 					approveQuoteModal.addComponents(approveNotesInputRow);
 					await interaction.showModal(approveQuoteModal);
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'adjustQuote':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let adjustQuoteModal = new ModalBuilder()
 						.setCustomId('adjustQuoteModal')
 						.setTitle('Adjust and approve a submitted quote');
@@ -163,11 +163,11 @@ module.exports.btnPressed = async (interaction) => {
 					adjustQuoteModal.addComponents(adjustPriceInputRow, adjustNotesInputRow);
 					await interaction.showModal(adjustQuoteModal);
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'denyQuote':
-				if (interaction.member._roles.includes(process.env.SR_REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let denyQuoteModal = new ModalBuilder()
 						.setCustomId('denyQuoteModal')
 						.setTitle('Deny a submitted quote');
@@ -183,7 +183,7 @@ module.exports.btnPressed = async (interaction) => {
 					denyQuoteModal.addComponents(denyNotesInputRow);
 					await interaction.showModal(denyQuoteModal);
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Senior Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'markAsContacted':
