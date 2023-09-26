@@ -220,84 +220,6 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 
 				break;
-			case 'houseSwapSaleCommission':
-				if (0 == 0) {
-					let allRealtors = await dbCmds.readAllRealtors();
-
-					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
-
-					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
-						return realtor.data.label !== interaction.member.nickname;
-					});
-
-					let realtorSelectionOptions = new StringSelectMenuBuilder()
-						.setCustomId('houseSwapCommissionRealtorDropdown')
-						.setPlaceholder('Select a Realtor')
-						.addOptions(allRealtorsArray);
-
-					let realtorSelectionComponent = new ActionRowBuilder()
-						.addComponents(realtorSelectionOptions);
-
-					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your commission is now:`) - 3));
-
-					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
-					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
-
-				}
-				break;
-			case 'warehouseSwapSaleCommission':
-				if (0 == 0) {
-					let allRealtors = await dbCmds.readAllRealtors();
-
-					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
-
-					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
-						return realtor.data.label !== interaction.member.nickname;
-					});
-
-					let realtorSelectionOptions = new StringSelectMenuBuilder()
-						.setCustomId('warehouseSwapCommissionRealtorDropdown')
-						.setPlaceholder('Select a Realtor')
-						.addOptions(allRealtorsArray);
-
-					let realtorSelectionComponent = new ActionRowBuilder()
-						.addComponents(realtorSelectionOptions);
-
-					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Your commission is now:`) - 3));
-
-					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
-					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
-
-				}
-				break;
-			case 'officeSwapSaleCommission':
-				if (0 == 0) {
-					let allRealtors = await dbCmds.readAllRealtors();
-
-					let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
-
-					allRealtorsArray = allRealtorsArray.filter(function (realtor) {
-						return realtor.data.label !== interaction.member.nickname;
-					});
-
-					let realtorSelectionOptions = new StringSelectMenuBuilder()
-						.setCustomId('officeSwapCommissionRealtorDropdown')
-						.setPlaceholder('Select a Realtor')
-						.addOptions(allRealtorsArray);
-
-					let realtorSelectionComponent = new ActionRowBuilder()
-						.addComponents(realtorSelectionOptions);
-
-					let messageContent = interaction.message.content;
-					let commissionString = messageContent.substring((messageContent.indexOf(`Your Commission:`) + 18), (messageContent.indexOf(`Limited Property Contract:`) - 4));
-
-					let commissionSwapInteraction = await interaction.reply({ content: `Who should your commission of \`${commissionString}\` be split with?`, components: [realtorSelectionComponent], ephemeral: true });
-					exports.commissionSwapInteraction = commissionSwapInteraction.interaction;
-
-				}
-				break;
 			case 'addReimbursementReq':
 				var addReimbursementReqModal = new ModalBuilder()
 					.setCustomId('addReimbursementReqModal')
@@ -785,9 +707,11 @@ module.exports.btnPressed = async (interaction) => {
 					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
 					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
 					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
+
 					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						let allRealtors = await dbCmds.readAllRealtors();
-						let allRealtorsArray = allRealtors.map(x => new StringSelectMenuOptionBuilder().setLabel(x.charName).setValue(x.discordId));
+						let allUsers = await interaction.member.guild.members.fetch();
+						let allRealtors = allUsers.filter(member => member._roles.includes(process.env.FULL_TIME_ROLE_ID));
+						let allRealtorsArray = allRealtors.map(member => new StringSelectMenuOptionBuilder().setLabel(member.nickname).setValue(member.user.id));
 
 						allRealtorsArray = allRealtorsArray.filter(function (realtor) {
 							return realtor.data.label !== interaction.member.nickname;
