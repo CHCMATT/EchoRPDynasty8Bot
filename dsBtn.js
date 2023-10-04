@@ -615,91 +615,80 @@ module.exports.btnPressed = async (interaction) => {
 				break;
 			case 'setGarageSlots':
 				if (1 == 1) {
-					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
-					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
-					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
-					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						let garageSlotsModal = new ModalBuilder()
-							.setCustomId('garageSlotsModal')
-							.setTitle('Set Garage Slots Amount');
+					let garageSlotsModal = new ModalBuilder()
+						.setCustomId('garageSlotsModal')
+						.setTitle('Set Garage Slots Amount');
 
-						let garageSlotsNumInput = new TextInputBuilder()
-							.setCustomId('garageSlotsNumInput')
-							.setLabel('How many garage slots does the property have?')
-							.setStyle(TextInputStyle.Short)
-							.setPlaceholder('7')
-							.setRequired(true);
+					let garageSlotsNumInput = new TextInputBuilder()
+						.setCustomId('garageSlotsNumInput')
+						.setLabel('How many garage slots does the property have?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('7')
+						.setRequired(true);
 
-						let garageSlotsNumInputRow = new ActionRowBuilder().addComponents(garageSlotsNumInput);
+					let garageSlotsNumInputRow = new ActionRowBuilder().addComponents(garageSlotsNumInput);
 
-						garageSlotsModal.addComponents(garageSlotsNumInputRow);
-						await interaction.showModal(garageSlotsModal);
-					}
+					garageSlotsModal.addComponents(garageSlotsNumInputRow);
+					await interaction.showModal(garageSlotsModal);
 				}
 				break;
 			case 'toggleSmartLock':
 				if (1 == 1) {
-					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
-					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
-					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
-
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let today = `<t:${now}:d>`;
 					let newSlStatus = "";
-					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						let embedTitle = interaction.message.embeds[0].data.title;
-						if (embedTitle.toLowerCase().includes("office")) {
-							if (interaction.message.embeds[0].data.fields[6].value === "No") {
-								newSlStatus = "Yes"
-								interaction.message.embeds[0].data.fields[6].value = newSlStatus;
-							} else {
-								newSlStatus = "No";
-								interaction.message.embeds[0].data.fields[6].value = newSlStatus;
-							}
-							if (interaction.message.embeds[0].data.fields[9]) {
-								interaction.message.embeds[0].data.fields[9].value = `${interaction.message.embeds[0].data.fields[9].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
-							} else {
-								interaction.message.embeds[0].data.fields[9] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
-							}
-						} else if (embedTitle.toLowerCase().includes("warehouse")) {
-							if (interaction.message.embeds[0].data.fields[5].value === "No") {
-								newSlStatus = "Yes"
-								interaction.message.embeds[0].data.fields[5].value = newSlStatus;
-							} else {
-								newSlStatus = "No";
-								interaction.message.embeds[0].data.fields[5].value = newSlStatus;
-							}
-							if (interaction.message.embeds[0].data.fields[7]) {
-								interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
-							} else {
-								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
-							}
-						} else if (embedTitle.toLowerCase().includes("house")) {
-							if (interaction.message.embeds[0].data.fields[5].value === "No") {
-								newSlStatus = "Yes"
-								interaction.message.embeds[0].data.fields[5].value = newSlStatus;
-							} else {
-								newSlStatus = "No";
-								interaction.message.embeds[0].data.fields[5].value = newSlStatus;
-							}
-							if (interaction.message.embeds[0].data.fields[7]) {
-								interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
-							} else {
-								interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
-							}
+					let embedTitle = interaction.message.embeds[0].data.title;
+					if (embedTitle.toLowerCase().includes("office")) {
+						if (interaction.message.embeds[0].data.fields[6].value === "No") {
+							newSlStatus = "Yes"
+							interaction.message.embeds[0].data.fields[6].value = newSlStatus;
+						} else {
+							newSlStatus = "No";
+							interaction.message.embeds[0].data.fields[6].value = newSlStatus;
 						}
-
-						await dbCmds.addOneSumm("countMiscSales");
-						await dbCmds.addOneSumm("countMonthlyMiscSales");
-						await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
-						await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
-						await editEmbed.editMainEmbed(interaction.client);
-
-						await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
-						await interaction.reply({
-							content: `Successfully toggled the smart locks status to \`${newSlStatus}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
-						});
+						if (interaction.message.embeds[0].data.fields[9]) {
+							interaction.message.embeds[0].data.fields[9].value = `${interaction.message.embeds[0].data.fields[9].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
+						} else {
+							interaction.message.embeds[0].data.fields[9] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
+						}
+					} else if (embedTitle.toLowerCase().includes("warehouse")) {
+						if (interaction.message.embeds[0].data.fields[5].value === "No") {
+							newSlStatus = "Yes"
+							interaction.message.embeds[0].data.fields[5].value = newSlStatus;
+						} else {
+							newSlStatus = "No";
+							interaction.message.embeds[0].data.fields[5].value = newSlStatus;
+						}
+						if (interaction.message.embeds[0].data.fields[7]) {
+							interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
+						} else {
+							interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
+						}
+					} else if (embedTitle.toLowerCase().includes("house")) {
+						if (interaction.message.embeds[0].data.fields[5].value === "No") {
+							newSlStatus = "Yes"
+							interaction.message.embeds[0].data.fields[5].value = newSlStatus;
+						} else {
+							newSlStatus = "No";
+							interaction.message.embeds[0].data.fields[5].value = newSlStatus;
+						}
+						if (interaction.message.embeds[0].data.fields[7]) {
+							interaction.message.embeds[0].data.fields[7].value = `${interaction.message.embeds[0].data.fields[7].value}\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.`;
+						} else {
+							interaction.message.embeds[0].data.fields[7] = { name: `Notes:`, value: `\n- Smart Locks toggled to ${newSlStatus} by <@${interaction.user.id}> on ${today}.` };
+						}
 					}
+
+					await dbCmds.addOneSumm("countMiscSales");
+					await dbCmds.addOneSumm("countMonthlyMiscSales");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "miscSales");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyMiscSales");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
+					await interaction.reply({
+						content: `Successfully toggled the smart locks status to \`${newSlStatus}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
+					});
 				}
 				break;
 			case 'splitSaleCommission':
