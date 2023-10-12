@@ -2451,9 +2451,9 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				if (notes) {
+				if (notesInfo) {
 					var embeds = [new EmbedBuilder()
-						.setTitle('A new Quote Request has been submitted!')
+						.setTitle('An Assistant Submitted A Quote Request!')
 						.addFields(
 							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
@@ -2465,7 +2465,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('FFE169')];
 				} else {
 					var embeds = [new EmbedBuilder()
-						.setTitle('A new Quote Request has been submitted!')
+						.setTitle('An Assistant Submitted A Quote Request!')
 						.addFields(
 							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
