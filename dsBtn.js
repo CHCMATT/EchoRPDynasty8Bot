@@ -734,13 +734,17 @@ module.exports.btnPressed = async (interaction) => {
 					.setPlaceholder('Select an Action')
 					.addOptions(
 						new StringSelectMenuOptionBuilder()
+							.setLabel('Request a Quote')
+							.setEmoji('🏠')
+							.setValue('assistantsRequestQuote'),
+						new StringSelectMenuOptionBuilder()
 							.setLabel('Purchase Property')
 							.setEmoji('💰')
 							.setValue('assistantsPurchaseProperty'),
-						//Elvi add more options for this button later
 					);
 
-					let addAssistantsPortalSelection = new ActionRowBuilder()
+
+				let addAssistantsPortalSelection = new ActionRowBuilder()
 					.addComponents(addAssistantsPortalOptions);
 
 				await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });

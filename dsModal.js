@@ -2384,6 +2384,118 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 
 				break;
+			case 'assistantsRequestQuoteModal':
+				var assistantName;
+				if (interaction.member.nickname) {
+					assistantName = interaction.member.nickname;
+				} else {
+					assistantName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var reqDate = `<t:${now}:d>`;
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+				var gpsPropertyString = strCleanup(interaction.fields.getTextInputValue('gpsPropertyImagesInput'));
+				var interiorInfo = strCleanup(interaction.fields.getTextInputValue('interiorInput'));
+				var zoneShiftInfo = strCleanup(interaction.fields.getTextInputValue('zoneShiftInput'));
+				var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
+				});
+
+				var photos = [gpsPropertyString];
+				if (gpsPropertyString.includes(",")) {
+					photos = gpsPropertyString.split(",")
+				} else if (gpsPropertyString.includes(";")) {
+					photos = gpsPropertyString.split(";")
+				} else if (gpsPropertyString.includes(" ")) {
+					photos = gpsPropertyString.split(" ")
+				} else if (gpsPropertyString.includes("|")) {
+					photos = gpsPropertyString.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (notes) {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Quote Request has been submitted!')
+						.addFields(
+							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Interior Information:`, value: `${interiorInfo}` },
+							{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+							{ name: `Notes:`, value: `${notesInfo}` }
+						)
+						.setColor('FFE169')];
+				} else {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Quote Request has been submitted!')
+						.addFields(
+							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Interior Information:`, value: `${interiorInfo}` },
+							{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+						)
+						.setColor('FFE169')];
+				}
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE169').setURL('https://echorp.net/').setImage(x));
+
+				embeds = embeds.concat(photosEmbed);
+
+				await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+
+				await dbCmds.addOneSumm("countContactRequests");
+				await dbCmds.addOneSumm("countMonthlyContactRequests");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+				await editEmbed.editMainEmbed(interaction.client);
+
+				await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
+
+				break;
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,

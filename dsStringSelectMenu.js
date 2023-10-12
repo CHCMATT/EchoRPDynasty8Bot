@@ -557,6 +557,54 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 					await interaction.showModal(assistantsPurchasePropertyModal);
 				};
+				if (interaction.values[0] == 'assistantsRequestQuote') {
+					let assistantsRequestQuoteModal = new ModalBuilder()
+						.setCustomId('assistantsRequestQuoteModal')
+						.setTitle(`Assistant's Quote Request`);
+					let clientInformationInput = new TextInputBuilder()
+						.setCustomId('clientInformationInput')
+						.setLabel('What is the name & phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName | Phone Number')
+						.setRequired(true);
+					let gpsPropertyImagesInput = new TextInputBuilder()
+						.setCustomId('gpsPropertyImagesInput')
+						.setLabel('GPS and Property Photos')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('https://i.imgur.com/PYrIiB0.jpeg, https://i.imgur.com/8tg4i7P.jpeg')
+						.setRequired(true);
+					let interiorInput = new TextInputBuilder()
+						.setCustomId('interiorInput')
+						.setLabel('What is the interior?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Large warehouse, AVPShell1')
+						.setRequired(true);
+					let zoneShiftInput = new TextInputBuilder()
+						.setCustomId('zoneShiftInput')
+						.setLabel(`Price Zone and Shift They Are Around`)
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Zone 7, 2nd Shift')
+						.setRequired(true);
+					let notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any additional notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Property looks like it can fit 20 cows in it. 2 stories.')
+						.setRequired(false);
+
+
+					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
+					let gpsPropertyImagesInputRow = new ActionRowBuilder().addComponents(gpsPropertyImagesInput);
+					let interiorInputRow = new ActionRowBuilder().addComponents(interiorInput);
+					let zoneShiftInputRow = new ActionRowBuilder().addComponents(zoneShiftInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+
+
+
+					assistantsRequestQuoteModal.addComponents(clientInformationInputRow, gpsPropertyImagesInputRow, interiorInputRow, zoneShiftInputRow, notesInputRow);
+
+					await interaction.showModal(assistantsRequestQuoteModal);
+				};
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
