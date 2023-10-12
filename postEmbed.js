@@ -27,7 +27,8 @@ module.exports.postMainEmbed = async (client) => {
 				employeeStats[i].activityChecks > 0 ||
 				employeeStats[i].miscSales > 0 ||
 				employeeStats[i].financialAgreements > 0 ||
-				employeeStats[i].quotesReviewed > 0) {
+				employeeStats[i].quotesReviewed > 0 ||
+				employeeStats[i].contactRequests > 0) {
 
 				overallDescList = overallDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
@@ -55,6 +56,9 @@ module.exports.postMainEmbed = async (client) => {
 				if (employeeStats[i].quotesReviewed >= 1) {
 					overallDescList = overallDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].quotesReviewed}`);
 				}
+				if (employeeStats[i].contactRequests >= 1) {
+					overallDescList = overallDescList.concat(`\n• **Contact Requests Submitted:** ${employeeStats[i].contactRequests}`);
+				}
 			}
 		}
 
@@ -77,7 +81,8 @@ module.exports.postMainEmbed = async (client) => {
 				employeeStats[i].monthlyActivityChecks > 0 ||
 				employeeStats[i].monthlyMiscSales > 0 ||
 				employeeStats[i].monthlyFinancialAgreements > 0 ||
-				employeeStats[i].monthlyQuotesReviewed > 0) {
+				employeeStats[i].monthlyQuotesReviewed > 0 ||
+				employeeStats[i].monthlyContactRequests > 0) {
 
 				monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
@@ -105,6 +110,9 @@ module.exports.postMainEmbed = async (client) => {
 				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
 					monthlyDescList = monthlyDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
 				}
+				if (employeeStats[i].monthlyContactRequests >= 1) {
+					monthlyDescList = monthlyDescList.concat(`\n• **Contact Requests Submitted:** ${employeeStats[i].monthlyContactRequests}`);
+				}
 			}
 		}
 
@@ -125,6 +133,7 @@ module.exports.postMainEmbed = async (client) => {
 		let countMiscSales = await dbCmds.readSummValue("countMiscSales");
 		let countFinancialAgreements = await dbCmds.readSummValue("countFinancialAgreements");
 		let activeFinancialAgreements = await dbCmds.readSummValue("activeFinancialAgreements");
+		let countContactRequests = await dbCmds.readSummValue("countContactRequests");
 
 		// theme color palette: https://coolors.co/palette/ffe169-fad643-edc531-dbb42c-c9a227-b69121-a47e1b-926c15-805b10-76520e
 
@@ -159,6 +168,10 @@ module.exports.postMainEmbed = async (client) => {
 		if (countFinancialAgreements >= 1) {
 			countFinancialAgreements = countFinancialAgreements.toString();
 			mainFields.push({ name: `Financial Agreements Filed:`, value: `${countFinancialAgreements} (${activeFinancialAgreements} active)` });
+		}
+		if (countContactRequests >= 1) {
+			countContactRequests = countContactRequests.toString();
+			mainFields.push({ name: `Contact Requests Submitted:`, value: `${countContactRequests}` });
 		}
 
 		let mainEmbed = new EmbedBuilder()
@@ -271,6 +284,11 @@ function addFrontDeskBtnRows() {
 		new ButtonBuilder()
 			.setCustomId('addReimbursementReq')
 			.setLabel('Request Reimbursement')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('assistantsPortal')
+			.setLabel(`Assistant's Portal`)
 			.setStyle(ButtonStyle.Secondary),
 	);
 

@@ -1,4 +1,5 @@
 let { Schema, model, models } = require('mongoose');
+const { readFinanceNum } = require('../dbCmds');
 
 let reqString = {
 	type: String,
@@ -36,6 +37,8 @@ let d8PersonnelInfoSchema = new Schema({
 	settingQuotePing: Boolean,
 	settingReimbursementPing: Boolean,
 	settingRepossessionPing: Boolean,
+	contactRequests: reqNum,
+	monthlyContactRequests: reqNum,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);
