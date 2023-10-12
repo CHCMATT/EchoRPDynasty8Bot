@@ -2338,6 +2338,52 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 				}
 				break;
+			case 'assistantsPurchasePropertyModal':
+				var assistantName;
+				if (interaction.member.nickname) {
+					assistantName = interaction.member.nickname;
+				} else {
+					assistantName = interaction.member.user.username;
+				}
+
+				var now = Math.floor(new Date().getTime() / 1000.0);
+				var reqDate = `<t:${now}:d>`;
+
+				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+				var paymentMethod = strCleanup(interaction.fields.getTextInputValue('paymentMethodInput'));
+				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+
+				await interaction.client.googleSheets.values.append({
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
+				});
+
+				var embeds = [new EmbedBuilder()
+					.setTitle('An Assistant Submitted A Property Purchase Request!')
+					.addFields(
+						{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+						{ name: `Request Date:`, value: `${reqDate}` },
+						{ name: `Client Information:`, value: `${clientInfo}` },
+						{ name: `Payment Method:`, value: `${paymentMethod}` },
+						{ name: `Notes:`, value: `${notes}` }
+					)
+					.setColor('EDC531')];
+
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+				}
+
+				await dbCmds.addOneSumm("countContactRequests");
+				await dbCmds.addOneSumm("countMonthlyContactRequests");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+				await editEmbed.editMainEmbed(interaction.client);
+
+				await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+				await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
+
+				break;
 			default:
 				await interaction.reply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,
