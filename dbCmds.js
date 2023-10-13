@@ -93,6 +93,8 @@ module.exports.addCommission = async (discordId, commission) => {
 
 module.exports.removeCommission = async (discordId, commission) => {
 	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { currentCommission: -commission } }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { $inc: { monthlyCommission: -commission } }, { upsert: true });
+
 };
 
 module.exports.addMiscPay = async (discordId, payAmt) => {
