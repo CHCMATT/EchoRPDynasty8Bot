@@ -2524,10 +2524,9 @@ module.exports.modalSubmit = async (interaction) => {
 					var shiftAvailable = strCleanup(interaction.fields.getTextInputValue('shiftAvailableInput'));
 					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
-					// WIP ELVI NEED TO GET NEW SHEET TITLE
-					// await interaction.client.googleSheets.values.append({
-					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
-					// });
+					await interaction.client.googleSheets.values.append({
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Smart Lock Update!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, propertyID, bankNumber, shiftAvailable, notes]] }
+					});
 
 					var embeds = [new EmbedBuilder()
 						.setTitle('An Assistant Submitted A Smartlock Request!')
@@ -2580,10 +2579,9 @@ module.exports.modalSubmit = async (interaction) => {
 					var amountSlotsWantAdded = strCleanup(interaction.fields.getTextInputValue('amountSlotsWantAddedInput'));
 					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
-					// WIP ELVI NEED TO GET NEW SHEET TITLE
-					// await interaction.client.googleSheets.values.append({
-					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
-					// });
+					await interaction.client.googleSheets.values.append({
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Garage Slots Update!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, propertyIDCurrentSlots, bankNumber, amountSlotsWantAdded, notes]] }
+					});
 
 					var embeds = [new EmbedBuilder()
 						.setTitle('An Assistant Submitted A Garage Slot Request!')
@@ -2634,10 +2632,9 @@ module.exports.modalSubmit = async (interaction) => {
 					var shiftAvailable = strCleanup(interaction.fields.getTextInputValue('shiftAvailableInput'));
 					var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
-					//  WIP ELVI NEED NEW SHEET NAME
-					// await interaction.client.googleSheets.values.append({
-					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
-					// });
+					await interaction.client.googleSheets.values.append({
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Misc. Inquiry!A:F", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, inquiry, shiftAvailable, notesInfo]] }
+					});
 
 					if (notesInfo) {
 						var embeds = [new EmbedBuilder()
