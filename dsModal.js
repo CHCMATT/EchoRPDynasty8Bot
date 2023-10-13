@@ -2339,162 +2339,350 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'assistantsPurchasePropertyModal':
-				var assistantName;
-				if (interaction.member.nickname) {
-					assistantName = interaction.member.nickname;
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var assistantName;
+					if (interaction.member.nickname) {
+						assistantName = interaction.member.nickname;
+					} else {
+						assistantName = interaction.member.user.username;
+					}
+
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var reqDate = `<t:${now}:d>`;
+
+					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+					var paymentMethod = strCleanup(interaction.fields.getTextInputValue('paymentMethodInput'));
+					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+
+					await interaction.client.googleSheets.values.append({
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
+					});
+
+					var embeds = [new EmbedBuilder()
+						.setTitle('An Assistant Submitted A Property Purchase Request!')
+						.addFields(
+							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Payment Method:`, value: `${paymentMethod}` },
+							{ name: `Notes:`, value: `${notes}` }
+						)
+						.setColor('EDC531')];
+
+					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					}
+
+					await dbCmds.addOneSumm("countContactRequests");
+					await dbCmds.addOneSumm("countMonthlyContactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+					await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 				} else {
-					assistantName = interaction.member.user.username;
+
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
 				}
-
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var reqDate = `<t:${now}:d>`;
-
-				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
-				var paymentMethod = strCleanup(interaction.fields.getTextInputValue('paymentMethodInput'));
-				var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
-				});
-
-				var embeds = [new EmbedBuilder()
-					.setTitle('An Assistant Submitted A Property Purchase Request!')
-					.addFields(
-						{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
-						{ name: `Request Date:`, value: `${reqDate}` },
-						{ name: `Client Information:`, value: `${clientInfo}` },
-						{ name: `Payment Method:`, value: `${paymentMethod}` },
-						{ name: `Notes:`, value: `${notes}` }
-					)
-					.setColor('EDC531')];
-
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
-				}
-
-				await dbCmds.addOneSumm("countContactRequests");
-				await dbCmds.addOneSumm("countMonthlyContactRequests");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
-				await editEmbed.editMainEmbed(interaction.client);
-
-				await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
-
-				await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
-
 				break;
 			case 'assistantsRequestQuoteModal':
-				var assistantName;
-				if (interaction.member.nickname) {
-					assistantName = interaction.member.nickname;
-				} else {
-					assistantName = interaction.member.user.username;
-				}
-
-				var now = Math.floor(new Date().getTime() / 1000.0);
-				var reqDate = `<t:${now}:d>`;
-				var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
-				var gpsPropertyString = strCleanup(interaction.fields.getTextInputValue('gpsPropertyImagesInput'));
-				var interiorInfo = strCleanup(interaction.fields.getTextInputValue('interiorInput'));
-				var zoneShiftInfo = strCleanup(interaction.fields.getTextInputValue('zoneShiftInput'));
-				var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
-
-				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
-				});
-
-				var photos = [gpsPropertyString];
-				if (gpsPropertyString.includes(",")) {
-					photos = gpsPropertyString.split(",")
-				} else if (gpsPropertyString.includes(";")) {
-					photos = gpsPropertyString.split(";")
-				} else if (gpsPropertyString.includes(" ")) {
-					photos = gpsPropertyString.split(" ")
-				} else if (gpsPropertyString.includes("|")) {
-					photos = gpsPropertyString.split("|")
-				} else if (photos.length > 1) {
-					await interaction.reply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var assistantName;
+					if (interaction.member.nickname) {
+						assistantName = interaction.member.nickname;
+					} else {
+						assistantName = interaction.member.user.username;
 					}
-					if (!isValidUrl(photos[i])) { // validate photo link
+
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var reqDate = `<t:${now}:d>`;
+					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+					var gpsPropertyString = strCleanup(interaction.fields.getTextInputValue('gpsPropertyImagesInput'));
+					var interiorInfo = strCleanup(interaction.fields.getTextInputValue('interiorInput'));
+					var zoneShiftInfo = strCleanup(interaction.fields.getTextInputValue('zoneShiftInput'));
+					var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+
+					await interaction.client.googleSheets.values.append({
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
+					});
+
+					var photos = [gpsPropertyString];
+					if (gpsPropertyString.includes(",")) {
+						photos = gpsPropertyString.split(",")
+					} else if (gpsPropertyString.includes(";")) {
+						photos = gpsPropertyString.split(";")
+					} else if (gpsPropertyString.includes(" ")) {
+						photos = gpsPropertyString.split(" ")
+					} else if (gpsPropertyString.includes("|")) {
+						photos = gpsPropertyString.split("|")
+					} else if (photos.length > 1) {
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
 						});
 						return;
 					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+
+					for (let i = 0; i < photos.length; i++) {
+						if (photos[i] == "") {
+							photos.splice(i, 1);
+							continue;
+						}
+						if (!isValidUrl(photos[i])) { // validate photo link
+							await interaction.reply({
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+								ephemeral: true
+							});
+							return;
+						}
+						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+							await interaction.reply({
+								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+								ephemeral: true
+							});
+							return;
+						}
+					}
+
+					if (photos.length >= 10) {
 						await interaction.reply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 							ephemeral: true
 						});
 						return;
 					}
-				}
 
-				if (photos.length >= 10) {
-					await interaction.reply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
+					if (notesInfo) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Quote Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Interior Information:`, value: `${interiorInfo}` },
+								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+								{ name: `Notes:`, value: `${notesInfo}` }
+							)
+							.setColor('FFE169')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Quote Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Interior Information:`, value: `${interiorInfo}` },
+								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+							)
+							.setColor('FFE169')];
+					}
 
-				if (notesInfo) {
-					var embeds = [new EmbedBuilder()
-						.setTitle('An Assistant Submitted A Quote Request!')
-						.addFields(
-							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${reqDate}` },
-							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Interior Information:`, value: `${interiorInfo}` },
-							{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
-							{ name: `Notes:`, value: `${notesInfo}` }
-						)
-						.setColor('FFE169')];
+					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE169').setURL('https://echorp.net/').setImage(x));
+
+					embeds = embeds.concat(photosEmbed);
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					}
+
+					await dbCmds.addOneSumm("countContactRequests");
+					await dbCmds.addOneSumm("countMonthlyContactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
 				} else {
+
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
+				}
+				break;
+			case 'assistantsRequestSmartlockModal':
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var assistantName;
+					if (interaction.member.nickname) {
+						assistantName = interaction.member.nickname;
+					} else {
+						assistantName = interaction.member.user.username;
+					}
+
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var reqDate = `<t:${now}:d>`;
+
+					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+					var propertyID = strCleanup(interaction.fields.getTextInputValue('propertyIDInput'));
+					var bankNumber = strCleanup(interaction.fields.getTextInputValue('bankNumberInput'));
+					var shiftAvailable = strCleanup(interaction.fields.getTextInputValue('shiftAvailableInput'));
+					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
+
+					// WIP ELVI NEED TO GET NEW SHEET TITLE
+					// await interaction.client.googleSheets.values.append({
+					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
+					// });
+
 					var embeds = [new EmbedBuilder()
-						.setTitle('An Assistant Submitted A Quote Request!')
+						.setTitle('An Assistant Submitted A Smartlock Request!')
 						.addFields(
 							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${reqDate}` },
 							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Interior Information:`, value: `${interiorInfo}` },
-							{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+							{ name: `Property ID:`, value: `${propertyID}` },
+							{ name: `Bank Number:`, value: `${bankNumber}` },
+							{ name: `Shift Available:`, value: `${shiftAvailable}` },
+							{ name: `Notes:`, value: `${notes}` }
 						)
-						.setColor('FFE169')];
+						.setColor('B69121')];
+
+					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					}
+
+					await dbCmds.addOneSumm("countContactRequests");
+					await dbCmds.addOneSumm("countMonthlyContactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+					await interaction.reply({ content: `Successfully logged this Smartlock Request.`, ephemeral: true });
+				} else {
+
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
 				}
+				break;
+			case 'assistantsRequestGarageSlotModal':
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var assistantName;
+					if (interaction.member.nickname) {
+						assistantName = interaction.member.nickname;
+					} else {
+						assistantName = interaction.member.user.username;
+					}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE169').setURL('https://echorp.net/').setImage(x));
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var reqDate = `<t:${now}:d>`;
 
-				embeds = embeds.concat(photosEmbed);
+					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+					var propertyIDCurrentSlots = strCleanup(interaction.fields.getTextInputValue('propertyIDCurrentSlotsInput'));
+					var bankNumber = strCleanup(interaction.fields.getTextInputValue('bankNumberInput'));
+					var amountSlotsWantAdded = strCleanup(interaction.fields.getTextInputValue('amountSlotsWantAddedInput'));
+					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
-				await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+					// WIP ELVI NEED TO GET NEW SHEET TITLE
+					// await interaction.client.googleSheets.values.append({
+					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
+					// });
 
-				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
-				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					var embeds = [new EmbedBuilder()
+						.setTitle('An Assistant Submitted A Garage Slot Request!')
+						.addFields(
+							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Property ID & Current Amount of Slots Owned:`, value: `${propertyIDCurrentSlots}` },
+							{ name: `Bank Number:`, value: `${bankNumber}` },
+							{ name: `Amount of Slots to Add:`, value: `${amountSlotsWantAdded}` },
+							{ name: `Notes:`, value: `${notes}` }
+						)
+						.setColor('B69121')];
+
+					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					}
+
+					await dbCmds.addOneSumm("countContactRequests");
+					await dbCmds.addOneSumm("countMonthlyContactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+					await interaction.reply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
+				} else {
+
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
 				}
+				break;
+			case 'assistantsOtherRequestModal':
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					var assistantName;
+					if (interaction.member.nickname) {
+						assistantName = interaction.member.nickname;
+					} else {
+						assistantName = interaction.member.user.username;
+					}
 
-				await dbCmds.addOneSumm("countContactRequests");
-				await dbCmds.addOneSumm("countMonthlyContactRequests");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
-				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
-				await editEmbed.editMainEmbed(interaction.client);
+					var now = Math.floor(new Date().getTime() / 1000.0);
+					var reqDate = `<t:${now}:d>`;
+					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
+					var inquiry = strCleanup(interaction.fields.getTextInputValue('inquiryInput'));
+					var shiftAvailable = strCleanup(interaction.fields.getTextInputValue('shiftAvailableInput'));
+					var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
-				await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
+					//  WIP ELVI NEED NEW SHEET NAME
+					// await interaction.client.googleSheets.values.append({
+					// 	auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
+					// });
 
+					if (notesInfo) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted An Other Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Inquiry Information:`, value: `${inquiry}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
+								{ name: `Notes:`, value: `${notesInfo}` }
+							)
+							.setColor('76520E')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted An Other Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Inquiry Information:`, value: `${inquiry}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
+							)
+							.setColor('76520E')];
+					}
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+
+					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
+					if (personnelStats == null || personnelStats.charName == null) {
+						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					}
+
+					await dbCmds.addOneSumm("countContactRequests");
+					await dbCmds.addOneSumm("countMonthlyContactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
+					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
+					await editEmbed.editMainEmbed(interaction.client);
+
+					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
+				} else {
+
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
+				}
 				break;
 			default:
 				await interaction.reply({

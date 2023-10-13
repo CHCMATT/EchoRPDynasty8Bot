@@ -605,6 +605,137 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 					await interaction.showModal(assistantsRequestQuoteModal);
 				};
+				if (interaction.values[0] == 'assistantsRequestSmartlock') {
+					let assistantsRequestSmartlockModal = new ModalBuilder()
+						.setCustomId('assistantsRequestSmartlockModal')
+						.setTitle(`Assistant's Smartlock Request`);
+					let clientInformationInput = new TextInputBuilder()
+						.setCustomId('clientInformationInput')
+						.setLabel('What is the name & phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName | Phone Number')
+						.setRequired(true);
+					let propertyIDInput = new TextInputBuilder()
+						.setCustomId('propertyIDInput')
+						.setLabel('What is their property ID?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('123')
+						.setRequired(true);
+					let bankNumberInput = new TextInputBuilder()
+						.setCustomId('bankNumberInput')
+						.setLabel('What is their bank account number?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('1234 5678')
+						.setRequired(true);
+					let shiftAvailableInput = new TextInputBuilder()
+						.setCustomId('shiftAvailableInput')
+						.setLabel('What shift are they available?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('2nd')
+						.setRequired(true);
+					let notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any additional notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Remote or In person')
+						.setRequired(true);
+
+
+					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
+					let propertyIDInputRow = new ActionRowBuilder().addComponents(propertyIDInput);
+					let bankNumberInputRow = new ActionRowBuilder().addComponents(bankNumberInput);
+					let shiftAvailableInputRow = new ActionRowBuilder().addComponents(shiftAvailableInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+
+					assistantsRequestSmartlockModal.addComponents(clientInformationInputRow, propertyIDInputRow, bankNumberInputRow, shiftAvailableInputRow, notesInputRow);
+
+					await interaction.showModal(assistantsRequestSmartlockModal);
+				};
+				if (interaction.values[0] == 'assistantsRequestGarageSlot') {
+					let assistantsRequestGarageSlotModal = new ModalBuilder()
+						.setCustomId('assistantsRequestGarageSlotModal')
+						.setTitle(`Assistant's Garage Slot(s) Request`);
+					let clientInformationInput = new TextInputBuilder()
+						.setCustomId('clientInformationInput')
+						.setLabel('What is the name & phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName | Phone Number')
+						.setRequired(true);
+					let propertyIDCurrentSlotsInput = new TextInputBuilder()
+						.setCustomId('propertyIDCurrentSlotsInput')
+						.setLabel('Property ID & current amount of owned slots?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('123 and 2 slots')
+						.setRequired(true);
+					let bankNumberInput = new TextInputBuilder()
+						.setCustomId('bankNumberInput')
+						.setLabel('What is their bank account number?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('1234 5678')
+						.setRequired(true);
+					let amountSlotsWantAddedInput = new TextInputBuilder()
+						.setCustomId('amountSlotsWantAddedInput')
+						.setLabel('How many slots do they want to add?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('1')
+						.setRequired(true);
+					let notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any additional notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Remote or In person, available 2nd shift')
+						.setRequired(true);
+
+
+					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
+					let propertyIDCurrentSlotsInputRow = new ActionRowBuilder().addComponents(propertyIDCurrentSlotsInput);
+					let bankNumberInputRow = new ActionRowBuilder().addComponents(bankNumberInput);
+					let amountSlotsWantAddedInputRow = new ActionRowBuilder().addComponents(amountSlotsWantAddedInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+
+					assistantsRequestGarageSlotModal.addComponents(clientInformationInputRow, propertyIDCurrentSlotsInputRow, bankNumberInputRow, amountSlotsWantAddedInputRow, notesInputRow);
+
+					await interaction.showModal(assistantsRequestGarageSlotModal);
+				};
+				if (interaction.values[0] == 'assistantsOtherRequest') {
+					let assistantsOtherRequestModal = new ModalBuilder()
+						.setCustomId('assistantsOtherRequestModal')
+						.setTitle(`Assistant's Other Request`);
+					let clientInformationInput = new TextInputBuilder()
+						.setCustomId('clientInformationInput')
+						.setLabel('What is the name & phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName | Phone Number')
+						.setRequired(true);
+					let inquiryInput = new TextInputBuilder()
+						.setCustomId('inquiryInput')
+						.setLabel('What do they need help with?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Interior tour, question, etc.')
+						.setRequired(true);
+					let shiftAvailableInput = new TextInputBuilder()
+						.setCustomId('shiftAvailableInput')
+						.setLabel('What shift are they available?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('2nd')
+						.setRequired(true);
+					let notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any additional notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Client wants to purchase an office.')
+						.setRequired(false);
+
+
+					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
+					let inquiryInputRow = new ActionRowBuilder().addComponents(inquiryInput);
+					let shiftAvailableInputRow = new ActionRowBuilder().addComponents(shiftAvailableInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+
+					assistantsOtherRequestModal.addComponents(clientInformationInputRow, inquiryInputRow, shiftAvailableInputRow, notesInputRow);
+
+					await interaction.showModal(assistantsOtherRequestModal);
+				};
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });

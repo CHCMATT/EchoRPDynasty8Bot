@@ -729,26 +729,43 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'assistantsPortal':
-				let addAssistantsPortalOptions = new StringSelectMenuBuilder()
-					.setCustomId('assistantsPortalDropdown')
-					.setPlaceholder('Select an Action')
-					.addOptions(
-						new StringSelectMenuOptionBuilder()
-							.setLabel('Request a Quote')
-							.setEmoji('🏠')
-							.setValue('assistantsRequestQuote'),
-						new StringSelectMenuOptionBuilder()
-							.setLabel('Purchase Property')
-							.setEmoji('💰')
-							.setValue('assistantsPurchaseProperty'),
-					);
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let addAssistantsPortalOptions = new StringSelectMenuBuilder()
+						.setCustomId('assistantsPortalDropdown')
+						.setPlaceholder('Select an Action')
+						.addOptions(
+							new StringSelectMenuOptionBuilder()
+								.setLabel('Request a Quote')
+								.setEmoji('🏠')
+								.setValue('assistantsRequestQuote'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel('Purchase Property')
+								.setEmoji('💰')
+								.setValue('assistantsPurchaseProperty'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel('Request Smartlock')
+								.setEmoji('🔐')
+								.setValue('assistantsRequestSmartlock'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel('Request Garage Slot(s)')
+								.setEmoji('🚘')
+								.setValue('assistantsRequestGarageSlot'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel('Other Request')
+								.setEmoji('🧠')
+								.setValue('assistantsOtherRequest'),
+						);
 
 
-				let addAssistantsPortalSelection = new ActionRowBuilder()
-					.addComponents(addAssistantsPortalOptions);
+					let addAssistantsPortalSelection = new ActionRowBuilder()
+						.addComponents(addAssistantsPortalOptions);
 
-				await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
+					await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
+				} else {
 
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+
+				}
 				break;
 
 			default:
