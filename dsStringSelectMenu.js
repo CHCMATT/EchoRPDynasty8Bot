@@ -524,6 +524,40 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				});
 
 				break;
+			case 'assistantsPortalDropdown':
+				if (interaction.values[0] == 'assistantsPurchaseProperty') {
+					let assistantsPurchasePropertyModal = new ModalBuilder()
+						.setCustomId('assistantsPurchasePropertyModal')
+						.setTitle(`Assistant's Purchase Property Request`);
+					let clientInformationInput = new TextInputBuilder()
+						.setCustomId('clientInformationInput')
+						.setLabel('What is the name & phone # of the client?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('FirstName LastName | Phone Number')
+						.setRequired(true);
+					let paymentMethodInput = new TextInputBuilder()
+						.setCustomId('paymentMethodInput')
+						.setLabel('How do they plan to pay?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Pay upfront or finance')
+						.setRequired(true);
+					let notesInput = new TextInputBuilder()
+						.setCustomId('notesInput')
+						.setLabel('Any additional notes?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('Availbility, contact method preferred')
+						.setRequired(true);
+
+
+					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
+					let paymentMethodInputRow = new ActionRowBuilder().addComponents(paymentMethodInput);
+					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
+
+					assistantsPurchasePropertyModal.addComponents(clientInformationInputRow, paymentMethodInputRow, notesInputRow);
+
+					await interaction.showModal(assistantsPurchasePropertyModal);
+				};
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized string select ID: ${interaction.customId}`);
