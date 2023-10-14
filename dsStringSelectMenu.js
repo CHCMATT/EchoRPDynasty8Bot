@@ -638,7 +638,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setLabel('Any additional notes?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Remote or In person')
-						.setRequired(true);
+						.setRequired(false);
 
 
 					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
@@ -684,7 +684,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setLabel('Any additional notes?')
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Remote or In person, available 2nd shift')
-						.setRequired(true);
+						.setRequired(false);
 
 
 					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);

@@ -2527,19 +2527,33 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.googleSheets.values.append({
 						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Smart Lock Update!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, propertyID, bankNumber, shiftAvailable, notes]] }
 					});
+					if (notes) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Smartlock Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Property ID:`, value: `${propertyID}` },
+								{ name: `Bank Number:`, value: `${bankNumber}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
+								{ name: `Notes:`, value: `${notes}` }
+							)
+							.setColor('B69121')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Smartlock Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Property ID:`, value: `${propertyID}` },
+								{ name: `Bank Number:`, value: `${bankNumber}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
+							)
+							.setColor('B69121')];
+					}
 
-					var embeds = [new EmbedBuilder()
-						.setTitle('An Assistant Submitted A Smartlock Request!')
-						.addFields(
-							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${reqDate}` },
-							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Property ID:`, value: `${propertyID}` },
-							{ name: `Bank Number:`, value: `${bankNumber}` },
-							{ name: `Shift Available:`, value: `${shiftAvailable}` },
-							{ name: `Notes:`, value: `${notes}` }
-						)
-						.setColor('B69121')];
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
@@ -2582,19 +2596,32 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.googleSheets.values.append({
 						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Garage Slots Update!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, propertyIDCurrentSlots, bankNumber, amountSlotsWantAdded, notes]] }
 					});
-
-					var embeds = [new EmbedBuilder()
-						.setTitle('An Assistant Submitted A Garage Slot Request!')
-						.addFields(
-							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${reqDate}` },
-							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Property ID & Current Amount of Slots Owned:`, value: `${propertyIDCurrentSlots}` },
-							{ name: `Bank Number:`, value: `${bankNumber}` },
-							{ name: `Amount of Slots to Add:`, value: `${amountSlotsWantAdded}` },
-							{ name: `Notes:`, value: `${notes}` }
-						)
-						.setColor('B69121')];
+					if (notes) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Garage Slot Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Property ID & Current Amount of Slots Owned:`, value: `${propertyIDCurrentSlots}` },
+								{ name: `Bank Number:`, value: `${bankNumber}` },
+								{ name: `Amount of Slots to Add:`, value: `${amountSlotsWantAdded}` },
+								{ name: `Notes:`, value: `${notes}` }
+							)
+							.setColor('B69121')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Garage Slot Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Property ID & Current Amount of Slots Owned:`, value: `${propertyIDCurrentSlots}` },
+								{ name: `Bank Number:`, value: `${bankNumber}` },
+								{ name: `Amount of Slots to Add:`, value: `${amountSlotsWantAdded}` },
+							)
+							.setColor('B69121')];
+					}
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
