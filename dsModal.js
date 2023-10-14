@@ -2352,22 +2352,37 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
 					var paymentMethod = strCleanup(interaction.fields.getTextInputValue('paymentMethodInput'));
+					var shiftAvailable = strCleanup(interaction.fields.getTextInputValue('shiftAvailableInput'));
 					var notes = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
 					await interaction.client.googleSheets.values.append({
-						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:E", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, notes]] }
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:F", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, shiftAvailable, notes]] }
 					});
+					if (notes) {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Property Purchase Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Payment Method:`, value: `${paymentMethod}` },
+								{ name: `shift Available:`, value: `${shiftAvailable}` },
+								{ name: `Notes:`, value: `${notes}` }
+							)
+							.setColor('EDC531')];
+					} else {
+						var embeds = [new EmbedBuilder()
+							.setTitle('An Assistant Submitted A Property Purchase Request!')
+							.addFields(
+								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
+								{ name: `Request Date:`, value: `${reqDate}` },
+								{ name: `Client Information:`, value: `${clientInfo}` },
+								{ name: `Payment Method:`, value: `${paymentMethod}` },
+								{ name: `shift Available:`, value: `${shiftAvailable}` },
+							)
+							.setColor('EDC531')];
+					}
 
-					var embeds = [new EmbedBuilder()
-						.setTitle('An Assistant Submitted A Property Purchase Request!')
-						.addFields(
-							{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${reqDate}` },
-							{ name: `Client Information:`, value: `${clientInfo}` },
-							{ name: `Payment Method:`, value: `${paymentMethod}` },
-							{ name: `Notes:`, value: `${notes}` }
-						)
-						.setColor('EDC531')];
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
@@ -2701,7 +2716,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
 
 					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });

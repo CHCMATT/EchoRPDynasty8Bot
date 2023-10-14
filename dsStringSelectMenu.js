@@ -541,19 +541,26 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setStyle(TextInputStyle.Short)
 						.setPlaceholder('Pay upfront or finance')
 						.setRequired(true);
+					let shiftAvailableInput = new TextInputBuilder()
+						.setCustomId('shiftAvailableInput')
+						.setLabel('what shift are they available?')
+						.setStyle(TextInputStyle.Short)
+						.setPlaceholder('2nd')
+						.setRequired(true);
 					let notesInput = new TextInputBuilder()
 						.setCustomId('notesInput')
 						.setLabel('Any additional notes?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('Availbility, contact method preferred')
-						.setRequired(true);
+						.setPlaceholder('Contact method preferred, etc.')
+						.setRequired(false);
 
 
 					let clientInformationInputRow = new ActionRowBuilder().addComponents(clientInformationInput);
 					let paymentMethodInputRow = new ActionRowBuilder().addComponents(paymentMethodInput);
+					let shiftAvailableInputRow = new ActionRowBuilder().addComponents(shiftAvailableInput);
 					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 
-					assistantsPurchasePropertyModal.addComponents(clientInformationInputRow, paymentMethodInputRow, notesInputRow);
+					assistantsPurchasePropertyModal.addComponents(clientInformationInputRow, paymentMethodInputRow, shiftAvailableInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsPurchasePropertyModal);
 				};
