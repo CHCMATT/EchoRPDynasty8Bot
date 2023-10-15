@@ -296,10 +296,10 @@ function addFrontDeskBtnRows() {
 			.setLabel('Request Reimbursement')
 			.setStyle(ButtonStyle.Secondary),
 
-		//new ButtonBuilder()
-		//	.setCustomId('assistantsPortal')
-		//	.setLabel(`Assistant's Portal`)
-		//	.setStyle(ButtonStyle.Secondary),
+		new ButtonBuilder()
+			.setCustomId('assistantsPortal')
+			.setLabel(`Assistant's Portal`)
+			.setStyle(ButtonStyle.Secondary),
 	);
 
 	let rows = [row1];
