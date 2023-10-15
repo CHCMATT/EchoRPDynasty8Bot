@@ -2366,7 +2366,7 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Request Date:`, value: `${reqDate}` },
 								{ name: `Client Information:`, value: `${clientInfo}` },
 								{ name: `Payment Method:`, value: `${paymentMethod}` },
-								{ name: `shift Available:`, value: `${shiftAvailable}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
 								{ name: `Notes:`, value: `${notes}` }
 							)
 							.setColor('EDC531')];
@@ -2378,7 +2378,7 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Request Date:`, value: `${reqDate}` },
 								{ name: `Client Information:`, value: `${clientInfo}` },
 								{ name: `Payment Method:`, value: `${paymentMethod}` },
-								{ name: `shift Available:`, value: `${shiftAvailable}` },
+								{ name: `Shift Available:`, value: `${shiftAvailable}` },
 							)
 							.setColor('EDC531')];
 					}
