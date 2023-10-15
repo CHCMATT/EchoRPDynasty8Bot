@@ -2339,7 +2339,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'assistantsPurchasePropertyModal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
 						assistantName = interaction.member.nickname;
@@ -2400,12 +2400,12 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
 			case 'assistantsRequestQuoteModal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
 						assistantName = interaction.member.nickname;
@@ -2517,12 +2517,12 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
 			case 'assistantsRequestSmartlockModal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
 						assistantName = interaction.member.nickname;
@@ -2586,12 +2586,12 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `Successfully logged this Smartlock Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
 			case 'assistantsRequestGarageSlotModal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
 						assistantName = interaction.member.nickname;
@@ -2654,12 +2654,12 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
 			case 'assistantsOtherRequestModal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
 						assistantName = interaction.member.nickname;
@@ -2719,7 +2719,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;

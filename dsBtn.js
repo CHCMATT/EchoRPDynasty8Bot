@@ -729,7 +729,7 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'assistantsPortal':
-				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let addAssistantsPortalOptions = new StringSelectMenuBuilder()
 						.setCustomId('assistantsPortalDropdown')
 						.setPlaceholder('Select an Action')
@@ -763,7 +763,7 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
