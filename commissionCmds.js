@@ -93,7 +93,7 @@ module.exports.commissionReport = async (client, commandType) => {
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
@@ -143,7 +143,7 @@ module.exports.addWeeklyAssets = async (client) => {
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
@@ -207,7 +207,7 @@ module.exports.addCommission = async (client, from, addAmount, userId, reason) =
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
@@ -258,14 +258,14 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
 
 module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 	try {
-		let currentMiscPay = 0;
+		let currentMiscPay;
 
 		if (addAmount > 0) {
 			await dbCmds.addMiscPay(userId, addAmount);
@@ -291,7 +291,7 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 		return currentMiscPay;
 
 	} catch (error) {
-		if (process.env.BOT_NAME == 'test') {
+		if (!process.env.BOT_NAME == 'test') {
 			console.error(error);
 		} else {
 			console.error(error);
@@ -308,14 +308,14 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
 
 module.exports.removeMiscPay = async (client, from, removeAmount, userId, reason) => {
 	try {
-		let currentMiscPay = 0;
+		let currentMiscPay;
 
 		if (removeAmount > 0) {
 			await dbCmds.removeMiscPay(userId, removeAmount);
@@ -359,7 +359,7 @@ module.exports.removeMiscPay = async (client, from, removeAmount, userId, reason
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
 };
