@@ -291,7 +291,7 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 		return currentMiscPay;
 
 	} catch (error) {
-		if (!process.env.BOT_NAME == 'test') {
+		if (process.env.BOT_NAME == 'test') {
 			console.error(error);
 		} else {
 			console.error(error);
