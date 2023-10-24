@@ -265,7 +265,7 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 
 module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 	try {
-		let currentMiscPay = formatter.format(await dbCmds.readCurrentMiscPay(userId));
+		let currentMiscPay = 0;
 
 		if (addAmount > 0) {
 			await dbCmds.addMiscPay(userId, addAmount);
@@ -315,7 +315,7 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 
 module.exports.removeMiscPay = async (client, from, removeAmount, userId, reason) => {
 	try {
-		let currentMiscPay = formatter.format(await dbCmds.readCurrentMiscPay(userId));
+		let currentMiscPay = 0;
 
 		if (removeAmount > 0) {
 			await dbCmds.removeMiscPay(userId, removeAmount);
