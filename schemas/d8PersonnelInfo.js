@@ -1,5 +1,4 @@
 let { Schema, model, models } = require('mongoose');
-const { readFinanceNum } = require('../dbCmds');
 
 let reqString = {
 	type: String,
