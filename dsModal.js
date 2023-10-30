@@ -2481,7 +2481,8 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Client Information:`, value: `${clientInfo}` },
 								{ name: `Interior Information:`, value: `${interiorInfo}` },
 								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
-								{ name: `Notes:`, value: `${notesInfo}` }
+								{ name: `Notes:`, value: `${notesInfo}` },
+								{ name: `Photo Links:`, value: `${gpsPropertyString}` }
 							)
 							.setColor('FFE169')];
 					} else {
@@ -2493,6 +2494,7 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Client Information:`, value: `${clientInfo}` },
 								{ name: `Interior Information:`, value: `${interiorInfo}` },
 								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
+								{ name: `Photo Links:`, value: `${gpsPropertyString}` }
 							)
 							.setColor('FFE169')];
 					}
