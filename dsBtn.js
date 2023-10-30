@@ -743,9 +743,9 @@ module.exports.btnPressed = async (interaction) => {
 								.setEmoji('💰')
 								.setValue('assistantsPurchaseProperty'),
 							new StringSelectMenuOptionBuilder()
-								.setLabel('Request Smartlock')
+								.setLabel('Request Smart Lock')
 								.setEmoji('🔐')
-								.setValue('assistantsRequestSmartlock'),
+								.setValue('assistantsRequestSmartLock'),
 							new StringSelectMenuOptionBuilder()
 								.setLabel('Request Garage Slot(s)')
 								.setEmoji('🚘')
@@ -767,7 +767,6 @@ module.exports.btnPressed = async (interaction) => {
 
 				}
 				break;
-
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);

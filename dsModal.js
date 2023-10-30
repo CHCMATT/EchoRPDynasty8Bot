@@ -2360,7 +2360,7 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					if (notes) {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Property Purchase Request!')
+							.setTitle('An Assistant submitted a Property Purchase Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2372,7 +2372,7 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('EDC531')];
 					} else {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Property Purchase Request!')
+							.setTitle('An Assistant submitted a Property Purchase Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2474,7 +2474,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					if (notesInfo) {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Quote Request!')
+							.setTitle('An Assistant submitted a Quote Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2486,7 +2486,7 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('FFE169')];
 					} else {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Quote Request!')
+							.setTitle('An Assistant submitted a Quote Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2521,7 +2521,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				}
 				break;
-			case 'assistantsRequestSmartlockModal':
+			case 'assistantsRequestSmartLockModal':
 				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var assistantName;
 					if (interaction.member.nickname) {
@@ -2544,7 +2544,7 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					if (notes) {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Smartlock Request!')
+							.setTitle('An Assistant submitted a Smart Lock Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2557,7 +2557,7 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('B69121')];
 					} else {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Smartlock Request!')
+							.setTitle('An Assistant submitted a Smart Lock Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2583,7 +2583,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
 
-					await interaction.reply({ content: `Successfully logged this Smartlock Request.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully logged this Smart Lock Request.`, ephemeral: true });
 				} else {
 
 					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
@@ -2613,7 +2613,7 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					if (notes) {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Garage Slot Request!')
+							.setTitle('An Assistant submitted a Garage Slot Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2626,7 +2626,7 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('B69121')];
 					} else {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted A Garage Slot Request!')
+							.setTitle('An Assistant submitted a Garage Slot Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2680,7 +2680,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					if (notesInfo) {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted An Other Request!')
+							.setTitle('An Assistant submitted a Misc. Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },
@@ -2692,7 +2692,7 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('76520E')];
 					} else {
 						var embeds = [new EmbedBuilder()
-							.setTitle('An Assistant Submitted An Other Request!')
+							.setTitle('An Assistant submitted a Misc. Request!')
 							.addFields(
 								{ name: `Assistant Name:`, value: `${assistantName} (<@${interaction.user.id}>)` },
 								{ name: `Request Date:`, value: `${reqDate}` },

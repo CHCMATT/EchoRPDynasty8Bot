@@ -612,10 +612,10 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 					await interaction.showModal(assistantsRequestQuoteModal);
 				};
-				if (interaction.values[0] == 'assistantsRequestSmartlock') {
-					let assistantsRequestSmartlockModal = new ModalBuilder()
-						.setCustomId('assistantsRequestSmartlockModal')
-						.setTitle(`Assistant's Smartlock Request`);
+				if (interaction.values[0] == 'assistantsRequestSmartLock') {
+					let assistantsRequestSmartLockModal = new ModalBuilder()
+						.setCustomId('assistantsRequestSmartLockModal')
+						.setTitle(`Assistant's Smart Lock Request`);
 					let clientInformationInput = new TextInputBuilder()
 						.setCustomId('clientInformationInput')
 						.setLabel('What is the name & phone # of the client?')
@@ -654,9 +654,9 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let shiftAvailableInputRow = new ActionRowBuilder().addComponents(shiftAvailableInput);
 					let notesInputRow = new ActionRowBuilder().addComponents(notesInput);
 
-					assistantsRequestSmartlockModal.addComponents(clientInformationInputRow, propertyIDInputRow, bankNumberInputRow, shiftAvailableInputRow, notesInputRow);
+					assistantsRequestSmartLockModal.addComponents(clientInformationInputRow, propertyIDInputRow, bankNumberInputRow, shiftAvailableInputRow, notesInputRow);
 
-					await interaction.showModal(assistantsRequestSmartlockModal);
+					await interaction.showModal(assistantsRequestSmartLockModal);
 				};
 				if (interaction.values[0] == 'assistantsRequestGarageSlot') {
 					let assistantsRequestGarageSlotModal = new ModalBuilder()
