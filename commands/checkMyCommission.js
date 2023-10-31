@@ -30,6 +30,19 @@ module.exports = {
 					bankAccount = personnelStats.bankAccount
 				}
 
+				if (currentCommission == null) {
+					currentCommission = 0;
+				}
+				if (monthlyCommission == null) {
+					monthlyCommission = 0;
+				}
+				if (currentMiscPay == null) {
+					currentMiscPay = 0;
+				}
+				if (bankAccount == null) {
+					bankAccount = 'n/a';
+				}
+
 				let formattedCurrCommission = formatter.format(currentCommission);
 				let formattedMonthlyCommission = formatter.format(monthlyCommission);
 				let formattedCurrMiscPay = formatter.format(currentMiscPay);
