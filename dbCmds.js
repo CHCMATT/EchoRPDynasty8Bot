@@ -36,11 +36,41 @@ module.exports.resetSummValue = async (summaryName) => {
 
 // for finding and adding to the personnel's statistics
 module.exports.initPersStats = async (discordId, discordNickname) => {
-	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { discordId: discordId, charName: discordNickname, housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, currentCommission: 0, monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, settingQuotePing: true, settingReimbursementPing: true, quotesReviewed: 0, monthlyQuotesReviewed: 0, monthlyContactRequests: 0, contactRequests: 0 }, { upsert: true });
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, {
+		// personnel data
+		discordId: discordId, charName: discordNickname,
+
+		// overall data
+		housesSold: 0, warehousesSold: 0, propertiesRepod: 0, propertiesQuoted: 0, activityChecks: 0, miscSales: 0, financialAgreements: 0, quotesReviewed: 0, contactRequests: 0,
+
+		//pay data
+		currentCommission: 0, monthlyCommission: 0, currentMiscPay: 0, bankAccount: 'n/a',
+
+		// monthly data
+		monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyQuotesReviewed: 0, monthlyContactRequests: 0,
+
+		// settings data
+		settingQuotePing: true, settingReimbursementPing: true, settingRepossessionPing: true
+
+	}, { upsert: true });
 };
 
 module.exports.readPersStats = async (discordId) => {
-	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { discordId: 1, charName: 1, housesSold: 1, embedMsgId: 1, embedColor: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, quotesReviewed: 1, currentCommission: 1, bankAccount: 1, contactRequests: 1, _id: 0 });
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, {
+		// personnel data
+		discordId: 1, charName: 1,
+
+		// overall data
+		housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, quotesReviewed: 1, contactRequests: 1,
+
+		//pay data
+		currentCommission: 1, monthlyCommission: 1, currentMiscPay: 1, bankAccount: 1,
+
+		// monthly data
+		monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyQuotesReviewed: 1, monthlyContactRequests: 1,
+
+		_id: 0
+	});
 	return result;
 };
 
@@ -112,6 +142,11 @@ module.exports.resetCurrPay = async (discordId) => {
 module.exports.readCurrentCommission = async (discordId) => {
 	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentCommission: 1, _id: 0 });
 	return result.currentCommission;
+};
+
+module.exports.readCurrentMiscPay = async (discordId) => {
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { currentMiscPay: 1, _id: 0 });
+	return result.currentMiscPay;
 };
 
 module.exports.readCurrentMiscPay = async (discordId) => {
