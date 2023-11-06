@@ -379,9 +379,9 @@ module.exports.btnPressed = async (interaction) => {
 					var evictionSentDate = `<t:${now}:d>`;
 
 					if (currentMsg.embeds[0].data.fields[12]) {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${msgNotes}\n- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` };
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${msgNotes}\n- [Eviction Notice](${documentLink}) created by <@${interaction.user.id}> on ${evictionSentDate}.` };
 					} else {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- [Eviction Notice](${documentLink}) sent by <@${interaction.user.id}> on ${evictionSentDate}.` };
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- [Eviction Notice](${documentLink}) created by <@${interaction.user.id}> on ${evictionSentDate}.` };
 					}
 
 					let btnRows = addBtnRows();
