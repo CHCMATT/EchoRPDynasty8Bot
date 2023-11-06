@@ -2720,9 +2720,52 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
-
 					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'evictionNoticeSentModal':
+				if (1 == 1) {
+					let now = Math.floor(new Date().getTime() / 1000.0);
+					let today = `<t:${now}:d>`;
+					let proofLinkInput = strCleanup(interaction.fields.getTextInputValue('proofLinkInput'));
 
+					if (!isValidUrl(proofLinkInput)) { // validate url of proof
+						await interaction.reply({
+							content: `:exclamation: \`${interaction.fields.getTextInputValue('proofLinkInput')}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					let origNotes = interaction.message.embeds[0].data.fields[12].value;
+
+					origNotes = origNotes + `\n- [Proof of Eviction Notice Sent](${proofLinkInput}) added by <@${interaction.user.id}> on ${today}.`;
+
+					interaction.message.embeds[0].data.fields[12].value = origNotes;
+
+					let btnComp = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('markPaymentsComplete')
+							.setLabel('Mark as Completed')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('createEvictionNotice')
+							.setLabel('Create an Eviction Notice')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+
+						new ButtonBuilder()
+							.setCustomId('addNoticeSentProof')
+							.setLabel('Add Proof of Eviction Sent')
+							.setStyle(ButtonStyle.Primary)
+							.setDisabled(true),
+					)];
+
+					await interaction.message.edit({ embeds: interaction.message.embeds, components: btnComp });
+
+					await interaction.reply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement.`, ephemeral: true });
 				}
 				break;
 			default:

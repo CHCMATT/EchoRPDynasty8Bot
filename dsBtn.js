@@ -400,6 +400,11 @@ module.exports.btnPressed = async (interaction) => {
 								.setLabel('Create an Eviction Notice')
 								.setStyle(ButtonStyle.Primary)
 								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('addNoticeSentProof')
+								.setLabel('Add Proof of Eviction Sent')
+								.setStyle(ButtonStyle.Primary),
 						);
 
 						let rows = [row1];
@@ -762,9 +767,28 @@ module.exports.btnPressed = async (interaction) => {
 
 					await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
 				} else {
-
 					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				}
+				break;
+			case 'addNoticeSentProof':
+				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let evictionNoticeSentModal = new ModalBuilder()
+						.setCustomId('evictionNoticeSentModal')
+						.setTitle('Add Proof of Eviction Notice Sent');
 
+					let proofLinkInput = new TextInputBuilder()
+						.setCustomId('proofLinkInput')
+						.setLabel('Please provide proof of notice sent')
+						.setStyle(TextInputStyle.Paragraph)
+						.setPlaceholder('Link to a screenshot from your phone of the eviction being sent')
+						.setRequired(true);
+
+					let proofLinkInputRow = new ActionRowBuilder().addComponents(proofLinkInput);
+
+					evictionNoticeSentModal.addComponents(proofLinkInputRow);
+					await interaction.showModal(evictionNoticeSentModal);
+				} else {
+					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			default:
