@@ -228,12 +228,12 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 			if (from == 'System') {
 				notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Automatically:')
-					.setDescription(`\`System\` removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
+					.setDescription(`\`System\` removed \`${formattedCommission}\` from <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** ${reason}.`)
 					.setColor('1EC276');
 			} else {
 				notificationEmbed = new EmbedBuilder()
 					.setTitle('Commission Modified Manually:')
-					.setDescription(`${from} removed \`${formattedCommission}\` to <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** \`${reason}\`.`)
+					.setDescription(`${from} removed \`${formattedCommission}\` from <@${userId}>'s current commission for a new total of \`${currCommission}\`.\n\n**Reason:** \`${reason}\`.`)
 					.setColor('FFA630');
 			}
 			await client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
