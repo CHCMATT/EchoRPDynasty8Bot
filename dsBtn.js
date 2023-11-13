@@ -705,7 +705,7 @@ module.exports.btnPressed = async (interaction) => {
 					if (interaction.user.id == originalUserId || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 						let allUsers = await interaction.member.guild.members.fetch();
 						let allRealtors = allUsers.filter(
-							member => member._roles.includes(process.env.FULL_TIME_ROLE_ID) && member._roles.includes(process.env.ASSISTANT_ROLE_ID)
+							member => member._roles.includes(process.env.FULL_TIME_ROLE_ID) || member._roles.includes(process.env.ASSISTANT_ROLE_ID)
 						);
 
 						let allRealtorsArray = allRealtors.map(member => new StringSelectMenuOptionBuilder().setLabel(member.nickname).setValue(member.user.id));
