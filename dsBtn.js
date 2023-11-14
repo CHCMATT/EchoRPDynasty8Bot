@@ -714,6 +714,9 @@ module.exports.btnPressed = async (interaction) => {
 							return realtor.data.label !== interaction.member.nickname;
 						});
 
+						// Sort the array alphabetically by label
+						allRealtorsArray.sort((a, b) => a.data.label.localeCompare(b.data.label));
+
 						let realtorSelectionOptions = new StringSelectMenuBuilder()
 							.setCustomId('swapCommissionRealtorDropdown')
 							.setPlaceholder('Select a Realtor')
@@ -730,12 +733,12 @@ module.exports.btnPressed = async (interaction) => {
 
 						let formattedRealtorCommission = formatter.format(realtorCommission);
 
-						let commissionSplitReply = await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						let commissionSplitReply = await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from the sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 						exports.commissionSplitReply = commissionSplitReply.interaction;
-
 					}
 				}
 				break;
+
 			case 'assistantsPortal':
 				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let addAssistantsPortalOptions = new StringSelectMenuBuilder()
