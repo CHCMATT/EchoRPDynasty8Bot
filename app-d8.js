@@ -4,6 +4,7 @@ let cron = require('node-cron');
 let mongoose = require("mongoose");
 let startUp = require('./startup.js');
 let { google } = require('googleapis');
+let message = require('./dsMessages.js');
 let interact = require('./dsInteractions.js');
 let statsReport = require('./statsReport.js');
 let commissionCmds = require('./commissionCmds.js');
