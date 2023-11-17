@@ -830,7 +830,6 @@ function getDisabledAckAlertBtn() {
 			.setLabel('Acknowledge Alert')
 			.setStyle(ButtonStyle.Primary)
 			.setDisabled(true),
-
 	);
 
 	let rows = [row1];
