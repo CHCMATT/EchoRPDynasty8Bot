@@ -2358,6 +2358,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.client.googleSheets.values.append({
 						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Purchase Request!A:F", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, paymentMethod, shiftAvailable, notes]] }
 					});
+
 					if (notes) {
 						var embeds = [new EmbedBuilder()
 							.setTitle('An Assistant submitted a Property Purchase Request!')
@@ -2383,7 +2384,6 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('EDC531')];
 					}
 
-
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
 						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -2395,13 +2395,13 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+					let assistantBtns = getAssistantButtons();
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
 
 					await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 				} else {
-
 					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
-
 				}
 				break;
 			case 'assistantsRequestQuoteModal':
@@ -2503,8 +2503,6 @@ module.exports.modalSubmit = async (interaction) => {
 
 					embeds = embeds.concat(photosEmbed);
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
-
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
 						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -2515,6 +2513,10 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
+
+					let assistantBtns = getAssistantButtons();
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
 
 					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
 				} else {
@@ -2583,8 +2585,9 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+					let assistantBtns = getAssistantButtons();
 
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
 					await interaction.reply({ content: `Successfully logged this Smart Lock Request.`, ephemeral: true });
 				} else {
 
@@ -2651,7 +2654,9 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
+					let assistantBtns = getAssistantButtons();
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
 
 					await interaction.reply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
 				} else {
@@ -2705,8 +2710,6 @@ module.exports.modalSubmit = async (interaction) => {
 							.setColor('76520E')];
 					}
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds });
-
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
 						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
@@ -2717,6 +2720,10 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "contactRequests");
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
+
+					let assistantBtns = getAssistantButtons();
+
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
 
 					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
@@ -2796,4 +2803,28 @@ module.exports.modalSubmit = async (interaction) => {
 			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 		}
 	}
+};
+
+function getAssistantButtons() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('markFormCompleted')
+			.setLabel('Mark Completed')
+			.setStyle(ButtonStyle.Success),
+		new ButtonBuilder()
+			.setCustomId('markIncomplete')
+			.setLabel('Mark Incomplete')
+			.setStyle(ButtonStyle.Danger),
+		new ButtonBuilder()
+			.setCustomId('markContacted')
+			.setLabel('Mark as Contacted')
+			.setStyle(ButtonStyle.Primary),
+		new ButtonBuilder()
+			.setCustomId('markFor48HrHold')
+			.setLabel('Add 48 Hour Hold')
+			.setStyle(ButtonStyle.Secondary),
+	);
+
+	let rows = [row1];
+	return rows;
 };
