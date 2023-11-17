@@ -738,7 +738,6 @@ module.exports.btnPressed = async (interaction) => {
 					}
 				}
 				break;
-
 			case 'assistantsPortal':
 				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let addAssistantsPortalOptions = new StringSelectMenuBuilder()
