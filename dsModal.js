@@ -2397,7 +2397,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let assistantBtns = getAssistantButtons();
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
 					await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 				} else {
@@ -2516,7 +2516,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let assistantBtns = getAssistantButtons();
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
 					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
 				} else {
@@ -2587,7 +2587,8 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let assistantBtns = getAssistantButtons();
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
+
 					await interaction.reply({ content: `Successfully logged this Smart Lock Request.`, ephemeral: true });
 				} else {
 
@@ -2656,7 +2657,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let assistantBtns = getAssistantButtons();
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
 					await interaction.reply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
 				} else {
@@ -2723,7 +2724,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let assistantBtns = getAssistantButtons();
 
-					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds, components: assistantBtns });
+					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
 					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
