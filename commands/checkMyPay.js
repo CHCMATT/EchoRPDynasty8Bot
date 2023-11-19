@@ -14,7 +14,7 @@ module.exports = {
 	description: 'Displays your current commission and pay information',
 	async execute(interaction) {
 		try {
-			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 
