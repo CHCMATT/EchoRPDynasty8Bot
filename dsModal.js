@@ -2216,8 +2216,6 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let reason = `Repossession of property number \`${lotNumStreetName}\` on ${repoDate}`;
-
 					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: repoEmbeds, components: trainActivityBtnsDisabled });
 
 					await interaction.message.delete();
