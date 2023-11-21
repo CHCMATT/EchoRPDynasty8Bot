@@ -1916,7 +1916,7 @@ module.exports.modalSubmit = async (interaction) => {
 					if (oldEmbeds[0].data.fields[4]) {
 						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
 					} else {
-						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `- ${notes}` };
 					}
 
 					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
@@ -2020,7 +2020,7 @@ module.exports.modalSubmit = async (interaction) => {
 					if (oldEmbeds[0].data.fields[4]) {
 						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
 					} else {
-						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `- ${notes}` };
 					}
 
 					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
@@ -2112,7 +2112,7 @@ module.exports.modalSubmit = async (interaction) => {
 					if (oldEmbeds[0].data.fields[4]) {
 						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${oldEmbeds[0].data.fields[4].value}\n- ${notes}` };
 					} else {
-						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
+						oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `- ${notes}` };
 					}
 
 					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
@@ -2165,24 +2165,15 @@ module.exports.modalSubmit = async (interaction) => {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let repoDate = `<t:${now}:d>`;
 
-					let prevOwner = interaction.message.embeds[0].data.fields[2].value;
-					let lotNumStreetName = interaction.message.embeds[0].data.fields[3].value;
+					let prevEmbeds = interaction.message.embeds;
+					let lotNumStreetName = prevEmbeds[0].data.fields[3].value;
+					let prevNotes = prevEmbeds[0].data.fields[4].value;
+
 					let repoReason = strCleanup(interaction.fields.getTextInputValue('completeRepoReasonInput'));
 
-					let repoEmbeds = [new EmbedBuilder()
-						.setTitle('A new property repossession has been completed!')
-						.addFields(
-							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-							{ name: `Repossession Date:`, value: `${repoDate}` },
-							{ name: `Previous Owner Information:`, value: `${prevOwner}` },
-							{ name: `Street Address:`, value: `${lotNumStreetName}` },
-							{ name: `Reason for Repossession:`, value: `${repoReason}` },
-						)
-						.setColor('B69121')];
-
-					for (let i = 1; i < interaction.message.embeds.length; i++) {
-						repoEmbeds = repoEmbeds.concat(interaction.message.embeds[i]);
-					}
+					prevEmbeds[0].data.title = "A Property Repossession has been completed!"
+					prevEmbeds[0].data.fields[4] = { name: `Reason for Repossession:`, value: `${repoReason}` };
+					prevEmbeds[0].data.fields[5] = { name: `Notes:`, value: `${prevNotes}\n- Repossesion completed by <@${interaction.user.id}> on ${repoDate}.` };
 
 					let trainActivityBtnsDisabled = [new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
@@ -2216,11 +2207,11 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyPropertiesRepod");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: repoEmbeds, components: trainActivityBtnsDisabled });
+					await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: prevEmbeds, components: trainActivityBtnsDisabled });
 
 					await interaction.message.delete();
 
-					await interaction.reply({ content: `Successfully marked the property for \`${prevOwner}\` as repossessed.`, ephemeral: true });
+					await interaction.reply({ content: `Successfully marked the property at address \`${lotNumStreetName}\` as repossessed.`, ephemeral: true });
 				}
 				break;
 			case 'markPaymentsCompleteModal':
