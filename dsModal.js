@@ -2453,6 +2453,14 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 					}
 
+					if (gpsPropertyString.length > 1024) {
+						await interaction.reply({
+							content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
+							ephemeral: true
+						});
+						return;
+					}
+
 					if (photos.length >= 10) {
 						await interaction.reply({
 							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
