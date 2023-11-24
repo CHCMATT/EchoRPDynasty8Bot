@@ -1637,6 +1637,63 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
+				var photos = [refundProof];
+				if (refundProof.includes(",")) {
+					photos = refundProof.split(",")
+				} else if (refundProof.includes(";")) {
+					photos = refundProof.split(";")
+				} else if (refundProof.includes(" ")) {
+					photos = refundProof.split(" ")
+				} else if (refundProof.includes("|")) {
+					photos = refundProof.split("|")
+				} else if (photos.length > 1) {
+					await interaction.reply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.reply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (refundProof.length > 1024) {
+					await interaction.reply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.reply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
+
 				var formattedAmount = formatter.format(refundAmount);
 
 				var embeds;
@@ -1647,9 +1704,8 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${requestDate}` },
-							{ name: `Reimbursement Reason:`, value: `${refundReason}` },
-							{ name: `Amount Requested:`, value: `${formattedAmount}` },
-							{ name: `Proof:`, value: `${refundProof}` },
+							{ name: `Reimbursement Reason:`, value: `${refundReason}`, inline: true },
+							{ name: `Amount Requested:`, value: `${formattedAmount}`, inline: true },
 						)
 						.setColor('DBB42C')];
 				} else {
@@ -1658,11 +1714,14 @@ module.exports.modalSubmit = async (interaction) => {
 						.addFields(
 							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
 							{ name: `Request Date:`, value: `${requestDate}` },
-							{ name: `Reimbursement Reason:`, value: `${refundReason}` },
-							{ name: `Amount Requested:`, value: `${formattedAmount}` },
+							{ name: `Reimbursement Reason:`, value: `${refundReason}`, inline: true },
+							{ name: `Amount Requested:`, value: `${formattedAmount}`, inline: true },
 						)
 						.setColor('DBB42C')];
 				}
+
+				embeds = embeds.concat(photosEmbed);
+
 
 				function addreimbursementBtns() {
 					let row1 = new ActionRowBuilder().addComponents(
@@ -1689,22 +1748,57 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.reply({ content: `Successfully submitted a reimbusement request for \`${formattedAmount}\`. You will be notified once Management has reviewed your request.`, ephemeral: true });
 				break;
 			case 'approveReimbursementModal':
-				interaction.deferReply({ ephemeral: true });
+				await interaction.deferReply({ ephemeral: true });
 
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
 
-					let reimbursementReason = `Reimbursement approved for \`${interaction.message.embeds[0].data.fields[2].value}\``;
+					let approvalNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
 
-					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let oldEmbeds = interaction.message.embeds;
+
+					let originalUserStr = oldEmbeds[0].data.fields[0].value;
 					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
 					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
 					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
-					let amountStr = interaction.message.embeds[0].data.fields[3].value;
-					let amount = Number(amountStr.replaceAll('$', '').replaceAll(',', ''));
 
-					var currCommission = await commissionCmds.addMiscPay(interaction.client, 'System', amount, originalUserId, reimbursementReason);
+					let reimburseReason = oldEmbeds[0].data.fields[2].value;
+					let amountStr = oldEmbeds[0].data.fields[3].value;
+					let amountNum = amountStr.replaceAll('$', '').replaceAll(',', '');
+
+					let reason = `Reimbursement approved for \`${reimburseReason}\``;
+
+					let notes;
+					let alertEmbed = [];
+
+					if (approvalNotes) {
+						notes = `Approved by <@${interaction.member.id}> on ${todayDate} with note \`${approvalNotes}\`.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A reimbursement request you submitted has been approved')
+							.addFields(
+								{ name: `Reimbursement Reason:`, value: `${reimburseReason}` },
+								{ name: `Amount Requested:`, value: `${amountStr}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+								{ name: `Approval Notes:`, value: `${approvalNotes}` }
+							)
+							.setColor('1EC276')];
+
+					} else {
+						notes = `Approved by <@${interaction.member.id}> on ${todayDate}.`
+
+						alertEmbed = [new EmbedBuilder()
+							.setTitle('A reimbursement request you submitted has been approved')
+							.addFields(
+								{ name: `Reimbursement Reason:`, value: `${reimburseReason}` },
+								{ name: `Amount Requested:`, value: `${amountStr}` },
+								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
+							)
+							.setColor('1EC276')];
+					}
+
+					oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
 
 					function addReimbursementBtnsDisabled() {
 						let row1 = new ActionRowBuilder().addComponents(
@@ -1725,46 +1819,11 @@ module.exports.modalSubmit = async (interaction) => {
 						return rows;
 					};
 
-					let approveNotes = strCleanup(interaction.fields.getTextInputValue('approveNotesInput'));
-					let oldEmbed = interaction.message.embeds[0];
-					let alertEmbed = [];
-					let notes;
-
-					if (approveNotes) {
-						notes = `Approved by <@${interaction.member.id}> on ${todayDate} with note \`${approveNotes}\`.`
-
-						alertEmbed = [new EmbedBuilder()
-							.setTitle('A reimbursement request you submitted has been approved')
-							.addFields(
-								{ name: `Reimbursement Reason:`, value: `${oldEmbed.data.fields[2].value}` },
-								{ name: `Amount Requested:`, value: `${oldEmbed.data.fields[3].value}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
-								{ name: `Approval Notes:`, value: `${approveNotes}` }
-							)
-							.setColor('1EC276')];
-
-					} else {
-						notes = `Approved by <@${interaction.member.id}> on ${todayDate}.`
-
-						alertEmbed = [new EmbedBuilder()
-							.setTitle('A reimbursement request you submitted has been approved')
-							.addFields(
-								{ name: `Reimbursement Reason:`, value: `${oldEmbed.data.fields[2].value}` },
-								{ name: `Amount Requested:`, value: `${oldEmbed.data.fields[3].value}` },
-								{ name: `Approved By:`, value: `<@${interaction.member.id}>` },
-							)
-							.setColor('1EC276')];
-					}
-
-					if (oldEmbed.data.fields[4]) {
-						oldEmbed.data.fields[5] = { name: `Notes:`, value: `${notes}` };
-					} else {
-						oldEmbed.data.fields[4] = { name: `Notes:`, value: `${notes}` };
-					}
+					await commissionCmds.addMiscPay(interaction.client, 'System', amountNum, originalUserId, reason);
 
 					let reimbursementBtnsDisabled = addReimbursementBtnsDisabled();
 
-					await interaction.message.edit({ embeds: [oldEmbed], components: reimbursementBtnsDisabled });
+					await interaction.message.edit({ embeds: oldEmbeds, components: reimbursementBtnsDisabled });
 
 					let settingReimbursementPing = await dbCmds.readPersSetting(originalUserId, 'settingReimbursementPing');
 
@@ -1789,16 +1848,20 @@ module.exports.modalSubmit = async (interaction) => {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
 
-					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
+					let denyNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
+
+					let oldEmbeds = interaction.message.embeds;
+
+					let originalUserStr = oldEmbeds[0].data.fields[0].value;
 					let originalUserName = originalUserStr.substring(0, (originalUserStr.indexOf(' (')));
 					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
 					let originalUserId = originalUser.replaceAll('<@', '').replaceAll('>', '');
-					let amountStr = interaction.message.embeds[0].data.fields[3].value;
 
-					let denyNotes = strCleanup(interaction.fields.getTextInputValue('denyNotesInput'));
-					let oldEmbed = interaction.message.embeds[0];
-					let alertEmbed = [];
+					let reimburseReason = oldEmbeds[0].data.fields[2].value;
+					let amountStr = oldEmbeds[0].data.fields[3].value;
+
 					let notes;
+					let alertEmbed = [];
 
 					if (denyNotes) {
 						notes = `Denied by <@${interaction.member.id}> on ${todayDate} with note \`${denyNotes}\`.`
@@ -1806,8 +1869,8 @@ module.exports.modalSubmit = async (interaction) => {
 						alertEmbed = [new EmbedBuilder()
 							.setTitle('A reimbursement request you submitted has been denied')
 							.addFields(
-								{ name: `Reimbursement Reason:`, value: `${oldEmbed.data.fields[2].value}` },
-								{ name: `Amount Requested:`, value: `${oldEmbed.data.fields[3].value}` },
+								{ name: `Reimbursement Reason:`, value: `${reimburseReason}` },
+								{ name: `Amount Requested:`, value: `${amountStr}` },
 								{ name: `Denied By:`, value: `<@${interaction.member.id}>` },
 								{ name: `Denial Notes:`, value: `${denyNotes}` }
 							)
@@ -1819,18 +1882,14 @@ module.exports.modalSubmit = async (interaction) => {
 						alertEmbed = [new EmbedBuilder()
 							.setTitle('A reimbursement request you submitted has been denied')
 							.addFields(
-								{ name: `Reimbursement Reason:`, value: `${oldEmbed.data.fields[2].value}` },
-								{ name: `Amount Requested:`, value: `${oldEmbed.data.fields[3].value}` },
+								{ name: `Reimbursement Reason:`, value: `${reimburseReason}` },
+								{ name: `Amount Requested:`, value: `${amountStr}` },
 								{ name: `Denied By:`, value: `<@${interaction.member.id}>` },
 							)
 							.setColor('B80600')];
 					}
 
-					if (oldEmbed.data.fields[4]) {
-						oldEmbed.data.fields[5] = { name: `Notes:`, value: `${notes}` };
-					} else {
-						oldEmbed.data.fields[4] = { name: `Notes:`, value: `${notes}` };
-					}
+					oldEmbeds[0].data.fields[4] = { name: `Notes:`, value: `${notes}` };
 
 					function addReimbursementBtnsDisabled() {
 						let row1 = new ActionRowBuilder().addComponents(
@@ -1853,7 +1912,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					let reimbursementBtnsDisabled = addReimbursementBtnsDisabled();
 
-					await interaction.message.edit({ embeds: [oldEmbed], components: reimbursementBtnsDisabled });
+					await interaction.message.edit({ embeds: oldEmbeds, components: reimbursementBtnsDisabled });
 
 					let settingReimbursementPing = await dbCmds.readPersSetting(originalUserId, 'settingReimbursementPing');
 
@@ -1868,7 +1927,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await interaction.editReply({ content: `Successfully denied the reimbursement request for \`${amountStr}\` for <@${originalUserId}>.`, ephemeral: true });
 
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'approveRepoModal':

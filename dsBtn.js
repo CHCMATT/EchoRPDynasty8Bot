@@ -241,7 +241,7 @@ module.exports.btnPressed = async (interaction) => {
 					.setLabel('What proof do you have?')
 					.setStyle(TextInputStyle.Short)
 					.setPlaceholder('https://i.imgur.com/qtzNB2p.jpeg')
-					.setRequired(false);
+					.setRequired(true);
 
 				var reasonInputRow = new ActionRowBuilder().addComponents(reasonInput);
 				var amountInputRow = new ActionRowBuilder().addComponents(amountInput);
