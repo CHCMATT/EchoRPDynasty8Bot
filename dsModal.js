@@ -65,6 +65,8 @@ function getSaleBtns() {
 module.exports.modalSubmit = async (interaction) => {
 	try {
 		var modalID = interaction.customId;
+		await interaction.deferReply({ ephemeral: true });
+
 		switch (modalID) {
 			case 'addHouseSoldModal':
 				var realtorName;
@@ -88,7 +90,7 @@ module.exports.modalSubmit = async (interaction) => {
 				});
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -105,7 +107,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -118,7 +120,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -126,7 +128,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -135,7 +137,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -194,7 +196,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newHousesSoldTotal = await dbCmds.readSummValue("countHousesSold");
 
-				await interaction.reply({ content: `Successfully logged this House Sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully logged this House Sale - the new total is \`${newHousesSoldTotal}\`.\n\nDetails about this sale:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedPrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
 			case 'addWarehouseSoldModal':
@@ -234,7 +236,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedTaxPrice = formatter.format(taxPrice);
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -251,7 +253,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -264,7 +266,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -272,7 +274,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -281,7 +283,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -325,12 +327,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newWarehousesSoldTotal = await dbCmds.readSummValue("countWarehousesSold");
 
-				await interaction.reply({ content: `Successfully logged this Warehouse Sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully logged this Warehouse Sale - the new total is \`${newWarehousesSoldTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Cost Price: \`${formattedCostPrice}\`\n> Dynasty 8 Profit: \`${formattedD8Profit}\`\n> Your Commission: \`${formattedRealtorCommission}\`\n\nYour commission is now: \`${currCommission}\`.`, ephemeral: true });
 
 				break;
 			case 'addOfficeSoldModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				var realtorName;
 				if (interaction.member.nickname) {
 					realtorName = interaction.member.nickname;
@@ -447,7 +447,7 @@ module.exports.modalSubmit = async (interaction) => {
 				});
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -464,7 +464,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -477,7 +477,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -485,7 +485,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -494,7 +494,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -562,7 +562,7 @@ module.exports.modalSubmit = async (interaction) => {
 				});
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -597,7 +597,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newMiscSalesTotal = await dbCmds.readSummValue("countMiscSales");
 
-				await interaction.reply({ content: `Successfully logged this Miscellaneous Sale. The new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\``, ephemeral: true });
+				await interaction.editReply({ content: `Successfully logged this Miscellaneous Sale. The new total is \`${newMiscSalesTotal}\`.\n\nDetails about this sale:\n> Sale Price: \`${formattedPrice}\``, ephemeral: true });
 				break;
 			case 'addPropertyQuoteModal':
 				var realtorName;
@@ -624,7 +624,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 
 				if (isNaN(price)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -641,7 +641,7 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (photosString.includes("|")) {
 						photos = photosString.split("|")
 					} else if (photos.length > 1) {
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
 						});
@@ -654,7 +654,7 @@ module.exports.modalSubmit = async (interaction) => {
 							continue;
 						}
 						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
+							await interaction.editReply({
 								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 								ephemeral: true
 							});
@@ -662,7 +662,7 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
+							await interaction.editReply({
 								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
@@ -671,7 +671,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					if (photos.length >= 10) {
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 							ephemeral: true
 						});
@@ -737,7 +737,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await editEmbed.editMainEmbed(interaction.client);
 
 				var newPropertiesQuotedTotal = await dbCmds.readSummValue("countPropertiesQuoted");
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Properties Quoted\` counter - the new total is \`${newPropertiesQuotedTotal}\`.`, ephemeral: true });
 				break;
 			case 'approveQuoteModal':
 				if (interaction.member._roles.includes(process.env.QUOTE_APPROVER_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
@@ -849,9 +849,9 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked this quote as approved.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'adjustQuoteModal':
@@ -860,7 +860,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let adjustedPrice = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('adjustPriceInput')).replaceAll(',', '').replaceAll('$', '')));
 
 					if (isNaN(adjustedPrice)) { // validate quantity of money
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${interaction.fields.getTextInputValue('adjustPriceInput')}\` is not a valid number, please be sure to only enter numbers.`,
 							ephemeral: true
 						});
@@ -977,9 +977,9 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked this quote as approved with adjustments.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'denyQuoteModal':
@@ -1091,9 +1091,9 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 					}
 
-					await interaction.reply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked this quote as denied.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Quote Approver\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'addPropertyRepodModal':
@@ -1127,7 +1127,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -1140,7 +1140,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -1148,7 +1148,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -1157,7 +1157,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -1209,7 +1209,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var newPropertiesRepodTotal = await dbCmds.readSummValue("countPropertiesRepod");
 
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Properties Repossessed\` counter - the new total is \`${newPropertiesRepodTotal}\`.`, ephemeral: true });
 
 				break;
 			case 'addRepoRequestModal':
@@ -1242,7 +1242,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (photosString.includes("|")) {
 					photos = photosString.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -1255,7 +1255,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -1263,7 +1263,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -1272,7 +1272,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -1335,10 +1335,9 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyActivityChecks");
 				await editEmbed.editMainEmbed(interaction.client);
 				var newTrainActivyChecksTotal = await dbCmds.readSummValue("countTrainActivitiesChecked");
-				await interaction.reply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added \`1\` to the \`Train Activities\` counter - the new total is \`${newTrainActivyChecksTotal}\`.`, ephemeral: true });
 				break;
 			case 'addFinancingAgreementModal':
-				await interaction.deferReply({ ephemeral: true });
 				var realtorName;
 				if (interaction.member.nickname) {
 					realtorName = interaction.member.nickname;
@@ -1566,7 +1565,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var screenshotLink = strCleanup(interaction.fields.getTextInputValue('screenshotInput'));
 
 				if (!isValidUrl(screenshotLink)) { // validate photo link
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${screenshotLink}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 						ephemeral: true
 					});
@@ -1574,7 +1573,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 				if (!RegExp(allowedValues.join('|')).test(screenshotLink.toLowerCase())) { // validate photo link, again
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${screenshotLink}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 						ephemeral: true
 					});
@@ -1602,7 +1601,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var reason = `Yellow Pages ad listed on ${adDate}`;
 				var currMiscPay = await commissionCmds.addMiscPay(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
 
-				await interaction.reply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Misc. Pay: \`${formattedCommission}\`\n\nYour miscellaneous pay is now: \`${currMiscPay}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully logged this Yellow Pages ad listing.\n\nDetails about this listing:\n> Your Misc. Pay: \`${formattedCommission}\`\n\nYour miscellaneous pay is now: \`${currMiscPay}\`.`, ephemeral: true });
 
 				break;
 			case 'addReimbursementReqModal':
@@ -1630,7 +1629,7 @@ module.exports.modalSubmit = async (interaction) => {
 				});
 
 				if (isNaN(refundAmount)) { // validate quantity of money
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('amountInput')}\` is not a valid number, please be sure to only enter numbers.`,
 						ephemeral: true
 					});
@@ -1647,7 +1646,7 @@ module.exports.modalSubmit = async (interaction) => {
 				} else if (refundProof.includes("|")) {
 					photos = refundProof.split("|")
 				} else if (photos.length > 1) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 						ephemeral: true
 					});
@@ -1660,7 +1659,7 @@ module.exports.modalSubmit = async (interaction) => {
 						continue;
 					}
 					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -1668,7 +1667,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 							ephemeral: true
 						});
@@ -1677,7 +1676,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (refundProof.length > 1024) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 						ephemeral: true
 					});
@@ -1685,7 +1684,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 
 				if (photos.length >= 10) {
-					await interaction.reply({
+					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
@@ -1745,11 +1744,9 @@ module.exports.modalSubmit = async (interaction) => {
 
 				await interaction.client.channels.cache.get(process.env.REIMBURSEMENT_REQ_CHANNEL_ID).send({ embeds: embeds, components: reimbursementReqBtns });
 
-				await interaction.reply({ content: `Successfully submitted a reimbusement request for \`${formattedAmount}\`. You will be notified once Management has reviewed your request.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully submitted a reimbusement request for \`${formattedAmount}\`. You will be notified once Management has reviewed your request.`, ephemeral: true });
 				break;
 			case 'approveReimbursementModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
@@ -1842,8 +1839,6 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'denyReimbursementModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
@@ -1931,8 +1926,6 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'approveRepoModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
@@ -2022,8 +2015,6 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'recheckRepoModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
@@ -2040,7 +2031,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let notes;
 
 					if (isNaN(recheckDaysInput)) { // validate quantity of days
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${interaction.fields.getTextInputValue('recheckDaysInput')}\` is not a valid number, please be sure to only enter numbers.`,
 							ephemeral: true
 						});
@@ -2127,8 +2118,6 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				break;
 			case 'denyRepoModal':
-				await interaction.deferReply({ ephemeral: true });
-
 				if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let todayDate = `<t:${now}:d>`;
@@ -2270,7 +2259,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.message.delete();
 
-					await interaction.reply({ content: `Successfully marked the property at address \`${lotNumStreetName}\` as repossessed.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked the property at address \`${lotNumStreetName}\` as repossessed.`, ephemeral: true });
 				}
 				break;
 			case 'markPaymentsCompleteModal':
@@ -2328,9 +2317,9 @@ module.exports.modalSubmit = async (interaction) => {
 						return rows;
 					};
 
-					await interaction.reply({ content: `Successfully marked the payments for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked the payments for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'garageSlotsModal':
@@ -2340,7 +2329,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let newGarageSlotsNumInput = Math.abs(strCleanup(interaction.fields.getTextInputValue('garageSlotsNumInput')));
 
 					if (isNaN(newGarageSlotsNumInput)) { // validate quantity of garage slots
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${interaction.fields.getTextInputValue('garageSlotsNumInput')}\` is not a valid number, please be sure to only enter numbers.`,
 							ephemeral: true
 						});
@@ -2381,7 +2370,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await editEmbed.editMainEmbed(interaction.client);
 
 					await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
-					await interaction.reply({
+					await interaction.editReply({
 						content: `Successfully set the Garage Slots to \`${newGarageSlotsNumInput}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
 					});
 				}
@@ -2447,9 +2436,9 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
-					await interaction.reply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully logged this Property Purchase Request.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'assistantsRequestQuoteModal':
@@ -2483,7 +2472,7 @@ module.exports.modalSubmit = async (interaction) => {
 					} else if (gpsPropertyString.includes("|")) {
 						photos = gpsPropertyString.split("|")
 					} else if (photos.length > 1) {
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
 							ephemeral: true
 						});
@@ -2496,7 +2485,7 @@ module.exports.modalSubmit = async (interaction) => {
 							continue;
 						}
 						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.reply({
+							await interaction.editReply({
 								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 								ephemeral: true
 							});
@@ -2504,7 +2493,7 @@ module.exports.modalSubmit = async (interaction) => {
 						}
 						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.reply({
+							await interaction.editReply({
 								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
 								ephemeral: true
 							});
@@ -2513,7 +2502,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					if (gpsPropertyString.length > 1024) {
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 							ephemeral: true
 						});
@@ -2521,7 +2510,7 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 
 					if (photos.length >= 10) {
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 							ephemeral: true
 						});
@@ -2574,10 +2563,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
-					await interaction.reply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully logged this Quote Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
@@ -2645,10 +2634,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
-					await interaction.reply({ content: `Successfully logged this Smart Lock Request.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully logged this Smart Lock Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
@@ -2715,10 +2704,10 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
-					await interaction.reply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully logged this Garage Slot Request.`, ephemeral: true });
 				} else {
 
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 
 				}
 				break;
@@ -2782,9 +2771,9 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
-					await interaction.reply({ content: `Successfully logged this Other Request.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully logged this Other Request.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'evictionNoticeSentModal':
@@ -2794,7 +2783,7 @@ module.exports.modalSubmit = async (interaction) => {
 					let proofLinkInput = strCleanup(interaction.fields.getTextInputValue('proofLinkInput'));
 
 					if (!isValidUrl(proofLinkInput)) { // validate url of proof
-						await interaction.reply({
+						await interaction.editReply({
 							content: `:exclamation: \`${interaction.fields.getTextInputValue('proofLinkInput')}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
 							ephemeral: true
 						});
@@ -2829,11 +2818,11 @@ module.exports.modalSubmit = async (interaction) => {
 
 					await interaction.message.edit({ embeds: interaction.message.embeds, components: btnComp });
 
-					await interaction.reply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement.`, ephemeral: true });
 				}
 				break;
 			default:
-				await interaction.reply({
+				await interaction.editReply({
 					content: `I'm not familiar with this modal type. Please tag @CHCMATT to fix this issue.`,
 					ephemeral: true
 				});

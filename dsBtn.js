@@ -14,6 +14,8 @@ module.exports.btnPressed = async (interaction) => {
 		var buttonID = interaction.customId;
 		switch (buttonID) {
 			case 'addSale':
+				await interaction.deferReply({ ephemeral: true });
+
 				let addSaleSelectOptions = new StringSelectMenuBuilder()
 					.setCustomId('addSaleDropdown')
 					.setPlaceholder('Select a Sale Type')
@@ -39,9 +41,11 @@ module.exports.btnPressed = async (interaction) => {
 				let addSaleSelectionsComponent = new ActionRowBuilder()
 					.addComponents(addSaleSelectOptions);
 
-				await interaction.reply({ content: `What type of **sale** is this?`, components: [addSaleSelectionsComponent], ephemeral: true });
+				await interaction.editReply({ content: `What type of **sale** is this?`, components: [addSaleSelectionsComponent], ephemeral: true });
 				break;
 			case 'addPropAction':
+				await interaction.deferReply({ ephemeral: true });
+
 				let addPropActionSelectOptions = new StringSelectMenuBuilder()
 					.setCustomId('addPropActionDropdown')
 					.setPlaceholder('Select a Property Action Type')
@@ -59,7 +63,7 @@ module.exports.btnPressed = async (interaction) => {
 				let addPropActionSelectionsComponent = new ActionRowBuilder()
 					.addComponents(addPropActionSelectOptions);
 
-				await interaction.reply({ content: `What type of **property action** are you taking?`, components: [addPropActionSelectionsComponent], ephemeral: true });
+				await interaction.editReply({ content: `What type of **property action** are you taking?`, components: [addPropActionSelectionsComponent], ephemeral: true });
 				break;
 			case 'addFinancingAgreement':
 				var addFinancingAgreementModal = new ModalBuilder()
@@ -187,6 +191,8 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'markAsContacted':
+				await interaction.deferReply({ ephemeral: true });
+
 				var currentMsg = interaction.message;
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
@@ -200,10 +206,11 @@ module.exports.btnPressed = async (interaction) => {
 
 				await currentMsg.edit({ embeds: currentMsg.embeds, components: [currentMsg.components[0]] });
 
-				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
-
+				await interaction.editReply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 				break;
 			case 'setContacted':
+				await interaction.deferReply({ ephemeral: true });
+
 				var currentMsg = interaction.message;
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
@@ -217,8 +224,7 @@ module.exports.btnPressed = async (interaction) => {
 
 				await currentMsg.edit({ embeds: currentMsg.embeds, components: [currentMsg.components[0]] });
 
-				await interaction.reply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
-
+				await interaction.editReply({ content: `Successfully marked the quote for \`${currentMsg.embeds[0].data.fields[2].value}\` as contacted.`, ephemeral: true });
 				break;
 			case 'addReimbursementReq':
 				var addReimbursementReqModal = new ModalBuilder()
@@ -290,6 +296,8 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'createEvictionNotice':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.deferReply({ ephemeral: true });
 					var currentMsg = interaction.message;
@@ -413,7 +421,7 @@ module.exports.btnPressed = async (interaction) => {
 
 					await interaction.editReply({ content: `Successfully created an Eviction Notice document for \`${msgClientName}\` for the \`${msgFinanceNum}\` Financing Agreement.\nDetails about this eviction:\n> Eviction Notice: [Click to view Eviction Notice](<${documentLink}>)`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'markPaymentsComplete':
@@ -438,6 +446,8 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'completeEviction':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					var currentMsg = interaction.message;
 
@@ -484,9 +494,9 @@ module.exports.btnPressed = async (interaction) => {
 						return rows;
 					};
 
-					await interaction.reply({ content: `Successfully marked the eviction for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully marked the eviction for the \`${msgFinanceNum}\` Financing Agreement as completed.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'approveRepo':
@@ -578,6 +588,8 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.showModal(completeRepoModal);
 				break;
 			case 'acknowledgeAlert':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (1 == 1) {
 					let disabledAckBtns = getDisabledAckAlertBtn();
 
@@ -592,13 +604,13 @@ module.exports.btnPressed = async (interaction) => {
 							let now = Math.floor(new Date().getTime() / 1000.0);
 							let waitSeconds = 15;
 							let deletionTime = now + waitSeconds;
-							interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+							interaction.editReply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
 
 							setTimeout(() => {
 								interaction.message.delete();
 							}, (waitSeconds * 1000));
 						} else {
-							interaction.reply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+							interaction.editReply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
 						}
 					} else { // assume msgContent is a nickname (they had pings disabled)
 						origRealtor = origMsgContent.replaceAll(':', '');
@@ -607,13 +619,13 @@ module.exports.btnPressed = async (interaction) => {
 							let now = Math.floor(new Date().getTime() / 1000.0);
 							let waitSeconds = 15;
 							let deletionTime = now + waitSeconds;
-							interaction.reply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
+							interaction.editReply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
 
 							setTimeout(() => {
 								interaction.message.delete();
 							}, (waitSeconds * 1000));
 						} else {
-							interaction.reply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
+							interaction.editReply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
 						}
 					}
 				}
@@ -638,6 +650,8 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'toggleSmartLock':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (1 == 1) {
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let today = `<t:${now}:d>`;
@@ -691,12 +705,14 @@ module.exports.btnPressed = async (interaction) => {
 					await editEmbed.editMainEmbed(interaction.client);
 
 					await interaction.message.edit({ embeds: interaction.message.embeds, components: interaction.message.components });
-					await interaction.reply({
+					await interaction.editReply({
 						content: `Successfully toggled the smart locks status to \`${newSlStatus}\` for property \`${interaction.message.embeds[0].data.fields[2].value}\`.`, ephemeral: true
 					});
 				}
 				break;
 			case 'splitSaleCommission':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (1 == 1) {
 					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
 					let originalUser = originalUserStr.substring((originalUserStr.indexOf(' (') + 2), originalUserStr.indexOf(')'));
@@ -733,12 +749,14 @@ module.exports.btnPressed = async (interaction) => {
 
 						let formattedRealtorCommission = formatter.format(realtorCommission);
 
-						let commissionSplitReply = await interaction.reply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from the sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						let commissionSplitReply = await interaction.editReply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from the sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 						exports.commissionSplitReply = commissionSplitReply.interaction;
 					}
 				}
 				break;
 			case 'assistantsPortal':
+				await interaction.deferReply({ ephemeral: true });
+
 				if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let addAssistantsPortalOptions = new StringSelectMenuBuilder()
 						.setCustomId('assistantsPortalDropdown')
@@ -770,9 +788,9 @@ module.exports.btnPressed = async (interaction) => {
 					let addAssistantsPortalSelection = new ActionRowBuilder()
 						.addComponents(addAssistantsPortalOptions);
 
-					await interaction.reply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
+					await interaction.editReply({ content: `What type of **action** do you want to take?`, components: [addAssistantsPortalSelection], ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Assistant\` role, the \`Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
 			case 'addNoticeSentProof':
