@@ -299,7 +299,6 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.deferReply({ ephemeral: true });
 
 				if (interaction.member._roles.includes(process.env.FINANCING_MGR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-					await interaction.deferReply({ ephemeral: true });
 					var currentMsg = interaction.message;
 
 					var realtorName;
