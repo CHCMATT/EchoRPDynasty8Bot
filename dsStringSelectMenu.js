@@ -169,7 +169,8 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					addMiscSaleModal.addComponents(itemsSoldInputRow, priceInputRow);
 					await interaction.showModal(addMiscSaleModal);
 				} else {
-					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					await interaction.reply({ content: `I'm not familiar with this string select value option. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					console.log(`Error: Unrecognized string select ID: ${interaction.values[0]}`);
 				}
 				break;
 			case 'addRemodelDropdown':
@@ -261,7 +262,8 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					addWarehouseRemodelModal.addComponents(remodelForInputRow, newLotNumNotesInputRow, oldLotNumInputRow, priceInputRow, photosInputRow);
 					await interaction.showModal(addWarehouseRemodelModal);
 				} else {
-					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					await interaction.reply({ content: `I'm not familiar with this string select value option. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					console.log(`Error: Unrecognized string select ID: ${interaction.values[0]}`);
 				}
 				break;
 			case 'addPropActionDropdown':
@@ -474,12 +476,14 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					let photosInputRow = new ActionRowBuilder().addComponents(photosInput);
 					addRepoRequestModal.addComponents(currentOwnerInputRow, lotNumStreetNameInputRow, notesInputRow, photosInputRow);
 					await interaction.showModal(addRepoRequestModal);
-				}
-				else {
-					await interaction.reply({ content: `I'm not familiar with this string select value. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				} else {
+					await interaction.reply({ content: `I'm not familiar with this string select value option. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					console.log(`Error: Unrecognized string select ID: ${interaction.values[0]}`);
 				}
 				break;
 			case 'swapCommissionRealtorDropdown':
+				await interaction.deferReply({ ephemeral: true });
+
 				let channel = await interaction.client.channels.fetch(process.env.PROPERTY_SALES_CHANNEL_ID);
 				let messages = await channel.messages.fetch();
 
@@ -509,8 +513,6 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 						let prevInteraction = dsBtn.commissionSplitReply;
 
-						await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission from sale of \`${origHouseAddr}\` to <@${toUserId}>.`, components: [], ephemeral: true })
-
 						if (saleType === "House" || saleType === "Warehouse") {
 							message.embeds[0].data.fields[7].value = `${message.embeds[0].data.fields[7].value}\n- Commission split with <@${toUserId}>.`;
 						} else if (saleType === "Office") {
@@ -520,6 +522,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 						await message.edit({ embeds: message.embeds, components: message.components })
 
+						await prevInteraction.editReply({ content: `Successfully swapped \`${formattedCommissionSwapped}\` of your \`${commissionString}\` commission from sale of \`${origHouseAddr}\` to <@${toUserId}>.`, components: [], ephemeral: true })
 					}
 				});
 
@@ -563,8 +566,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					assistantsPurchasePropertyModal.addComponents(clientInformationInputRow, paymentMethodInputRow, shiftAvailableInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsPurchasePropertyModal);
-				};
-				if (interaction.values[0] == 'assistantsRequestQuote') {
+				} else if (interaction.values[0] == 'assistantsRequestQuote') {
 					let assistantsRequestQuoteModal = new ModalBuilder()
 						.setCustomId('assistantsRequestQuoteModal')
 						.setTitle(`Assistant's Quote Request`);
@@ -611,8 +613,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					assistantsRequestQuoteModal.addComponents(clientInformationInputRow, gpsPropertyImagesInputRow, interiorInputRow, zoneShiftInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsRequestQuoteModal);
-				};
-				if (interaction.values[0] == 'assistantsRequestSmartLock') {
+				} else if (interaction.values[0] == 'assistantsRequestSmartLock') {
 					let assistantsRequestSmartLockModal = new ModalBuilder()
 						.setCustomId('assistantsRequestSmartLockModal')
 						.setTitle(`Assistant's Smart Lock Request`);
@@ -657,8 +658,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					assistantsRequestSmartLockModal.addComponents(clientInformationInputRow, propertyIDInputRow, bankNumberInputRow, shiftAvailableInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsRequestSmartLockModal);
-				};
-				if (interaction.values[0] == 'assistantsRequestGarageSlot') {
+				} else if (interaction.values[0] == 'assistantsRequestGarageSlot') {
 					let assistantsRequestGarageSlotModal = new ModalBuilder()
 						.setCustomId('assistantsRequestGarageSlotModal')
 						.setTitle(`Assistant's Garage Slot(s) Request`);
@@ -703,8 +703,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					assistantsRequestGarageSlotModal.addComponents(clientInformationInputRow, propertyIDCurrentSlotsInputRow, bankNumberInputRow, amountSlotsWantAddedInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsRequestGarageSlotModal);
-				};
-				if (interaction.values[0] == 'assistantsOtherRequest') {
+				} else if (interaction.values[0] == 'assistantsOtherRequest') {
 					let assistantsOtherRequestModal = new ModalBuilder()
 						.setCustomId('assistantsOtherRequestModal')
 						.setTitle(`Assistant's Other Request`);
@@ -742,7 +741,10 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 					assistantsOtherRequestModal.addComponents(clientInformationInputRow, inquiryInputRow, shiftAvailableInputRow, notesInputRow);
 
 					await interaction.showModal(assistantsOtherRequestModal);
-				};
+				} else {
+					await interaction.reply({ content: `I'm not familiar with this string select value option. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+					console.log(`Error: Unrecognized string select ID: ${interaction.values[0]}`);
+				}
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this string select type. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
@@ -754,19 +756,29 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 		} else {
 			console.error(error);
 
-			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');;
+			let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 			let fileParts = __filename.split(/[\\/]/);
 			let fileName = fileParts[fileParts.length - 1];
 
 			console.log(`Error occured at ${errTime} at file ${fileName}!`);
 
+			let errString = error.toString();
+
+			let gServUnavailIndc;
+
+			if (errString === 'Error: The service is currently unavailable.') {
+				gServUnavailIndc = '\`gServUnavailIndc: true\`';
+			} else {
+				gServUnavailIndc = '\`gServUnavailIndc: false\`';
+			}
+
 			let errorEmbed = [new EmbedBuilder()
 				.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
-				.setDescription(`\`\`\`${error.toString().slice(0, 2000)}\`\`\``)
+				.setDescription(`\`\`\`${errString}\`\`\``)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
 
-			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ content: gServUnavailIndc, embeds: errorEmbed });
 		}
 	}
 };
