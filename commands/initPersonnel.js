@@ -9,7 +9,7 @@ module.exports = {
 	options: [
 		{
 			name: 'user',
-			description: 'The user you\'d like to modify commission on',
+			description: 'The user you\'d like to initialize in the database',
 			type: 6,
 			required: true,
 		},
