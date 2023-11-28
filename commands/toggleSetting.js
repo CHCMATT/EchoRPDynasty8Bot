@@ -19,6 +19,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			let discordId = interaction.member.id;
 			let settingChoice = interaction.options.getString('setting');
@@ -28,29 +30,29 @@ module.exports = {
 			if (settingChoice == 'settingQuotePing') {
 				if (currentSettingOption) {
 					dbCmds.setPersSetting(discordId, settingChoice, false);
-					await interaction.reply({ content: `Successfully toggled the \`Quote Ping\` setting to \`off\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Quote Ping\` setting to \`off\`.`, ephemeral: true });
 				} else {
 					dbCmds.setPersSetting(discordId, settingChoice, true);
-					await interaction.reply({ content: `Successfully toggled the \`Quote Ping\` setting to \`on\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Quote Ping\` setting to \`on\`.`, ephemeral: true });
 				}
 			} else if (settingChoice == 'settingReimbursementPing') {
 				if (currentSettingOption) {
 					dbCmds.setPersSetting(discordId, settingChoice, false);
-					await interaction.reply({ content: `Successfully toggled the \`Reimbursement Ping\` setting to \`off\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Reimbursement Ping\` setting to \`off\`.`, ephemeral: true });
 				} else {
 					dbCmds.setPersSetting(discordId, settingChoice, true);
-					await interaction.reply({ content: `Successfully toggled the \`Reimbursement Ping\` setting to \`on\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Reimbursement Ping\` setting to \`on\`.`, ephemeral: true });
 				}
 			} else if (settingChoice == 'settingRepossessionPing') {
 				if (currentSettingOption) {
 					dbCmds.setPersSetting(discordId, settingChoice, false);
-					await interaction.reply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`off\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`off\`.`, ephemeral: true });
 				} else {
 					dbCmds.setPersSetting(discordId, settingChoice, true);
-					await interaction.reply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`on\`.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully toggled the \`Repossession Ping\` setting to \`on\`.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
+				await interaction.editReply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized setting to toggle: ${settingChoice}`);
 			}
 

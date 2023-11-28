@@ -20,23 +20,25 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let assetOwner = interaction.options.getUser('assetowner');
 				let assetsArray = await dbCmds.listPersonnelAssets(assetOwner.id);
 
 				if (assetsArray.length < 1) {
-					await interaction.reply({ content: `${assetOwner} does not have any assigned assets yet.`, ephemeral: true });
+					await interaction.editReply({ content: `${assetOwner} does not have any assigned assets yet.`, ephemeral: true });
 				} else {
 					let assetsList = '';
 					for (let i = 0; i < assetsArray.length; i++) {
 						assetsList = assetsList + `> \`${assetsArray[i].assetName}\`: ${formatter.format(assetsArray[i].assetCost)}\n`
 					}
-					await interaction.reply({ content: `${assetOwner} has the following asset(s):\n${assetsList}`, ephemeral: true });
+					await interaction.editReply({ content: `${assetOwner} has the following asset(s):\n${assetsList}`, ephemeral: true });
 				}
 
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

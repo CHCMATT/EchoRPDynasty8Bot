@@ -33,6 +33,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let assetOwner = interaction.options.getUser('assetowner');
@@ -44,9 +46,9 @@ module.exports = {
 
 				let formattedAssetCost = formatter.format(assetCost);
 
-				await interaction.reply({ content: `Successfully added the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully added the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

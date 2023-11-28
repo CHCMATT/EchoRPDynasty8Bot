@@ -33,6 +33,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let user = interaction.options.getUser('user');
@@ -43,15 +45,15 @@ module.exports = {
 					let personnelData = await dbCmds.readPersStats(user.id)
 					if (personnelData.currentCommission != null && personnelData.currentCommission > 0) {
 						let newCommission = await commissionCmds.removeCommission(interaction.client, `<@${interaction.user.id}>`, amount, user.id, reason);
-						await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
+						await interaction.editReply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
 					} else {
-						await interaction.reply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
+						await interaction.editReply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
 					}
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

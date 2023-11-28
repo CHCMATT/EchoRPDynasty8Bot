@@ -26,6 +26,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let calcType = interaction.options.getString('calctype');
@@ -45,7 +47,7 @@ module.exports = {
 					let formattedRealtorCommission = formatter.format(realtorCommission);
 					let formattedAssetFees = formatter.format(assetFees);
 
-					await interaction.reply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
+					await interaction.editReply({ content: `Regular Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax)\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 				} else if (calcType == 'financing') {
 					let salePrice = interaction.options.getInteger('saleprice');
 
@@ -68,14 +70,14 @@ module.exports = {
 					let formattedAssetFees = formatter.format(assetFees);
 					let formattedRealtorCommission = formatter.format(realtorCommission);
 
-					await interaction.reply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
+					await interaction.editReply({ content: `Financing Sale Calculator Results:\n> Total Price: \`${formattedTotalPrice}\` (\`${formattedSalePrice}\` sale + \`${formattedTaxPrice}\` tax + \`${formattedInterestPrice}\` interest)\n> Down Payment: \`${formattedDownPayment}\`\n> Amount Owed Remaining: \`${formattedAmountOwed}\`\n> Weekly Asset Fees: \`${formattedAssetFees}\`\n> Your Commission: \`${formattedRealtorCommission}\``, ephemeral: true });
 
 				} else {
 					console.log(`Error: Unrecognized calculator type:  ${calctype}`)
-					await interaction.reply({ content: `:exclamation: I don't recognize this calculator type. Please try again with a proper calculator type.`, ephemeral: true });
+					await interaction.editReply({ content: `:exclamation: I don't recognize this calculator type. Please try again with a proper calculator type.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

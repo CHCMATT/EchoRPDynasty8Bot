@@ -26,6 +26,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let assetOwner = interaction.options.getUser('assetowner');
@@ -33,9 +35,9 @@ module.exports = {
 
 				await dbCmds.removePersonnelAsset(assetName);
 
-				await interaction.reply({ content: `Successfully removed the \`${assetName}\` asset from ${assetOwner}'s weekly commission.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully removed the \`${assetName}\` asset from ${assetOwner}'s weekly commission.`, ephemeral: true });
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

@@ -6,14 +6,16 @@ module.exports = {
 	name: 'startup',
 	description: 'Posts the embed to the specified channel',
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				const postOrEditMain = await startUp.mainStartUp(interaction.client);
 				const postOrEditFrontDesk = await startUp.frontDeskStartUp(interaction.client);
-				await interaction.reply({ content: `Successfully ${postOrEditMain} the main embed in the <#${process.env.EMBED_CHANNEL_ID}> channel and ${postOrEditFrontDesk} the front desk embed in the <#${process.env.FRONT_DESK_CHANNEL_ID}>.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully ${postOrEditMain} the main embed in the <#${process.env.EMBED_CHANNEL_ID}> channel and ${postOrEditFrontDesk} the front desk embed in the <#${process.env.FRONT_DESK_CHANNEL_ID}>.`, ephemeral: true });
 			}
 			else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

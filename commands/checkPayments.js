@@ -6,13 +6,15 @@ module.exports = {
 	name: 'checkpayments',
 	description: 'Checks to see if there are any overdue payments at this time',
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				await checkOverduePayments.checkOverduePayments(interaction.client);
-				await interaction.reply({ content: `Checking for overdue on payment agreements and agreements ready for repossession! *(this process will take about 30 seconds)*`, ephemeral: true });
+				await interaction.editReply({ content: `Checking for overdue on payment agreements and agreements ready for repossession! *(this process will take about 30 seconds)*`, ephemeral: true });
 			}
 			else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

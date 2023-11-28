@@ -6,17 +6,19 @@ module.exports = {
 	name: 'commissionreport',
 	description: 'Manually runs the commission report for the Management team',
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
 				if (result === "success") {
-					await interaction.reply({ content: `Successfully ran the commission report.`, ephemeral: true });
+					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
+					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
 				}
 			}
 			else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

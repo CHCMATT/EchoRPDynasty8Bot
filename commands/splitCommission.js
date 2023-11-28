@@ -39,6 +39,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let fromUser = interaction.options.getUser('fromuser');
@@ -54,15 +56,15 @@ module.exports = {
 						await commissionCmds.removeCommission(interaction.client, `<@${interaction.user.id}>`, splitAmount, fromUser.id, reason);
 						await commissionCmds.addCommission(interaction.client, `<@${interaction.user.id}>`, splitAmount, toUser.id, reason);
 
-						await interaction.reply({ content: `Successfully swapped \`${formattedSplitAmount}\` from <@${fromUser.id}> to <@${toUser.id}>'s current commission.`, ephemeral: true });
+						await interaction.editReply({ content: `Successfully swapped \`${formattedSplitAmount}\` from <@${fromUser.id}> to <@${toUser.id}>'s current commission.`, ephemeral: true });
 					} else {
-						await interaction.reply({ content: `:exclamation: <@${fromUser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
+						await interaction.editReply({ content: `:exclamation: <@${fromUser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
 					}
 				} else {
-					await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

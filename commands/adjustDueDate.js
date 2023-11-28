@@ -19,6 +19,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let financingNum = interaction.options.getString('financingnumber').toUpperCase();
@@ -101,18 +103,18 @@ module.exports = {
 
 								await message.edit({ embeds: [embeds] })
 
-								await interaction.reply({ content: `Successfully adjusted the due date of property \`${financingNum}\` to ${newSaleDateStr}.`, ephemeral: true });
+								await interaction.editReply({ content: `Successfully adjusted the due date of property \`${financingNum}\` to ${newSaleDateStr}.`, ephemeral: true });
 							}
 						}
 					}
 				})
 
 				if (countFound < 1) {
-					await interaction.reply({ content: `:exclamation: Unable to find a Financing Agreement # of \`${financingNum}\` Please check to make sure you have the right number and try again.`, ephemeral: true });
+					await interaction.editReply({ content: `:exclamation: Unable to find a Financing Agreement # of \`${financingNum}\` Please check to make sure you have the right number and try again.`, ephemeral: true });
 				}
 
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

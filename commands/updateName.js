@@ -15,6 +15,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let user = interaction.options.getUser('user');
@@ -32,10 +34,10 @@ module.exports = {
 				await dbCmds.setCharName(userId, charName);
 
 				await editEmbed.editMainEmbed(interaction.client);
-				await interaction.reply({ content: `Successfully set the name for <@${userId}> to \`${charName}\`.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully set the name for <@${userId}> to \`${charName}\`.`, ephemeral: true });
 			}
 			else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

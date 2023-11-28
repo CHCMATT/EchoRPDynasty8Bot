@@ -12,6 +12,8 @@ module.exports = {
 	name: 'checkcommissions',
 	description: 'Shows a list of current commissions without resetting anyone\'s commission',
 	async execute(interaction) {
+		await interaction.deferReply({ ephemeral: true });
+
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let lastRep = await dbCmds.readRepDate("lastCommissionReportDate");
@@ -45,11 +47,11 @@ module.exports = {
 					lastRep = `<t:${nowMinus7}:d>`
 				}
 
-				await interaction.reply({ content: commissionMsg, ephemeral: true });
+				await interaction.editReply({ content: commissionMsg, ephemeral: true });
 
 			}
 			else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {
