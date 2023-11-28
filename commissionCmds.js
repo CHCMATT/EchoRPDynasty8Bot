@@ -36,13 +36,18 @@ module.exports.commissionReport = async (client, commandType) => {
 			let commissionDescList = '';
 
 			for (i = 0; i < peopleArray.length; i++) {
+				if (!peopleArray[i].bankAccount) {
+					peopleArray[i].bankAccount = 'N/A';
+				}
 
 				if (peopleArray[i].currentCommission == null) {
 					peopleArray[i].currentCommission = 0
 				}
+
 				if (peopleArray[i].currentMiscPay == null) {
 					peopleArray[i].currentMiscPay = 0
 				}
+
 				let totalPay = peopleArray[i].currentMiscPay + peopleArray[i].currentCommission;
 
 				commissionDescList = commissionDescList.concat(`<@${peopleArray[i].discordId}> (\`${peopleArray[i].bankAccount}\`): ${formatter.format(totalPay)}`);
