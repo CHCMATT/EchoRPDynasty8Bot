@@ -147,7 +147,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
+				var realtorCommission = Math.round(d8Profit * 0.30);
 				var assetFees = (price * 0.01);
 				var taxPrice = Math.round((price * 0.052));
 				var totalPrice = (price + taxPrice);
@@ -223,7 +223,7 @@ module.exports.modalSubmit = async (interaction) => {
 				var formattedPrice = formatter.format(price);
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
+				var realtorCommission = Math.round(d8Profit * 0.30);
 				var assetFees = (price * 0.01);
 				var taxPrice = Math.round((price * 0.052));
 				var totalPrice = (price + taxPrice);
@@ -361,7 +361,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
-				var realtorCommission = (d8Profit * 0.30);
+				var realtorCommission = Math.round(d8Profit * 0.30);
 				var assetFees = (price * 0.01);
 				var taxPrice = Math.round((price * 0.052));
 				var totalPrice = (price + taxPrice);

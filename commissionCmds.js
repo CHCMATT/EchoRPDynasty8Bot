@@ -168,6 +168,8 @@ module.exports.addCommission = async (client, from, addAmount, userId, reason) =
 	try {
 		let currCommission = formatter.format(await dbCmds.readCurrentCommission(userId));
 
+		addAmount = Math.round(addAmount);
+
 		if (addAmount > 0) {
 			await dbCmds.addCommission(userId, addAmount);
 			currCommission = formatter.format(await dbCmds.readCurrentCommission(userId));
@@ -232,6 +234,8 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 	try {
 		let currCommission = formatter.format(await dbCmds.readCurrentCommission(userId));
 
+		removeAmount = Math.round(removeAmount);
+
 		if (removeAmount > 0) {
 			await dbCmds.removeCommission(userId, removeAmount);
 			currCommission = formatter.format(await dbCmds.readCurrentCommission(userId));
@@ -283,6 +287,8 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 	try {
 		let currentMiscPay;
 
+		addAmount = Math.round(addAmount);
+
 		if (addAmount > 0) {
 			await dbCmds.addMiscPay(userId, addAmount);
 			currentMiscPay = formatter.format(await dbCmds.readCurrentMiscPay(userId));
@@ -332,6 +338,8 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 module.exports.removeMiscPay = async (client, from, removeAmount, userId, reason) => {
 	try {
 		let currentMiscPay;
+
+		removeAmount = Math.round(removeAmount);
 
 		if (removeAmount > 0) {
 			await dbCmds.removeMiscPay(userId, removeAmount);

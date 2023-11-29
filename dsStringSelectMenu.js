@@ -497,7 +497,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						let messageContent = interaction.message.content;
 						let commissionString = messageContent.substring((messageContent.indexOf(`Who should your commission of \``) + 31), (messageContent.indexOf(`\` from the sale be split with?`)));
 						let commissionNumber = Number(commissionString.replaceAll('$', '').replaceAll(',', ''));
-						let commissionSplit = (commissionNumber * 0.50);
+						let commissionSplit = Math.round(commissionNumber * 0.50);
 						let formattedCommissionSwapped = formatter.format(commissionSplit);
 
 						let origHouseAddr = message.embeds[0].data.fields[2].value;

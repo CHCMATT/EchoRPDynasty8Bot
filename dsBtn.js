@@ -744,7 +744,7 @@ module.exports.btnPressed = async (interaction) => {
 						let salePriceNum = Number(salePriceStr.replaceAll('$', '').replaceAll(',', ''));
 						let d8CostPrice = (salePriceNum * 0.85);
 						let d8Profit = salePriceNum - d8CostPrice;
-						let realtorCommission = (d8Profit * 0.30);
+						let realtorCommission = Math.round(d8Profit * 0.30);
 
 						let formattedRealtorCommission = formatter.format(realtorCommission);
 
