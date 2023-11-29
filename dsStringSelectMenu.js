@@ -482,8 +482,6 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 				}
 				break;
 			case 'swapCommissionRealtorDropdown':
-				await interaction.deferReply({ ephemeral: true });
-
 				let channel = await interaction.client.channels.fetch(process.env.PROPERTY_SALES_CHANNEL_ID);
 				let messages = await channel.messages.fetch();
 

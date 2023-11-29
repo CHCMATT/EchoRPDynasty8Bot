@@ -710,7 +710,7 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'splitSaleCommission':
-				await interaction.deferReply({ ephemeral: true });
+				let commissionSplitReply = await interaction.deferReply({ ephemeral: true });
 
 				if (1 == 1) {
 					let originalUserStr = interaction.message.embeds[0].data.fields[0].value;
@@ -748,7 +748,7 @@ module.exports.btnPressed = async (interaction) => {
 
 						let formattedRealtorCommission = formatter.format(realtorCommission);
 
-						let commissionSplitReply = await interaction.editReply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from the sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
+						await interaction.editReply({ content: `Who should your commission of \`${formattedRealtorCommission}\` from the sale be split with?`, components: [realtorSelectionComponent], ephemeral: true });
 						exports.commissionSplitReply = commissionSplitReply.interaction;
 					}
 				}
