@@ -590,16 +590,15 @@ module.exports.btnPressed = async (interaction) => {
 				await interaction.deferReply({ ephemeral: true });
 
 				if (1 == 1) {
-					let disabledAckBtns = getDisabledAckAlertBtn();
-
-					await interaction.message.edit({ content: interaction.message.content, embeds: interaction.message.embeds, components: disabledAckBtns });
-
 					let origMsgContent = interaction.message.content;
 					let origRealtor = '';
 					if (origMsgContent.startsWith("<")) { //check if msgContent is a user's @ (they had pings enabled)
 						origRealtor = origMsgContent.replaceAll('<@', '').replaceAll('>', '');
 
 						if (interaction.user.id == origRealtor || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+							let disabledAckBtns = getDisabledAckAlertBtn();
+							await interaction.message.edit({ content: interaction.message.content, embeds: interaction.message.embeds, components: disabledAckBtns });
+
 							let now = Math.floor(new Date().getTime() / 1000.0);
 							let waitSeconds = 15;
 							let deletionTime = now + waitSeconds;
