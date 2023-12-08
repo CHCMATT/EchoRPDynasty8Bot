@@ -27,20 +27,36 @@ module.exports = {
 				});
 
 				let commissionList = '';
+				let miscPayList = '';
 				let totalCommission = 0;
+				let totalMiscPay = 0;
 
 				for (i = 0; i < peopleArray.length; i++) {
-					commissionList = commissionList.concat(`> • ${peopleArray[i].charName}: ${formatter.format(peopleArray[i].currentCommission)}\n`);
-					totalCommission = totalCommission + Number(peopleArray[i].currentCommission);
+					if (peopleArray[i].currentCommission > 0) {
+						commissionList = commissionList.concat(`> • ${peopleArray[i].charName}: ${formatter.format(peopleArray[i].currentCommission)}\n`);
+						totalCommission = totalCommission + Number(peopleArray[i].currentCommission);
+					}
+				}
+
+				for (i = 0; i < peopleArray.length; i++) {
+					if (peopleArray[i].currentMiscPay > 0) {
+						miscPayList = miscPayList.concat(`> • ${peopleArray[i].charName}: ${formatter.format(peopleArray[i].currentMiscPay)}\n`);
+						totalMiscPay = totalMiscPay + Number(peopleArray[i].currentMiscPay);
+					}
 				}
 
 				let formattedTotalCommission = formatter.format(totalCommission);
+				let formattedTotalMiscPay = formatter.format(totalMiscPay);
 
 				if (commissionList == '') {
-					commissionList = "There is no commission to pay yet this week.";
+					commissionList = "There is no commission pay so far this week.";
 				}
 
-				let commissionMsg = `Commission Report for ${lastRep} through ${today}:\n**Total Overall Commission**: ${formattedTotalCommission}\n` + commissionList;
+				if (miscPayList == '') {
+					miscPayList = "There is no miscellaneous pay so far this week.";
+				}
+
+				let commissionMsg = `Commission Report for ${lastRep} through ${today}:\n\n**Total Overall Commission**: ${formattedTotalCommission}\n` + commissionList + `\n\n**Total Overall Misc. Pay**: ${formattedTotalMiscPay}\n` + miscPayList;
 
 				if (lastRep == null || lastRep.includes("Value not found")) {
 					let nowMinus7 = now - 604800;
