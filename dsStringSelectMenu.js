@@ -1,8 +1,7 @@
 let moment = require('moment');
 let dsBtn = require('./dsBtn.js');
-let dsModal = require('./dsModal.js');
 let commissionCmds = require('./commissionCmds.js');
-let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -762,11 +761,11 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
 				try {
-					await interaction.editReply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
-					await interaction.reply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.reply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				}
 			}
 

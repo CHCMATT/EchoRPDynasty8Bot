@@ -65,7 +65,7 @@ function getSaleBtns() {
 module.exports.modalSubmit = async (interaction) => {
 	try {
 		var modalID = interaction.customId;
-		await interaction.deferReply({ ephemeral: true });
+		let interactionReply = await interaction.deferReply({ ephemeral: true });
 
 		switch (modalID) {
 			case 'addHouseSoldModal':
@@ -2432,7 +2432,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let assistantBtns = getAssistantButtons();
+					let assistantBtns = getAssistantBtns();
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
@@ -2559,7 +2559,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let assistantBtns = getAssistantButtons();
+					let assistantBtns = getAssistantBtns();
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
@@ -2630,7 +2630,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let assistantBtns = getAssistantButtons();
+					let assistantBtns = getAssistantBtns();
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
@@ -2700,7 +2700,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let assistantBtns = getAssistantButtons();
+					let assistantBtns = getAssistantBtns();
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
@@ -2767,7 +2767,7 @@ module.exports.modalSubmit = async (interaction) => {
 					await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyContactRequests");
 					await editEmbed.editMainEmbed(interaction.client);
 
-					let assistantBtns = getAssistantButtons();
+					let assistantBtns = getAssistantBtns();
 
 					await interaction.client.channels.cache.get(process.env.CONTACT_US_FORMS_CHANNEL_ID).send({ embeds: embeds/*, components: assistantBtns*/ });
 
@@ -2816,9 +2816,32 @@ module.exports.modalSubmit = async (interaction) => {
 							.setDisabled(true),
 					)];
 
+					let watchlistBtns = getPotentialWatchlistBtns();
+
+					let saleDate = interaction.message.embeds[0].data.fields[1].value;
+					saleDate = Number(saleDate.replaceAll('<t:', '').replaceAll(':d>', ''));
+
+					let dueDate = interaction.message.embeds[0].data.fields[2].value;
+					dueDate = dueDate.split(' ')[0];
+					dueDate = Number(dueDate.replaceAll('<t:', '').replaceAll(':d>', ''));
+
+					let expireDate = now + (dueDate - saleDate);
+
 					await interaction.message.edit({ embeds: interaction.message.embeds, components: btnComp });
 
-					await interaction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement.`, ephemeral: true });
+					let watchlistEmbed = [new EmbedBuilder()
+						.setTitle('Watchlist Addition Details')
+						.addFields(
+							{ name: `Client Name:`, value: `${interaction.message.embeds[0].data.fields[4].value}`, inline: true },
+							{ name: `Client Info:`, value: `${interaction.message.embeds[0].data.fields[5].value}`, inline: true },
+							{ name: `Client Contact:`, value: `${interaction.message.embeds[0].data.fields[6].value}`, inline: true },
+							{ name: `Watchlist Expires:`, value: `<t:${expireDate}:R>` },
+						)
+						.setColor('FFA630')];
+
+					await interaction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement. Would you like us to add the following person to the watchlist?`, embeds: watchlistEmbed, components: watchlistBtns, ephemeral: true });
+
+					exports.origInteraction = interactionReply.interaction;
 				}
 				break;
 			default:
@@ -2842,11 +2865,11 @@ module.exports.modalSubmit = async (interaction) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
 				try {
-					await interaction.editReply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
-					await interaction.reply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.reply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				}
 			}
 
@@ -2861,7 +2884,7 @@ module.exports.modalSubmit = async (interaction) => {
 	}
 };
 
-function getAssistantButtons() {
+function getAssistantBtns() {
 	let row1 = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
 			.setCustomId('markFormCompleted')
@@ -2879,6 +2902,22 @@ function getAssistantButtons() {
 			.setCustomId('markFor48HrHold')
 			.setLabel('Add 48 Hour Hold')
 			.setStyle(ButtonStyle.Secondary),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function getPotentialWatchlistBtns() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('yesAddToWatchlist')
+			.setLabel('Yes, add to list')
+			.setStyle(ButtonStyle.Success),
+		new ButtonBuilder()
+			.setCustomId('noDontAddToWatchlist')
+			.setLabel('No, don\'t add to list')
+			.setStyle(ButtonStyle.Danger),
 	);
 
 	let rows = [row1];

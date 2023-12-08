@@ -1,5 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('./dbCmds.js');
+let dsModal = require('./dsModal.js');
 let editEmbed = require('./editEmbed.js');
 let { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionsBitField, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 
@@ -812,6 +813,31 @@ module.exports.btnPressed = async (interaction) => {
 					await interaction.reply({ content: `:x: You must have the \`Financing Manager\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 				break;
+			case 'yesAddToWatchlist':
+				let oldWatchlistEmbed = interaction.message.embeds[0];
+				let watchlistEmbed = [oldWatchlistEmbed];
+				watchlistEmbed[0].data.title = `A new person has been added to the watchlist`;
+
+				await interaction.client.channels.cache.get(process.env.WATCHLIST_CHANNEL_ID).send({ embeds: watchlistEmbed });
+
+				let disabledWatchlistYesBtns = new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('yesAddToWatchlist')
+						.setLabel('Yes, add to list')
+						.setStyle(ButtonStyle.Success)
+						.setDisabled(true),
+					new ButtonBuilder()
+						.setCustomId('noDontAddToWatchlist')
+						.setLabel('No, don\'t add to list')
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(true),
+				);
+
+				let prevInteraction = dsModal.origInteraction;
+				console.log(prevInteraction)
+
+				await prevInteraction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[1].value}\` Financing Agreement. \`${}\``, embeds: [oldWatchlistEmbed], components: disabledWatchlistYesBtns, ephemeral: true });
+				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
 				console.log(`Error: Unrecognized button press: ${interaction.customId}`);
@@ -830,11 +856,11 @@ module.exports.btnPressed = async (interaction) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
 				try {
-					await interaction.editReply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
-					await interaction.reply({ content: `⚠ A service provider we use has had a temporary outage. Please try to submit your request again.`, ephemeral: true });
+					await interaction.reply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				}
 			}
 
