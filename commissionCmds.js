@@ -30,7 +30,7 @@ module.exports.commissionReport = async (client, commandType) => {
 			let peopleArray = await dbCmds.payReport();
 
 			peopleArray.sort((a, b) => {
-				return b.currentCommission - a.currentCommission;
+				return (b.currentCommission + b.currentMiscPay) - (a.currentCommission + a.currentMiscPay);
 			});
 
 			let commissionDescList = '';
