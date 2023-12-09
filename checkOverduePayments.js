@@ -68,8 +68,8 @@ module.exports.checkOverduePayments = async (client) => {
 								.setColor('FFA630');
 
 							await client.channels.cache.get(process.env.FINANCING_ALERTS_CHANNEL_ID).send({ embeds: [overdueEmbed] });
-						} else if (message.components[0].components.length == 3 || message.components[0].components.length == 2 && message.components[0].components[1].data.disabled == true) {
-							if (now >= (paidOffDueDate + (86400 * 3))) { // eviction ready
+						} else if (message.components[0].components.length == 3 && message.components[0].components[2].data.disabled == true) {
+							if (now == now/*>= (paidOffDueDate + (86400 * 3))*/) { // eviction ready
 
 								let msgPaymentDueDate = message.embeds[0].data.fields[2].value;
 								let msgFinanceNum = message.embeds[0].data.fields[3].value;

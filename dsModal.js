@@ -2839,7 +2839,7 @@ module.exports.modalSubmit = async (interaction) => {
 						)
 						.setColor('FFA630')];
 
-					await interaction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement. Would you like us to add the following person to the watchlist?`, embeds: watchlistEmbed, components: watchlistBtns, ephemeral: true });
+					await interaction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[3].value}\` Financing Agreement. Would you like to add the following person to the watchlist?`, embeds: watchlistEmbed, components: watchlistBtns, ephemeral: true });
 
 					exports.origInteraction = interactionReply.interaction;
 				}

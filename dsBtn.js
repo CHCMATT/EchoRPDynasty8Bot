@@ -457,9 +457,9 @@ module.exports.btnPressed = async (interaction) => {
 					var markCompletedDate = `<t:${now}:d>`;
 
 					if (currentMsg.embeds[0].data.fields[12]) {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `${currentMsg.embeds[0].data.fields[12].value}\n- Eviction marked as complete <@${interaction.user.id}> on ${markCompletedDate}.` };
 					} else {
-						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Eviction marked as completed <@${interaction.user.id}> on ${markCompletedDate}.` };
+						currentMsg.embeds[0].data.fields[12] = { name: `Notes:`, value: `- Eviction marked as complete <@${interaction.user.id}> on ${markCompletedDate}.` };
 					}
 
 					await dbCmds.subtractOneSumm("activeFinancialAgreements");
@@ -474,13 +474,19 @@ module.exports.btnPressed = async (interaction) => {
 							new ButtonBuilder()
 								.setCustomId('markPaymentsComplete')
 								.setLabel('Mark as Completed')
-								.setStyle(ButtonStyle.Success)
+								.setStyle(ButtonStyle.Secondary)
 								.setDisabled(true),
 
 							new ButtonBuilder()
 								.setCustomId('createEvictionNotice')
 								.setLabel('Create an Eviction Notice')
-								.setStyle(ButtonStyle.Secondary)
+								.setStyle(ButtonStyle.Primary)
+								.setDisabled(true),
+
+							new ButtonBuilder()
+								.setCustomId('addNoticeSentProof')
+								.setLabel('Add Proof of Eviction Sent')
+								.setStyle(ButtonStyle.Primary)
 								.setDisabled(true),
 
 							new ButtonBuilder()
@@ -814,29 +820,59 @@ module.exports.btnPressed = async (interaction) => {
 				}
 				break;
 			case 'yesAddToWatchlist':
-				let oldWatchlistEmbed = interaction.message.embeds[0];
-				let watchlistEmbed = [oldWatchlistEmbed];
-				watchlistEmbed[0].data.title = `A new person has been added to the watchlist`;
+				if (1 == 1) {
+					let oldWatchlistEmbed = interaction.message.embeds[0];
+					let watchlistEmbed = [oldWatchlistEmbed];
+					watchlistEmbed[0].data.title = `A new person has been added to the watchlist`;
 
-				await interaction.client.channels.cache.get(process.env.WATCHLIST_CHANNEL_ID).send({ embeds: watchlistEmbed });
+					let watchlistUntil = oldWatchlistEmbed.data.fields[3].value;
+					watchlistUntil = watchlistUntil.replaceAll(':R>', ':D>')
 
-				let disabledWatchlistYesBtns = new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('yesAddToWatchlist')
-						.setLabel('Yes, add to list')
-						.setStyle(ButtonStyle.Success)
-						.setDisabled(true),
-					new ButtonBuilder()
-						.setCustomId('noDontAddToWatchlist')
-						.setLabel('No, don\'t add to list')
-						.setStyle(ButtonStyle.Secondary)
-						.setDisabled(true),
-				);
+					await interaction.client.channels.cache.get(process.env.WATCHLIST_CHANNEL_ID).send({ embeds: watchlistEmbed });
 
-				let prevInteraction = dsModal.origInteraction;
-				console.log(prevInteraction)
+					let disabledWatchlistYesBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('yesAddToWatchlist')
+							.setLabel('Yes, add to list')
+							.setStyle(ButtonStyle.Success)
+							.setDisabled(true),
+						new ButtonBuilder()
+							.setCustomId('noDontAddToWatchlist')
+							.setLabel('No, don\'t add to list')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+					)];
 
-				await prevInteraction.editReply({ content: `Successfully added Proof of Eviction Notice Sent to the \`${interaction.message.embeds[0].data.fields[1].value}\` Financing Agreement. \`${}\``, embeds: [oldWatchlistEmbed], components: disabledWatchlistYesBtns, ephemeral: true });
+					let prevInteraction = dsModal.origInteraction;
+
+					await prevInteraction.editReply({ content: interaction.message.content, embeds: [oldWatchlistEmbed], components: disabledWatchlistYesBtns, ephemeral: true });
+
+					await interaction.reply({ content: `Successfully added \`${oldWatchlistEmbed.data.fields[0].value}\` to the watchlist until ${watchlistUntil}.`, ephemeral: true });
+				}
+				break;
+			case 'noDontAddToWatchlist':
+				if (1 == 1) {
+					let oldWatchlistEmbed = interaction.message.embeds[0];
+
+					let disabledWatchlistNoBtns = [new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('yesAddToWatchlist')
+							.setLabel('Yes, add to list')
+							.setStyle(ButtonStyle.Secondary)
+							.setDisabled(true),
+						new ButtonBuilder()
+							.setCustomId('noDontAddToWatchlist')
+							.setLabel('No, don\'t add to list')
+							.setStyle(ButtonStyle.Danger)
+							.setDisabled(true),
+					)];
+
+					let prevInteraction = dsModal.origInteraction;
+
+					await prevInteraction.editReply({ content: interaction.message.content, embeds: [oldWatchlistEmbed], components: disabledWatchlistNoBtns, ephemeral: true });
+
+					await interaction.reply({ content: `Successfully declined to add \`${oldWatchlistEmbed.data.fields[0].value}\` to the watchlist.`, ephemeral: true });
+				}
 				break;
 			default:
 				await interaction.reply({ content: `I'm not familiar with this button press. Please tag @CHCMATT to fix this issue.`, ephemeral: true });
