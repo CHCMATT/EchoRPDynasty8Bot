@@ -1,6 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
-let personnelCmds = require('../personnelCmds.js');
+let miscFunctions = require('../miscFunctions.js');
 let commissionCmds = require('../commissionCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
@@ -43,7 +43,7 @@ module.exports = {
 
 					let personnelStats = await dbCmds.readPersStats(user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, user.id);
+						await miscFunctions.initPersonnel(interaction.client, user.id);
 					}
 
 					let amount = Math.abs(interaction.options.getInteger('amount'));

@@ -1,5 +1,5 @@
 let moment = require('moment');
-let checkOverduePayments = require('../checkOverduePayments.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				await checkOverduePayments.checkOverduePayments(interaction.client);
+				await miscFunctions.checkOverduePayments(interaction.client);
 				await interaction.editReply({ content: `Checking for overdue on payment agreements and agreements ready for repossession! *(this process will take about 30 seconds)*`, ephemeral: true });
 			}
 			else {

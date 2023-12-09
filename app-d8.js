@@ -6,10 +6,8 @@ let startUp = require('./startup.js');
 let { google } = require('googleapis');
 let message = require('./dsMessages.js');
 let interact = require('./dsInteractions.js');
-let statsReport = require('./statsReport.js');
 let commissionCmds = require('./commissionCmds.js');
-let checkRepoRechecks = require('./checkRepoRechecks.js');
-let checkOverduePayments = require('./checkOverduePayments.js');
+let miscFunctions = require('./miscFunctions.js');
 let { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 let client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages], partials: [Partials.Channel, Partials.Message, Partials.Reaction] });
 
@@ -22,10 +20,13 @@ let fileParts = __filename.split(/[\\/]/);
 let fileName = fileParts[fileParts.length - 1];
 
 cron.schedule('0 6 * * FRI', function () { commissionCmds.commissionReport(client, 'Automatic'); }); // runs at 6:00am every Friday (FRI)
-cron.schedule('0 0 1 * *', function () { statsReport.statsReport(client, 'Automatic'); }); // runs at 12:00am on the first day of every month
+cron.schedule('0 0 1 * *', function () { miscFunctions.runStatsReport(client, 'Automatic'); }); // runs at 12:00am on the first day of every month
 cron.schedule('55 5 * * FRI', function () { commissionCmds.addWeeklyAssets(client, 'Automatic'); }); // runs at 5:55am every Friday (FRI)
-cron.schedule('0 16 * * *', function () { checkOverduePayments.checkOverduePayments(client); }); // runs at 4:00pm every day
-cron.schedule('0 12 * * *', function () { checkRepoRechecks.checkRepoRechecks(client); }); // runs at 12:00pm every day
+cron.schedule('0 16 * * *', function () { miscFunctions.checkOverduePayments(client); }); // runs at 4:00pm every day
+cron.schedule('0 12 * * *', function () {
+	miscFunctions.checkRepoRechecks(client);
+	miscFunctions.clearOldWatchlists(client);
+}); // runs at 12:00pm every day
 
 client.once('ready', async () => {
 	console.log(`[${fileName}] The client is starting up!`);

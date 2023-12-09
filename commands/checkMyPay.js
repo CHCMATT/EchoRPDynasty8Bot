@@ -1,6 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
-let personnelCmds = require('../personnelCmds.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {

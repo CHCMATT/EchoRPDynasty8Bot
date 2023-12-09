@@ -611,8 +611,8 @@ module.exports.btnPressed = async (interaction) => {
 							let deletionTime = now + waitSeconds;
 							interaction.editReply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
 
-							setTimeout(() => {
-								interaction.message.delete();
+							setTimeout(async () => {
+								await interaction.message.delete();
 							}, (waitSeconds * 1000));
 						} else {
 							interaction.editReply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });
@@ -626,8 +626,8 @@ module.exports.btnPressed = async (interaction) => {
 							let deletionTime = now + waitSeconds;
 							interaction.editReply({ content: `Alert has been successfully acknowledged and will be deleted <t:${deletionTime}:R>.`, ephemeral: true });
 
-							setTimeout(() => {
-								interaction.message.delete();
+							setTimeout(async () => {
+								await interaction.message.delete();
 							}, (waitSeconds * 1000));
 						} else {
 							interaction.editReply({ content: `:x: You must be <@${origRealtor}> or have the \`Administrator\` permission to take this action.`, ephemeral: true });

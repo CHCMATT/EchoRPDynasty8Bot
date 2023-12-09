@@ -1,6 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
-let personnelCmds = require('../personnelCmds.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
 
 				let personnelStats = await dbCmds.readPersStats(user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, user.id);
+					await miscFunctions.initPersonnel(interaction.client, user.id);
 				}
 
 				await interaction.editReply({ content: `Successfully initialized <@${user.id}> in the database.`, ephemeral: true });

@@ -1,5 +1,5 @@
 let moment = require('moment');
-let statsReport = require('../statsReport.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				await statsReport.statsReport(interaction.client, 'Manual');
+				await miscFunctions.runStatsReport(interaction.client, 'Manual');
 				await interaction.editReply({ content: `Successfully ran the statistics report.`, ephemeral: true });
 			}
 			else {

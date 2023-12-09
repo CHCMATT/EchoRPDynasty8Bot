@@ -3,7 +3,7 @@ let dbCmds = require('./dbCmds.js');
 let { v4: uuidv4 } = require('uuid');
 let editEmbed = require('./editEmbed.js');
 let { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField } = require('discord.js');
-let personnelCmds = require('./personnelCmds.js');
+let miscFunctions = require('./miscFunctions.js');
 let commissionCmds = require('./commissionCmds.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
@@ -182,7 +182,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countHousesSold");
@@ -313,7 +313,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countWarehousesSold");
@@ -526,7 +526,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countHousesSold");
@@ -585,7 +585,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countMiscSales");
 				await dbCmds.addOneSumm("countMonthlyMiscSales");
@@ -728,7 +728,7 @@ module.exports.modalSubmit = async (interaction) => {
 				}
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 				await dbCmds.addOneSumm("countPropertiesQuoted");
 				await dbCmds.addOneSumm("countMonthlyPropertiesQuoted");
@@ -1196,7 +1196,7 @@ module.exports.modalSubmit = async (interaction) => {
 				await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: embeds });
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countPropertiesRepod");
@@ -1326,7 +1326,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 				}
 
 				await dbCmds.addOneSumm("countTrainActivitiesChecked");
@@ -1614,7 +1614,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
-					await personnelCmds.initPersonnel(interaction.client, interaction.user.id);
+					await miscFunctions.initPersonnel(interaction.client, interaction.user.id);
 				}
 
 				var now = Math.floor(new Date().getTime() / 1000.0);
@@ -2423,7 +2423,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+						await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 					}
 
 					await dbCmds.addOneSumm("countContactRequests");
@@ -2550,7 +2550,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+						await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 					}
 
 					await dbCmds.addOneSumm("countContactRequests");
@@ -2621,7 +2621,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+						await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 					}
 
 					await dbCmds.addOneSumm("countContactRequests");
@@ -2691,7 +2691,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+						await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 					}
 
 					await dbCmds.addOneSumm("countContactRequests");
@@ -2758,7 +2758,7 @@ module.exports.modalSubmit = async (interaction) => {
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 					if (personnelStats == null || personnelStats.charName == null) {
-						await personnelCmds.initPersonnel(interaction.client, interaction.member.user.id);
+						await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
 					}
 
 					await dbCmds.addOneSumm("countContactRequests");
