@@ -823,7 +823,7 @@ module.exports.btnPressed = async (interaction) => {
 				if (1 == 1) {
 					let oldWatchlistEmbed = interaction.message.embeds[0];
 					let watchlistEmbed = [oldWatchlistEmbed];
-					watchlistEmbed[0].data.title = `A new person has been added to the watchlist`;
+					watchlistEmbed[0].data.title = `A new person has been added to the watchlist!`;
 
 					let watchlistUntil = oldWatchlistEmbed.data.fields[3].value;
 					watchlistUntil = watchlistUntil.replaceAll(':R>', ':D>')
