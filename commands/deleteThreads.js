@@ -43,13 +43,12 @@ module.exports = {
 
 				sum_messages.forEach(async (message) => {
 					if (message.author.bot == false && message.type == 18) {
-						console.log(message.id, message.type, message.content.substring(0, 15), message.author.bot);
-						//message.delete();
+						message.delete();
 						deletedMsgCnt++;
 					}
 				});
 
-				await interaction.editReply({ content: `Successfully deleted \`${deletedMsgCnt}\` messages.`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully deleted \`${deletedMsgCnt}\` Thread Creation messages.`, ephemeral: true });
 			}
 			else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
