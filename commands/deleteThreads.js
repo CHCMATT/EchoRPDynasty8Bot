@@ -39,13 +39,17 @@ module.exports = {
 					}
 				}
 
+				let deletedMsgCnt = 0;
+
 				sum_messages.forEach(async (message) => {
-					if (message.author.bot == false) {
+					if (message.author.bot == false && message.type == 18) {
 						console.log(message.id, message.type, message.content.substring(0, 15), message.author.bot);
+						//message.delete();
+						deletedMsgCnt++;
 					}
 				});
 
-				await interaction.editReply({ content: `Deleting`, ephemeral: true });
+				await interaction.editReply({ content: `Successfully deleted \`${deletedMsgCnt}\` messages.`, ephemeral: true });
 			}
 			else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
