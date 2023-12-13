@@ -12,56 +12,6 @@ let formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
-function strCleanup(str) {
-	var cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
-	return cleaned;
-};
-
-function isValidUrl(string) {
-	let url;
-	try {
-		url = new URL(string);
-	} catch (_) {
-		return false;
-	}
-	return url.protocol === "http:" || url.protocol === "https:";
-}
-
-function getAckAlertBtn() {
-	let row1 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('acknowledgeAlert')
-			.setLabel('Acknowledge Alert')
-			.setStyle(ButtonStyle.Primary),
-
-	);
-
-	let rows = [row1];
-	return rows;
-};
-
-function getSaleBtns() {
-	let row1 = new ActionRowBuilder().addComponents(
-		new ButtonBuilder()
-			.setCustomId('setGarageSlots')
-			.setLabel('Set Garage Slots')
-			.setStyle(ButtonStyle.Secondary),
-
-		new ButtonBuilder()
-			.setCustomId('toggleSmartLock')
-			.setLabel('Toggle Smart Locks')
-			.setStyle(ButtonStyle.Secondary),
-
-		new ButtonBuilder()
-			.setCustomId('splitSaleCommission')
-			.setLabel('Split Commission')
-			.setStyle(ButtonStyle.Secondary),
-	);
-
-	let rows = [row1];
-	return rows;
-};
-
 module.exports.modalSubmit = async (interaction) => {
 	try {
 		var modalID = interaction.customId;
@@ -2836,6 +2786,7 @@ module.exports.modalSubmit = async (interaction) => {
 							{ name: `Client Info:`, value: `${interaction.message.embeds[0].data.fields[5].value}`, inline: true },
 							{ name: `Client Contact:`, value: `${interaction.message.embeds[0].data.fields[6].value}`, inline: true },
 							{ name: `Watchlist Expires:`, value: `<t:${expireDate}:R>` },
+							{ name: `Reason for Watchlist:`, value: `Failed to pay financing agreement.` },
 						)
 						.setColor('FFA630')];
 
@@ -2918,6 +2869,56 @@ function getPotentialWatchlistBtns() {
 			.setCustomId('noDontAddToWatchlist')
 			.setLabel('No, don\'t add to list')
 			.setStyle(ButtonStyle.Danger),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function strCleanup(str) {
+	var cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
+	return cleaned;
+};
+
+function isValidUrl(string) {
+	let url;
+	try {
+		url = new URL(string);
+	} catch (_) {
+		return false;
+	}
+	return url.protocol === "http:" || url.protocol === "https:";
+}
+
+function getAckAlertBtn() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('acknowledgeAlert')
+			.setLabel('Acknowledge Alert')
+			.setStyle(ButtonStyle.Primary),
+
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+function getSaleBtns() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('setGarageSlots')
+			.setLabel('Set Garage Slots')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('toggleSmartLock')
+			.setLabel('Toggle Smart Locks')
+			.setStyle(ButtonStyle.Secondary),
+
+		new ButtonBuilder()
+			.setCustomId('splitSaleCommission')
+			.setLabel('Split Commission')
+			.setStyle(ButtonStyle.Secondary),
 	);
 
 	let rows = [row1];
