@@ -43,7 +43,7 @@ module.exports = {
 
 				sum_messages.forEach(async (message) => {
 					if (message.author.bot == false && message.type == 18) {
-						message.delete();
+						await message.delete();
 						deletedMsgCnt++;
 					}
 				});
