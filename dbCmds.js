@@ -50,7 +50,10 @@ module.exports.initPersStats = async (discordId, discordNickname) => {
 		monthlyHousesSold: 0, monthlyWarehousesSold: 0, monthlyPropertiesRepod: 0, monthlyPropertiesQuoted: 0, monthlyActivityChecks: 0, monthlyMiscSales: 0, monthlyFinancialAgreements: 0, monthlyQuotesReviewed: 0, monthlyContactRequests: 0,
 
 		// settings data
-		settingQuotePing: true, settingReimbursementPing: true, settingRepossessionPing: true
+		settingQuotePing: true, settingReimbursementPing: true, settingRepossessionPing: true,
+
+		//active user data
+		active: true
 
 	}, { upsert: true });
 };
@@ -68,6 +71,9 @@ module.exports.readPersStats = async (discordId) => {
 
 		// monthly data
 		monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyQuotesReviewed: 1, monthlyContactRequests: 1,
+
+		//active user data
+		active: 1,
 
 		_id: 0
 	});

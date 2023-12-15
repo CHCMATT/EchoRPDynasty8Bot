@@ -38,6 +38,7 @@ let d8PersonnelInfoSchema = new Schema({
 	settingRepossessionPing: Boolean,
 	contactRequests: reqNum,
 	monthlyContactRequests: reqNum,
+	active: Boolean,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);
