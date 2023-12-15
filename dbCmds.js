@@ -219,7 +219,24 @@ module.exports.readFinanceNum = async (summaryName) => {
 
 
 module.exports.currStats = async () => {
-	let result = await d8PersonnelInfo.find({ charName: { $ne: null } }, { discordId: 1, charName: 1, housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, quotesReviewed: 1, monthlyQuotesReviewed: 1, monthlyContactRequests: 1, contactRequests: 1, _id: 0 });
+	let result = await d8PersonnelInfo.find({ $and: [{ charName: { $ne: null } }, { active: true }] }, {
+		// personnel data
+		discordId: 1, charName: 1,
+
+		// overall data
+		housesSold: 1, warehousesSold: 1, propertiesRepod: 1, propertiesQuoted: 1, activityChecks: 1, miscSales: 1, financialAgreements: 1, quotesReviewed: 1, contactRequests: 1,
+
+		//pay data
+		currentCommission: 1, monthlyCommission: 1, currentMiscPay: 1, bankAccount: 1,
+
+		// monthly data
+		monthlyHousesSold: 1, monthlyWarehousesSold: 1, monthlyPropertiesRepod: 1, monthlyPropertiesQuoted: 1, monthlyActivityChecks: 1, monthlyMiscSales: 1, monthlyFinancialAgreements: 1, monthlyQuotesReviewed: 1, monthlyContactRequests: 1,
+
+		//active user data
+		active: 1,
+
+		_id: 0
+	});
 	return result;
 };
 
@@ -254,4 +271,15 @@ module.exports.removeRepoRecheck = async (uniqueId) => {
 module.exports.readAllRechecks = async () => {
 	let result = await d8RepoRechecks.find({ uniqueId: { $ne: null } }, { uniqueId: 1, ownerName: 1, streetAddress: 1, recheckDate: 1, originalMsg: 1, _id: 0 });
 	return result;
+};
+
+
+// active status
+module.exports.readActiveIndicator = async (discordId) => {
+	let result = await d8PersonnelInfo.findOne({ discordId: discordId }, { active: 1, _id: 0 });
+	return result.active;
+};
+
+module.exports.setActiveIndicator = async (discordId, value) => {
+	await d8PersonnelInfo.findOneAndUpdate({ discordId: discordId }, { active: value });
 };
