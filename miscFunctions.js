@@ -48,7 +48,7 @@ module.exports.checkRepoRechecks = async (client) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
 				try {
 					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
@@ -118,7 +118,7 @@ module.exports.clearOldWatchlists = async (client) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
 				try {
 					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
@@ -165,7 +165,7 @@ module.exports.initPersonnel = async (client, userId) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
 				try {
 					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
@@ -324,7 +324,7 @@ module.exports.runStatsReport = async (client, commandType) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
 				try {
 					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
@@ -496,7 +496,7 @@ module.exports.checkOverduePayments = async (client) => {
 
 			let errString = error.toString();
 
-			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.') {
+			if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
 				try {
 					await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
 				} catch {
