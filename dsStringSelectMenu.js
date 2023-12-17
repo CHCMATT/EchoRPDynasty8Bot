@@ -22,7 +22,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('soldToInput')
 						.setLabel('What is the name and info of the buyer?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
@@ -66,7 +66,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('soldToInput')
 						.setLabel('What is the name and info of the buyer?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
@@ -154,7 +154,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('itemsSoldInput')
 						.setLabel('What did you sell?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('3x Garage Slots')
+						.setPlaceholder('3 GS at 456')
 						.setRequired(true);
 					let priceInput = new TextInputBuilder()
 						.setCustomId('priceInput')
@@ -181,7 +181,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('remodelForInput')
 						.setLabel('What is the name and info of the owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					let newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
@@ -225,7 +225,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('remodelForInput')
 						.setLabel('What is the name and info of the owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					let newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
@@ -274,7 +274,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('clientInfoInput')
 						.setLabel('What is the name and phone # of the client?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - Phone Number')
+						.setPlaceholder('FirstName LastName | Phone Number')
 						.setRequired(true);
 					let priceInput = new TextInputBuilder()
 						.setCustomId('priceInput')
@@ -318,7 +318,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('prevOwnerInput')
 						.setLabel('What is the name and info of the prev. owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
@@ -362,7 +362,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('remodelForInput')
 						.setLabel('What is the name and info of the owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					var newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
@@ -405,7 +405,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('remodelForInput')
 						.setLabel('What is the name and info of the owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID - DOB')
+						.setPlaceholder('FirstName LastName | CID | DOB')
 						.setRequired(true);
 					var newLotNumNotesInput = new TextInputBuilder()
 						.setCustomId('newLotNumNotesInput')
@@ -448,7 +448,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setCustomId('currentOwnerInput')
 						.setLabel('What is the name & CID of the current owner?')
 						.setStyle(TextInputStyle.Short)
-						.setPlaceholder('FirstName LastName - CID')
+						.setPlaceholder('FirstName LastName | CID')
 						.setRequired(true);
 					let lotNumStreetNameInput = new TextInputBuilder()
 						.setCustomId('lotNumStreetNameInput')
