@@ -47,18 +47,28 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
 					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 						ephemeral: true
 					});
 					return;
@@ -84,14 +94,6 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
 				}
 
 				var formattedPrice = formatter.format(price);
@@ -170,21 +172,6 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Property Sales!A:H", valueInputOption: "RAW", resource: { values: [[`Warehouse Sale`, `${realtorName} (<@${interaction.user.id}>)`, saleDate, lotNumStreetName, price, soldTo, locationNotes, photosString]] }
 				});
 
-				var formattedPrice = formatter.format(price);
-				var costPrice = (price * 0.85);
-				var d8Profit = price - costPrice;
-				var realtorCommission = Math.round(d8Profit * 0.30);
-				var assetFees = (price * 0.01);
-				var taxPrice = Math.round((price * 0.052));
-				var totalPrice = (price + taxPrice);
-
-				var formattedCostPrice = formatter.format(costPrice);
-				var formattedD8Profit = formatter.format(d8Profit);
-				var formattedRealtorCommission = formatter.format(realtorCommission);
-				var formattedAssetFees = formatter.format(assetFees);
-				var formattedTotalPrice = formatter.format(totalPrice);
-				var formattedTaxPrice = formatter.format(taxPrice);
-
 				if (isNaN(price)) { // validate quantity of money
 					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
@@ -193,18 +180,28 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
 					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 						ephemeral: true
 					});
 					return;
@@ -232,13 +229,20 @@ module.exports.modalSubmit = async (interaction) => {
 					}
 				}
 
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
+				var formattedPrice = formatter.format(price);
+				var costPrice = (price * 0.85);
+				var d8Profit = price - costPrice;
+				var realtorCommission = Math.round(d8Profit * 0.30);
+				var assetFees = (price * 0.01);
+				var taxPrice = Math.round((price * 0.052));
+				var totalPrice = (price + taxPrice);
+
+				var formattedCostPrice = formatter.format(costPrice);
+				var formattedD8Profit = formatter.format(d8Profit);
+				var formattedRealtorCommission = formatter.format(realtorCommission);
+				var formattedAssetFees = formatter.format(assetFees);
+				var formattedTotalPrice = formatter.format(totalPrice);
+				var formattedTaxPrice = formatter.format(taxPrice);
 
 				var embeds = [new EmbedBuilder()
 					.setTitle('A new Warehouse has been sold!')
@@ -308,6 +312,63 @@ module.exports.modalSubmit = async (interaction) => {
 				let officeSaleDocumentLink = `https://docs.google.com/document/d/${officeSaleNewFile.data.id}`;
 
 				let officeSaleTodayDate = moment().format('MMMM DD, YYYY');
+
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.editReply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
+					await interaction.editReply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.editReply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.editReply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
 
 				var costPrice = (price * 0.85);
 				var d8Profit = price - costPrice;
@@ -395,61 +456,6 @@ module.exports.modalSubmit = async (interaction) => {
 						}]
 					}
 				});
-
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.editReply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
-					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
 
 				var embeds = [new EmbedBuilder()
 					.setTitle('A new Office has been sold!')
@@ -580,102 +586,104 @@ module.exports.modalSubmit = async (interaction) => {
 					});
 					return;
 				}
-				else {
-					var photos = [photosString];
-					if (photosString.includes(",")) {
-						photos = photosString.split(",")
-					} else if (photosString.includes(";")) {
-						photos = photosString.split(";")
-					} else if (photosString.includes(" ")) {
-						photos = photosString.split(" ")
-					} else if (photosString.includes("|")) {
-						photos = photosString.split("|")
-					} else if (photos.length > 1) {
-						await interaction.editReply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-							ephemeral: true
-						});
-						return;
-					}
 
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.editReply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.editReply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
-					}
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
 
-					if (photos.length >= 10) {
-						await interaction.editReply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					if (notes) {
-						var embeds = [new EmbedBuilder()
-							.setTitle('A new Property Quote request has been submitted!')
-							.addFields(
-								{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-								{ name: `Request Date:`, value: `${reqDate}` },
-								{ name: `Client Information:`, value: `${clientInfo}` },
-								{ name: `Estimated Price:`, value: `${formattedPrice}` },
-								{ name: `Interior Type:`, value: `${interiorType}` },
-								{ name: `Notes:`, value: `${notes}` }
-							)
-							.setColor('A47E1B')];
-					} else {
-						var embeds = [new EmbedBuilder()
-							.setTitle('A new Property Quote request has been submitted!')
-							.addFields(
-								{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
-								{ name: `Request Date:`, value: `${reqDate}` },
-								{ name: `Client Information:`, value: `${clientInfo}` },
-								{ name: `Estimated Price:`, value: `${formattedPrice}` },
-								{ name: `Interior Type:`, value: `${interiorType}` },
-							)
-							.setColor('A47E1B')];
-					}
-
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-
-					embeds = embeds.concat(photosEmbed);
-
-					let quoteBtns = [new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId('approveQuote')
-							.setLabel('Approve Quote')
-							.setStyle(ButtonStyle.Success),
-
-						new ButtonBuilder()
-							.setCustomId('adjustQuote')
-							.setLabel('Adjust & Approve')
-							.setStyle(ButtonStyle.Primary),
-
-						new ButtonBuilder()
-							.setCustomId('denyQuote')
-							.setLabel('Deny Quote')
-							.setStyle(ButtonStyle.Danger),
-					)];
-
-					await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ embeds: embeds, components: quoteBtns, });
+				if (photos.length <= 1) {
+					await interaction.editReply({
+						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
 				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				for (let i = 0; i < photos.length; i++) {
+					if (photos[i] == "") {
+						photos.splice(i, 1);
+						continue;
+					}
+					if (!isValidUrl(photos[i])) { // validate photo link
+						await interaction.editReply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+							ephemeral: true
+						});
+						return;
+					}
+					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
+						await interaction.editReply({
+							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
+							ephemeral: true
+						});
+						return;
+					}
+				}
+
+				if (notes) {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Estimated Price:`, value: `${formattedPrice}` },
+							{ name: `Interior Type:`, value: `${interiorType}` },
+							{ name: `Notes:`, value: `${notes}` }
+						)
+						.setColor('A47E1B')];
+				} else {
+					var embeds = [new EmbedBuilder()
+						.setTitle('A new Property Quote request has been submitted!')
+						.addFields(
+							{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
+							{ name: `Request Date:`, value: `${reqDate}` },
+							{ name: `Client Information:`, value: `${clientInfo}` },
+							{ name: `Estimated Price:`, value: `${formattedPrice}` },
+							{ name: `Interior Type:`, value: `${interiorType}` },
+						)
+						.setColor('A47E1B')];
+				}
+
+				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
+
+				embeds = embeds.concat(photosEmbed);
+
+				let quoteBtns = [new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('approveQuote')
+						.setLabel('Approve Quote')
+						.setStyle(ButtonStyle.Success),
+
+					new ButtonBuilder()
+						.setCustomId('adjustQuote')
+						.setLabel('Adjust & Approve')
+						.setStyle(ButtonStyle.Primary),
+
+					new ButtonBuilder()
+						.setCustomId('denyQuote')
+						.setLabel('Deny Quote')
+						.setStyle(ButtonStyle.Danger),
+				)];
+
+				await interaction.client.channels.cache.get(process.env.BUILDING_QUOTES_CHANNEL_ID).send({ embeds: embeds, components: quoteBtns, });
+
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 				if (personnelStats == null || personnelStats.charName == null) {
 					await miscFunctions.initPersonnel(interaction.client, interaction.member.user.id);
@@ -1067,18 +1075,28 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Logs!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNumStreetName, repoReason, notes, photosString]] }
 				});
 
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
 					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 						ephemeral: true
 					});
 					return;
@@ -1104,14 +1122,6 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
 				}
 
 				if (notes) {
@@ -1182,18 +1192,36 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Request!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNumStreetName, notes, photosString]] }
 				});
 
-				var photos = [photosString];
-				if (photosString.includes(",")) {
-					photos = photosString.split(",")
-				} else if (photosString.includes(";")) {
-					photos = photosString.split(";")
-				} else if (photosString.includes(" ")) {
-					photos = photosString.split(" ")
-				} else if (photosString.includes("|")) {
-					photos = photosString.split("|")
-				} else if (photos.length > 1) {
+				if (isNaN(price)) { // validate quantity of money
+					await interaction.editReply({
+						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				var photos = [];
+				photos = photosString.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
 					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photosString.length > 1024) {
+					await interaction.editReply({
+						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 						ephemeral: true
 					});
 					return;
@@ -1219,14 +1247,6 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
 				}
 
 				if (notes) {
@@ -1586,18 +1606,20 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [refundProof];
-				if (refundProof.includes(",")) {
-					photos = refundProof.split(",")
-				} else if (refundProof.includes(";")) {
-					photos = refundProof.split(";")
-				} else if (refundProof.includes(" ")) {
-					photos = refundProof.split(" ")
-				} else if (refundProof.includes("|")) {
-					photos = refundProof.split("|")
-				} else if (photos.length > 1) {
+				var photos = [];
+				photos = refundProof.split(/\,|\;| |\|/);
+
+				if (photos.length <= 1) {
 					await interaction.editReply({
 						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						ephemeral: true
+					});
+					return;
+				}
+
+				if (photos.length >= 10) {
+					await interaction.editReply({
+						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
 						ephemeral: true
 					});
 					return;
@@ -1623,22 +1645,6 @@ module.exports.modalSubmit = async (interaction) => {
 						});
 						return;
 					}
-				}
-
-				if (refundProof.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
 				}
 
 				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
@@ -2412,18 +2418,28 @@ module.exports.modalSubmit = async (interaction) => {
 						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
 					});
 
-					var photos = [gpsPropertyString];
-					if (gpsPropertyString.includes(",")) {
-						photos = gpsPropertyString.split(",")
-					} else if (gpsPropertyString.includes(";")) {
-						photos = gpsPropertyString.split(";")
-					} else if (gpsPropertyString.includes(" ")) {
-						photos = gpsPropertyString.split(" ")
-					} else if (gpsPropertyString.includes("|")) {
-						photos = gpsPropertyString.split("|")
-					} else if (photos.length > 1) {
+					var photos = [];
+					photos = gpsPropertyString.split(/\,|\;| |\|/);
+
+					if (photos.length <= 1) {
 						await interaction.editReply({
 							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					if (photos.length >= 10) {
+						await interaction.editReply({
+							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+							ephemeral: true
+						});
+						return;
+					}
+
+					if (gpsPropertyString.length > 1024) {
+						await interaction.editReply({
+							content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
 							ephemeral: true
 						});
 						return;
@@ -2449,22 +2465,6 @@ module.exports.modalSubmit = async (interaction) => {
 							});
 							return;
 						}
-					}
-
-					if (gpsPropertyString.length > 1024) {
-						await interaction.editReply({
-							content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					if (photos.length >= 10) {
-						await interaction.editReply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
 					}
 
 					if (notesInfo) {
