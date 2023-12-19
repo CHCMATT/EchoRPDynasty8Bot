@@ -1192,14 +1192,6 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Request!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNumStreetName, notes, photosString]] }
 				});
 
-				if (isNaN(price)) { // validate quantity of money
-					await interaction.editReply({
-						content: `:exclamation: \`${interaction.fields.getTextInputValue('priceInput')}\` is not a valid number, please be sure to only enter numbers.`,
-						ephemeral: true
-					});
-					return;
-				}
-
 				var photos = [];
 				photos = photosString.split(/\,|\;| |\|/);
 
