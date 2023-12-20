@@ -1601,14 +1601,6 @@ module.exports.modalSubmit = async (interaction) => {
 				var photos = [];
 				photos = refundProof.split(/\,|\;| |\|/);
 
-				if (photos.length <= 1) {
-					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
-						ephemeral: true
-					});
-					return;
-				}
-
 				if (photos.length >= 10) {
 					await interaction.editReply({
 						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
