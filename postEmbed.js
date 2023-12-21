@@ -221,7 +221,7 @@ module.exports.postFrontDeskEmbed = async (client) => {
 	try {
 		let frontDeskEmbed = new EmbedBuilder()
 			.setTitle(`Dynasty 8 Front Desk`)
-			.setDescription(`Press the relevant button below to log a YP ad or request reimbursement`)
+			.setDescription(`Press the relevant button below to log a YP ad, request reimbursement, or file a request as an assistant.`)
 			.setColor('926C15');
 
 		let btnRows = addFrontDeskBtnRows();
