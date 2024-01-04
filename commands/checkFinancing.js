@@ -1,21 +1,26 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'checkfinancing',
+	description: 'Check the current amount of Financing Agreements',
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
-				}
+				let totalFinancialAgreements = await dbCmds.readSummValue('countFinancialAgreements');
+				let monthlyFinancialAgreements = await dbCmds.readSummValue('countMonthlyFinancialAgreements');
+				let activeFinancialAgreements = await dbCmds.readSummValue('activeFinancialAgreements');
+
+				await interaction.editReply({ content: `Overview of Dynasty 8's Financing Agreements:\n_Total_\n> ${totalFinancialAgreements} total agreements\n\n_Monthly_\n> ${monthlyFinancialAgreements} monthly agreements\n\n_Active_\n> ${activeFinancialAgreements} active agreements`, ephemeral: true });
 			}
 			else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });

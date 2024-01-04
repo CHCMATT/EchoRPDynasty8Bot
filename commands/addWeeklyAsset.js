@@ -1,23 +1,53 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
+let { v4: uuidv4 } = require('uuid');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'addweeklyasset',
+	description: 'Adds an asset to be reimbursed weekly to the specified user',
+	options: [
+		{
+			name: 'assetowner',
+			description: 'The owner of the asset that will be reimbursed weekly',
+			type: 6,
+			required: true,
+		},
+		{
+			name: 'assetname',
+			description: 'The name of the asset that will be reimbursed weekly',
+			type: 3,
+			required: true,
+		},
+		{
+			name: 'assetcost',
+			description: 'The cost of the asset that will be reimbursed weekly',
+			type: 4,
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
-				}
-			}
-			else {
+				let assetOwner = interaction.options.getUser('assetowner');
+				let assetCost = Math.abs(interaction.options.getInteger('assetcost'));
+				let assetName = interaction.options.getString('assetname');
+				let assetUuid = uuidv4();
+
+				await dbCmds.addPersonnelAsset(assetUuid, assetOwner, assetName, assetCost);
+
+				let formattedAssetCost = formatter.format(assetCost);
+
+				await interaction.editReply({ content: `Successfully added the \`${assetName}\` asset with a weekly cost \`${formattedAssetCost}\` to ${assetOwner}. This will be automatically added to their weekly commission for reimbursement.`, ephemeral: true });
+			} else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {

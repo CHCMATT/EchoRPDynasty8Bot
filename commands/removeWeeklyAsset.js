@@ -1,23 +1,42 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'removeweeklyasset',
+	description: 'Remove an asset from the specified user',
+	options: [
+		{
+			name: 'assetowner',
+			description: 'The owner of the asset that should be removed',
+			type: 6,
+			required: true,
+		},
+		{
+			name: 'assetname',
+			description: 'The name of the asset that should be removed',
+			type: 3,
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
-				}
-			}
-			else {
+				let assetOwner = interaction.options.getUser('assetowner');
+				let assetName = interaction.options.getString('assetname');
+
+				await dbCmds.removePersonnelAsset(assetName);
+
+				await interaction.editReply({ content: `Successfully removed the \`${assetName}\` asset from ${assetOwner}'s weekly commission.`, ephemeral: true });
+			} else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {

@@ -1,6 +1,5 @@
 let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
-let miscFunctions = require('../miscFunctions.js');
 let commissionCmds = require('../commissionCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
@@ -11,18 +10,24 @@ let formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'addcommission',
-	description: 'Adds the specified amount to the specified user\'s current commission metrics',
+	name: 'splitcommission',
+	description: 'Divides the amount by 50%, removes it from the 1st user, and adds to the 2nd user\'s commission',
 	options: [
 		{
-			name: 'user',
-			description: 'The user you\'d like to modify commission on',
+			name: 'fromuser',
+			description: 'The user you\'d like to remove commission from',
+			type: 6,
+			required: true,
+		},
+		{
+			name: 'touser',
+			description: 'The user you\'d like to add commission to',
 			type: 6,
 			required: true,
 		},
 		{
 			name: 'amount',
-			description: 'The amount of commission you\'d like to add',
+			description: 'The total amount of commission you\'d like to split (this number will be divided in half)',
 			type: 4,
 			required: true,
 		},
@@ -38,20 +43,23 @@ module.exports = {
 
 		try {
 			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let user = interaction.options.getUser('user');
-				if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-
-					let personnelStats = await dbCmds.readPersStats(user.id);
-					if (personnelStats == null || personnelStats.charName == null) {
-						await miscFunctions.initPersonnel(interaction.client, user.id);
-					}
-
+				let fromUser = interaction.options.getUser('fromuser');
+				let toUser = interaction.options.getUser('touser');
+				if (interaction.user.id == fromUser.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					let amount = Math.abs(interaction.options.getInteger('amount'));
+					let splitAmount = (amount * 0.50);
 					let reason = interaction.options.getString('reason');
-					let newCommission = await commissionCmds.addCommission(interaction.client, `<@${interaction.user.id}>`, amount, user.id, reason);
-					let formattedAmt = formatter.format(amount);
+					let formattedSplitAmount = formatter.format(splitAmount);
+					let fromUserPersonnelData = await dbCmds.readPersStats(fromUser.id);
+					if (fromUserPersonnelData.currentCommission != null && fromUserPersonnelData.currentCommission > 0) {
 
-					await interaction.editReply({ content: `Successfully added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
+						await commissionCmds.removeCommission(interaction.client, `<@${interaction.user.id}>`, splitAmount, fromUser.id, reason);
+						await commissionCmds.addCommission(interaction.client, `<@${interaction.user.id}>`, splitAmount, toUser.id, reason);
+
+						await interaction.editReply({ content: `Successfully swapped \`${formattedSplitAmount}\` from <@${fromUser.id}> to <@${toUser.id}>'s current commission.`, ephemeral: true });
+					} else {
+						await interaction.editReply({ content: `:exclamation: <@${fromUser.id}> doesn't have any commission to swap, yet.`, ephemeral: true });
+					}
 				} else {
 					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}

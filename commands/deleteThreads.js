@@ -1,21 +1,54 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'deletethreads',
+	description: 'Deletes any messages in the specified channel where the message is someone starting a thread',
+	options: [
+		{
+			name: 'channel',
+			description: 'The channel that you\'d like to delete messages from',
+			type: 7,
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
+				let channelSelection = interaction.options.getChannel('channel');
+				let channel = await interaction.client.channels.fetch(channelSelection.id);
+
+				let sum_messages = [];
+				let last_id;
+
+				while (true) {
+					const options = { limit: 100 };
+					if (last_id) {
+						options.before = last_id;
+					}
+
+					let messages = await channel.messages.fetch(options);
+					sum_messages.push(...messages.values());
+					last_id = messages.last().id;
+
+					if (messages.size != 100 || sum_messages >= options.limit) {
+						break;
+					}
 				}
+
+				let deletedMsgCnt = 0;
+
+				sum_messages.forEach(async (message) => {
+					if (message.author.bot == false && message.type == 18) {
+						await message.delete();
+						deletedMsgCnt++;
+					}
+				});
+
+				await interaction.editReply({ content: `Successfully deleted \`${deletedMsgCnt}\` Thread Creation messages.`, ephemeral: true });
 			}
 			else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });

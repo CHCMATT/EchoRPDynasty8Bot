@@ -1,21 +1,17 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	name: 'commissionreport',
+	name: 'statsreport',
 	description: 'Manually runs the commission report for the Management team',
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
-				}
+				await miscFunctions.runStatsReport(interaction.client, 'Manual');
+				await interaction.editReply({ content: `Successfully ran the statistics report.`, ephemeral: true });
 			}
 			else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });

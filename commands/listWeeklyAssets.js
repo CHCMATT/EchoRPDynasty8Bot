@@ -1,23 +1,43 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
+let formatter = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	maximumFractionDigits: 0
+});
+
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'listweeklyassets',
+	description: 'Lists all of the assets that are assigned to the specified user',
+	options: [
+		{
+			name: 'assetowner',
+			description: 'The owner of the assets',
+			type: 6,
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
+				let assetOwner = interaction.options.getUser('assetowner');
+				let assetsArray = await dbCmds.listPersonnelAssets(assetOwner.id);
+
+				if (assetsArray.length < 1) {
+					await interaction.editReply({ content: `${assetOwner} does not have any assigned assets yet.`, ephemeral: true });
 				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
+					let assetsList = '';
+					for (let i = 0; i < assetsArray.length; i++) {
+						assetsList = assetsList + `> \`${assetsArray[i].assetName}\`: ${formatter.format(assetsArray[i].assetCost)}\n`
+					}
+					await interaction.editReply({ content: `${assetOwner} has the following asset(s):\n${assetsList}`, ephemeral: true });
 				}
-			}
-			else {
+
+			} else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {

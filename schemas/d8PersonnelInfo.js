@@ -1,16 +1,16 @@
-var { Schema, model, models } = require('mongoose');
+let { Schema, model, models } = require('mongoose');
 
-var reqString = {
+let reqString = {
 	type: String,
 	required: true,
 };
 
-var reqNum = {
+let reqNum = {
 	type: Number,
 	required: true,
 };
 
-var d8PersonnelInfoSchema = new Schema({
+let d8PersonnelInfoSchema = new Schema({
 	discordId: reqString,
 	charName: reqString,
 	housesSold: reqNum,
@@ -19,9 +19,10 @@ var d8PersonnelInfoSchema = new Schema({
 	propertiesQuoted: reqNum,
 	activityChecks: reqNum,
 	miscSales: reqNum,
-	embedColor: reqString,
-	embedMsgId: reqString,
+	financialAgreements: reqNum,
+	quotesReviewed: reqNum,
 	currentCommission: reqNum,
+	currentMiscPay: reqNum,
 	bankAccount: reqString,
 	monthlyHousesSold: reqNum,
 	monthlyWarehousesSold: reqNum,
@@ -29,6 +30,15 @@ var d8PersonnelInfoSchema = new Schema({
 	monthlyPropertiesQuoted: reqNum,
 	monthlyActivityChecks: reqNum,
 	monthlyMiscSales: reqNum,
+	monthlyFinancialAgreements: reqNum,
+	monthlyQuotesReviewed: reqNum,
+	monthlyCommission: reqNum,
+	settingQuotePing: Boolean,
+	settingReimbursementPing: Boolean,
+	settingRepossessionPing: Boolean,
+	contactRequests: reqNum,
+	monthlyContactRequests: reqNum,
+	active: Boolean,
 });
 
 module.exports = models['d8PersonnelInfo'] || model('d8PersonnelInfo', d8PersonnelInfoSchema);

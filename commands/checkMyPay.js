@@ -1,7 +1,6 @@
 let moment = require('moment');
 let dbCmds = require('../dbCmds.js');
 let miscFunctions = require('../miscFunctions.js');
-let commissionCmds = require('../commissionCmds.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 let formatter = new Intl.NumberFormat('en-US', {
@@ -11,50 +10,47 @@ let formatter = new Intl.NumberFormat('en-US', {
 });
 
 module.exports = {
-	name: 'addcommission',
-	description: 'Adds the specified amount to the specified user\'s current commission metrics',
-	options: [
-		{
-			name: 'user',
-			description: 'The user you\'d like to modify commission on',
-			type: 6,
-			required: true,
-		},
-		{
-			name: 'amount',
-			description: 'The amount of commission you\'d like to add',
-			type: 4,
-			required: true,
-		},
-		{
-			name: 'reason',
-			description: 'The reason for modifying the commission',
-			type: 3,
-			required: true,
-		},
-	],
+	name: 'checkmypay',
+	description: 'Displays your current commission and pay information',
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
-			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let user = interaction.options.getUser('user');
-				if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
-					let personnelStats = await dbCmds.readPersStats(user.id);
-					if (personnelStats == null || personnelStats.charName == null) {
-						await miscFunctions.initPersonnel(interaction.client, user.id);
-					}
+				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 
-					let amount = Math.abs(interaction.options.getInteger('amount'));
-					let reason = interaction.options.getString('reason');
-					let newCommission = await commissionCmds.addCommission(interaction.client, `<@${interaction.user.id}>`, amount, user.id, reason);
-					let formattedAmt = formatter.format(amount);
+				let currentCommission = 0;
+				let monthlyCommission = 0;
+				let currentMiscPay = 0;
+				let bankAccount = 'n/a';
 
-					await interaction.editReply({ content: `Successfully added \`${formattedAmt}\` to <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				if (!Object.is(personnelStats, null)) {
+					currentCommission = personnelStats.currentCommission
+					monthlyCommission = personnelStats.monthlyCommission
+					currentMiscPay = personnelStats.currentMiscPay
+					bankAccount = personnelStats.bankAccount
 				}
+
+				if (currentCommission == null) {
+					currentCommission = 0;
+				}
+				if (monthlyCommission == null) {
+					monthlyCommission = 0;
+				}
+				if (currentMiscPay == null) {
+					currentMiscPay = 0;
+				}
+				if (bankAccount == null) {
+					bankAccount = 'n/a';
+				}
+
+				let formattedCurrCommission = formatter.format(currentCommission);
+				let formattedMonthlyCommission = formatter.format(monthlyCommission);
+				let formattedCurrMiscPay = formatter.format(currentMiscPay);
+
+				await interaction.editReply({ content: `Your current pay information:\n> Commission this pay period: \`${formattedCurrCommission}\`\n> Commission this month: \`${formattedMonthlyCommission}\`\n> Misc. pay this pay period: \`${formattedCurrMiscPay}\`\n> Your bank account number: \`${bankAccount}\``, ephemeral: true })
+
 			} else {
 				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}

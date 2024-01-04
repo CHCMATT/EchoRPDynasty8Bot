@@ -1,24 +1,16 @@
-let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
-let { PermissionsBitField, EmbedBuilder } = require('discord.js');
+const moment = require('moment');
 
-module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
-	async execute(interaction) {
-		await interaction.deferReply({ ephemeral: true });
-
+module.exports = (client) => {
+	client.on('messageCreate', async message => {
 		try {
-			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
-				}
-			}
-			else {
-				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+			if (message.guild == null && message.author.id !== client.user.id) {
+				await message.channel.sendTyping();
+
+				let now = Math.floor(new Date().getTime() / 1000.0);
+
+				client.users.send(`177088916250296320`, `${message.author} sent a DM at <t:${now}:T> (<t:${now}:R>):\n> ${message.content}`);
+
+				await message.author.send({ content: `Hi there! I am not able help you via DM, if you have a request or problem, please DM my developer <@177088916250296320> directly.` });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {
@@ -51,5 +43,5 @@ module.exports = {
 				await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
 			}
 		}
-	},
+	});
 };

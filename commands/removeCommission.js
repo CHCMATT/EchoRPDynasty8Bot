@@ -1,7 +1,9 @@
-var dbCmds = require('../dbCmds.js');
-var { PermissionsBitField, EmbedBuilder } = require('discord.js');
+let moment = require('moment');
+let dbCmds = require('../dbCmds.js');
+let commissionCmds = require('../commissionCmds.js');
+let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
-var formatter = new Intl.NumberFormat('en-US', {
+let formatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
 	currency: 'USD',
 	maximumFractionDigits: 0
@@ -31,33 +33,58 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
-		if (interaction.member._roles.includes(process.env.REALTOR_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-			var user = interaction.options.getUser('user');
-			if (interaction.user.id == user.id || interaction.member.id == '220286286064386048' || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				var amount = Math.abs(interaction.options.getInteger('amount'));
-				var reason = interaction.options.getString('reason');
-				var formattedAmt = formatter.format(amount);
-				var personnelData = await dbCmds.readPersStats(user.id)
-				if (personnelData.currentCommission != null && personnelData.currentCommission > 0) {
-					await dbCmds.removeCommission(user.id, amount)
-					var personnelData = await dbCmds.readPersStats(user.id)
-					var newCommission = personnelData.currentCommission;
-					var formattedNewCommission = formatter.format(newCommission);
-					// color palette: https://coolors.co/palette/706677-7bc950-fffbfe-13262b-1ca3c4-b80600-1ec276-ffa630
-					var notificationEmbed = new EmbedBuilder()
-						.setTitle('Commission Modified Manually:')
-						.setDescription(`<@${interaction.user.id}> removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.\n\n**Reason:** \`${reason}\`.`)
-						.setColor('#FFA630');
-					await interaction.client.channels.cache.get(process.env.COMMISSION_LOGS_CHANNEL_ID).send({ embeds: [notificationEmbed] });
-					await interaction.reply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${formattedNewCommission}\`.`, ephemeral: true });
+		await interaction.deferReply({ ephemeral: true });
+
+		try {
+			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				let user = interaction.options.getUser('user');
+				if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+					let amount = Math.abs(interaction.options.getInteger('amount'));
+					let reason = interaction.options.getString('reason');
+					let formattedAmt = formatter.format(amount);
+					let personnelData = await dbCmds.readPersStats(user.id)
+					if (personnelData.currentCommission != null && personnelData.currentCommission > 0) {
+						let newCommission = await commissionCmds.removeCommission(interaction.client, `<@${interaction.user.id}>`, amount, user.id, reason);
+						await interaction.editReply({ content: `Successfully removed \`${formattedAmt}\` from <@${user.id}>'s current commission for a new total of \`${newCommission}\`.`, ephemeral: true });
+					} else {
+						await interaction.editReply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
+					}
 				} else {
-					await interaction.reply({ content: `:exclamation: <@${user.id}> doesn't have any commission to modify, yet.`, ephemeral: true });
+					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 			} else {
-				await interaction.reply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
-		} else {
-			await interaction.reply({ content: `:x: You must have the \`Realtor\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+		} catch (error) {
+			if (process.env.BOT_NAME == 'test') {
+				console.error(error);
+			} else {
+				console.error(error);
+
+				let errTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+				let fileParts = __filename.split(/[\\/]/);
+				let fileName = fileParts[fileParts.length - 1];
+
+				console.log(`An error occured at ${errTime} at file ${fileName}!`);
+
+				let errString = error.toString();
+
+				if (errString === 'Error: The service is currently unavailable.' || errString === 'Error: Internal error encountered.' || errString === 'HTTPError: Service Unavailable') {
+					try {
+						await interaction.editReply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
+					} catch {
+						await interaction.reply({ content: `:warning: One of the service providers we use had a brief outage. Please try to submit your request again!`, ephemeral: true });
+					}
+				}
+
+				let errorEmbed = [new EmbedBuilder()
+					.setTitle(`An error occured on the ${process.env.BOT_NAME} bot file ${fileName}!`)
+					.setDescription(`\`\`\`${errString}\`\`\``)
+					.setColor('B80600')
+					.setFooter({ text: `${errTime}` })];
+
+				await interaction.client.channels.cache.get(process.env.ERROR_LOG_CHANNEL_ID).send({ embeds: errorEmbed });
+			}
 		}
 	},
 };

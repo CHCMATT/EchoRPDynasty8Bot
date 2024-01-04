@@ -1,23 +1,33 @@
 let moment = require('moment');
-let commissionCmds = require('../commissionCmds.js');
+let dbCmds = require('../dbCmds.js');
+let miscFunctions = require('../miscFunctions.js');
 let { PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	name: 'commissionreport',
-	description: 'Manually runs the commission report for the Management team',
+	name: 'initpersonnel',
+	description: 'Initializes a person in the database, if they don\'t already exist',
+	options: [
+		{
+			name: 'user',
+			description: 'The user you\'d like to initialize in the database',
+			type: 6,
+			required: true,
+		},
+	],
 	async execute(interaction) {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
 			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-				let result = await commissionCmds.commissionReport(interaction.client, 'Manual');
-				if (result === "success") {
-					await interaction.editReply({ content: `Successfully ran the commission report.`, ephemeral: true });
-				} else {
-					await interaction.editReply({ content: `:exclamation: The commission report has been run recently, please wait 24 hours between reports.`, ephemeral: true });
+				let user = interaction.options.getUser('user');
+
+				let personnelStats = await dbCmds.readPersStats(user.id);
+				if (personnelStats == null || personnelStats.charName == null) {
+					await miscFunctions.initPersonnel(interaction.client, user.id);
 				}
-			}
-			else {
+
+				await interaction.editReply({ content: `Successfully initialized <@${user.id}> in the database.`, ephemeral: true });
+			} else {
 				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
