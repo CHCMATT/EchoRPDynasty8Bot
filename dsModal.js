@@ -2860,14 +2860,15 @@ function getPotentialWatchlistBtns() {
 };
 
 function strCleanup(str) {
-	var cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
-	return cleaned;
+	let cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
+	let shortAndClean = cleaned.substring(0, 1024);
+	return shortAndClean;
 };
 
-function isValidUrl(string) {
+function isValidUrl(str) {
 	let url;
 	try {
-		url = new URL(string);
+		url = new URL(str);
 	} catch (_) {
 		return false;
 	}
