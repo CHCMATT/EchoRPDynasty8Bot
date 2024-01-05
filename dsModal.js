@@ -1503,7 +1503,6 @@ module.exports.modalSubmit = async (interaction) => {
 				await dbCmds.addOneSumm("countFinancialAgreements");
 				await dbCmds.addOneSumm("countMonthlyFinancialAgreements");
 				await dbCmds.addOneSumm("activeFinancialAgreements");
-				await dbCmds.addValueSumm("activeFinancialAmount", Math.round(amountOwed));
 				await dbCmds.addOnePersStat(interaction.member.user.id, "financialAgreements");
 				await dbCmds.addOnePersStat(interaction.member.user.id, "monthlyFinancialAgreements");
 
