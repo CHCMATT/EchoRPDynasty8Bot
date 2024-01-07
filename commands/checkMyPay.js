@@ -16,7 +16,7 @@ module.exports = {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
-			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member._roles.includes(process.env.ASSISTANT_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member._roles.includes(process.env.FULL_TIME_PD_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
 				var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
 
@@ -52,7 +52,7 @@ module.exports = {
 				await interaction.editReply({ content: `Your current pay information:\n> Commission this pay period: \`${formattedCurrCommission}\`\n> Commission this month: \`${formattedMonthlyCommission}\`\n> Misc. pay this pay period: \`${formattedCurrMiscPay}\`\n> Your bank account number: \`${bankAccount}\``, ephemeral: true })
 
 			} else {
-				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have either the \`Assistant\` or \`Full-Time\` or \`PD Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

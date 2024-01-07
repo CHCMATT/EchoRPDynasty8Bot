@@ -77,7 +77,7 @@ module.exports = {
 					await interaction.editReply({ content: `:exclamation: I don't recognize this calculator type. Please try again with a proper calculator type.`, ephemeral: true });
 				}
 			} else {
-				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have either the \`Assistant\` or \`Full-Time\` or \`PD Full-Time\` role, or the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {

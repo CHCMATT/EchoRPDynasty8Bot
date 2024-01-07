@@ -37,7 +37,7 @@ module.exports = {
 		await interaction.deferReply({ ephemeral: true });
 
 		try {
-			if (interaction.member._roles.includes(process.env.FULL_TIME_ROLE_ID) || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+			if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				let user = interaction.options.getUser('user');
 				if (interaction.user.id == user.id || interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
@@ -56,7 +56,7 @@ module.exports = {
 					await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 				}
 			} else {
-				await interaction.editReply({ content: `:x: You must have the \`Full-Time\` role or the \`Administrator\` permission to use this function.`, ephemeral: true });
+				await interaction.editReply({ content: `:x: You must have the \`Administrator\` permission to use this function.`, ephemeral: true });
 			}
 		} catch (error) {
 			if (process.env.BOT_NAME == 'test') {
