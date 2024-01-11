@@ -12,7 +12,7 @@ module.exports.mainStartUp = async (client) => {
 		await editEmbed.editMainEmbed(client);
 		return "edited";
 	}
-	catch (error) {
+	catch {
 		await postEmbed.postMainEmbed(client);
 		return "posted";
 	}
@@ -27,7 +27,7 @@ module.exports.frontDeskStartUp = async (client) => {
 		await editEmbed.editFrontDeskEmbed(client);
 		return "edited";
 	}
-	catch (error) {
+	catch {
 		await postEmbed.postFrontDeskEmbed(client);
 		return "posted";
 	}
