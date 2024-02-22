@@ -47,53 +47,14 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				var formattedPrice = formatter.format(price);
@@ -125,7 +86,7 @@ module.exports.modalSubmit = async (interaction) => {
 					)
 					.setColor('805B10')];
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				var salesBtns = getSaleBtns();
@@ -180,53 +141,14 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				var formattedPrice = formatter.format(price);
@@ -256,9 +178,9 @@ module.exports.modalSubmit = async (interaction) => {
 						{ name: `Garage Slots #:`, value: `0`, inline: true },
 						{ name: `Location/Notes:`, value: `${locationNotes}` }
 					)
-					.setColor('926C15')];
+					.setColor('805B10')];
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('926C15').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				var salesBtns = getSaleBtns();
@@ -321,53 +243,14 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				var costPrice = (price * 0.85);
@@ -473,7 +356,7 @@ module.exports.modalSubmit = async (interaction) => {
 					)
 					.setColor('805B10')];
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('805B10').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				var salesBtns = getSaleBtns();
@@ -587,53 +470,14 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				if (notes) {
@@ -661,8 +505,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('A47E1B')];
 				}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
-
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('A47E1B').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				let quoteBtns = [new ActionRowBuilder().addComponents(
@@ -1075,53 +918,14 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Logs!A:G", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, repoDate, prevOwner, lotNumStreetName, repoReason, notes, photosString]] }
 				});
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				if (notes) {
@@ -1149,8 +953,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('B69121')];
 				}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('B69121').setURL('https://echorp.net/').setImage(x));
-
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('B69121').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				await interaction.client.channels.cache.get(process.env.REPO_LOGS_CHANNEL_ID).send({ embeds: embeds });
@@ -1192,53 +995,14 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Repo Request!A:F", valueInputOption: "RAW", resource: { values: [[`${realtorName} (<@${interaction.user.id}>)`, reqDate, ownerInfo, lotNumStreetName, notes, photosString]] }
 				});
 
-				var photos = [];
-				photos = photosString.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length <= 1) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-
-				if (photos.length >= 10) {
-					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				if (photosString.length > 1024) {
-					await interaction.editReply({
-						content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-						ephemeral: true
-					});
-					return;
-				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
+					break;
 				}
 
 				if (notes) {
@@ -1264,7 +1028,7 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('C9A227')];
 				}
 
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('C9A227').setURL('https://echorp.net/').setImage(x));
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('C9A227').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
 
 				let trainActivityBtns = [new ActionRowBuilder().addComponents(
@@ -1523,41 +1287,33 @@ module.exports.modalSubmit = async (interaction) => {
 				var now = Math.floor(new Date().getTime() / 1000.0);
 				var adDate = `<t:${now}:d>`;
 
-				var screenshotLink = strCleanup(interaction.fields.getTextInputValue('screenshotInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('screenshotInput'));
 
-				if (!isValidUrl(screenshotLink)) { // validate photo link
+				var photosOutput = await processAndValidatePhotos(photosString);
+
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: \`${screenshotLink}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
-				}
-				var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-				if (!RegExp(allowedValues.join('|')).test(screenshotLink.toLowerCase())) { // validate photo link, again
-					await interaction.editReply({
-						content: `:exclamation: \`${screenshotLink}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-						ephemeral: true
-					});
-					return;
+					break;
 				}
 
 				var realtorCommission = 526;
 				var formattedCommission = formatter.format(realtorCommission);
 
-				var embeds = new EmbedBuilder()
+				var embeds = [new EmbedBuilder()
 					.setTitle('A new Misc. Sale has been submitted!')
 					.addFields(
 						{ name: `Realtor Name:`, value: `${realtorName} (<@${interaction.user.id}>)` },
 						{ name: `Ad Date:`, value: `${adDate}` },
 					)
-					.setColor('DBB42C');
+					.setColor('DBB42C')];
 
-				var photosEmbed = new EmbedBuilder()
-					.setColor('DBB42C')
-					.setURL('https://echorp.net/')
-					.setImage(screenshotLink);
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
+				embeds = embeds.concat(photosEmbed);
 
-				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: [embeds, photosEmbed] });
+				await interaction.client.channels.cache.get(process.env.MISC_SALES_CHANNEL_ID).send({ embeds: embeds });
 
 				var reason = `Yellow Pages ad listed on ${adDate}`;
 				var currMiscPay = await commissionCmds.addMiscPay(interaction.client, 'System', realtorCommission, interaction.member.user.id, reason);
@@ -1582,11 +1338,11 @@ module.exports.modalSubmit = async (interaction) => {
 				var requestDate = `<t:${now}:d>`;
 
 				var refundReason = strCleanup(interaction.fields.getTextInputValue('reasonInput'));
-				var refundProof = strCleanup(interaction.fields.getTextInputValue('proofInput'));
+				var photosString = strCleanup(interaction.fields.getTextInputValue('proofInput'));
 				var refundAmount = Math.abs(Number(strCleanup(interaction.fields.getTextInputValue('amountInput')).replaceAll(',', '').replaceAll('$', '')));
 
 				await interaction.client.googleSheets.values.append({
-					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Reimbursement Requests!A:D", valueInputOption: "RAW", resource: { values: [[`${requestorName} (<@${interaction.user.id}>)`, refundReason, refundAmount, refundProof]] }
+					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Reimbursement Requests!A:D", valueInputOption: "RAW", resource: { values: [[`${requestorName} (<@${interaction.user.id}>)`, refundReason, refundAmount, photosString]] }
 				});
 
 				if (isNaN(refundAmount)) { // validate quantity of money
@@ -1597,44 +1353,19 @@ module.exports.modalSubmit = async (interaction) => {
 					return;
 				}
 
-				var photos = [];
-				photos = refundProof.split(/\,|\;| |\|/);
+				var photosOutput = await processAndValidatePhotos(photosString);
 
-				if (photos.length >= 10) {
+				if (photosOutput.status === `fail`) {
 					await interaction.editReply({
-						content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
+						content: `:exclamation: ${photosOutput.data}`,
 						ephemeral: true
 					});
-					return;
+					break;
 				}
-
-				for (let i = 0; i < photos.length; i++) {
-					if (photos[i] == "") {
-						photos.splice(i, 1);
-						continue;
-					}
-					if (!isValidUrl(photos[i])) { // validate photo link
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-							ephemeral: true
-						});
-						return;
-					}
-					var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-					if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-						await interaction.editReply({
-							content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-							ephemeral: true
-						});
-						return;
-					}
-				}
-
-				var photosEmbed = photos.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
 
 				var formattedAmount = formatter.format(refundAmount);
 
-				var embeds;
+				var embeds = [];
 
 				if (refundProof) {
 					embeds = [new EmbedBuilder()
@@ -1658,26 +1389,8 @@ module.exports.modalSubmit = async (interaction) => {
 						.setColor('DBB42C')];
 				}
 
+				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
-
-
-				function addreimbursementBtns() {
-					let row1 = new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId('approveReimbursement')
-							.setLabel('Approve Reimbursement')
-							.setStyle(ButtonStyle.Success),
-
-						new ButtonBuilder()
-							.setCustomId('denyReimbursement')
-							.setLabel('Deny Reimbursement')
-							.setStyle(ButtonStyle.Danger),
-					);
-
-					let rows = [row1];
-					return rows;
-				};
-
 
 				var reimbursementReqBtns = addreimbursementBtns();
 
@@ -2142,13 +1855,6 @@ module.exports.modalSubmit = async (interaction) => {
 				break;
 			case 'completeRepoModal':
 				if (1 == 1) {
-					let realtorName;
-					if (interaction.member.nickname) {
-						realtorName = interaction.member.nickname;
-					} else {
-						realtorName = interaction.member.user.username;
-					}
-
 					let now = Math.floor(new Date().getTime() / 1000.0);
 					let repoDate = `<t:${now}:d>`;
 
@@ -2392,62 +2098,23 @@ module.exports.modalSubmit = async (interaction) => {
 					var now = Math.floor(new Date().getTime() / 1000.0);
 					var reqDate = `<t:${now}:d>`;
 					var clientInfo = strCleanup(interaction.fields.getTextInputValue('clientInformationInput'));
-					var gpsPropertyString = strCleanup(interaction.fields.getTextInputValue('gpsPropertyImagesInput'));
+					var photosString = strCleanup(interaction.fields.getTextInputValue('gpsPropertyImagesInput'));
 					var interiorInfo = strCleanup(interaction.fields.getTextInputValue('interiorInput'));
 					var zoneShiftInfo = strCleanup(interaction.fields.getTextInputValue('zoneShiftInput'));
 					var notesInfo = strCleanup(interaction.fields.getTextInputValue('notesInput'));
 
 					await interaction.client.googleSheets.values.append({
-						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, gpsPropertyString, interiorInfo, zoneShiftInfo, notesInfo]] }
+						auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Asst - Property Quote Request!A:G", valueInputOption: "RAW", resource: { values: [[`${assistantName} (<@${interaction.user.id}>)`, reqDate, clientInfo, photosString, interiorInfo, zoneShiftInfo, notesInfo]] }
 					});
 
-					var photos = [];
-					photos = gpsPropertyString.split(/\,|\;| |\|/);
+					var photosOutput = await processAndValidatePhotos(photosString);
 
-					if (photos.length <= 1) {
+					if (photosOutput.status === `fail`) {
 						await interaction.editReply({
-							content: `:exclamation: The photos you linked are not separated properly *(or you didn't submit multiple photos)*. Please be sure to use commas (\`,\`), semicolons(\`;\`), vertical pipes(\`|\`), or spaces (\` \`) to separate your links.`,
+							content: `:exclamation: ${photosOutput.data}`,
 							ephemeral: true
 						});
-						return;
-					}
-
-					if (photos.length >= 10) {
-						await interaction.editReply({
-							content: `:exclamation: You may only include a maximum of 9 photo links (\`${photos.length}\` detected).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					if (gpsPropertyString.length > 1024) {
-						await interaction.editReply({
-							content: `:exclamation: The length of your photos input is too long. We'd recommend downloading [ShareX](<https://getsharex.com>) (preferred) or uploading them to [Imgur](<https://imgur.com>).`,
-							ephemeral: true
-						});
-						return;
-					}
-
-					for (let i = 0; i < photos.length; i++) {
-						if (photos[i] == "") {
-							photos.splice(i, 1);
-							continue;
-						}
-						if (!isValidUrl(photos[i])) { // validate photo link
-							await interaction.editReply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.`,
-								ephemeral: true
-							});
-							return;
-						}
-						var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-						if (!RegExp(allowedValues.join('|')).test(photos[i].toLowerCase())) { // validate photo link, again
-							await interaction.editReply({
-								content: `:exclamation: \`${photos[i].trimStart().trimEnd()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.`,
-								ephemeral: true
-							});
-							return;
-						}
+						break;
 					}
 
 					if (notesInfo) {
@@ -2460,7 +2127,7 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Interior Information:`, value: `${interiorInfo}` },
 								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
 								{ name: `Notes:`, value: `${notesInfo}` },
-								{ name: `Photo Links:`, value: `${gpsPropertyString}` }
+								{ name: `Photo Links:`, value: `${photosString}` }
 							)
 							.setColor('FFE169')];
 					} else {
@@ -2472,13 +2139,12 @@ module.exports.modalSubmit = async (interaction) => {
 								{ name: `Client Information:`, value: `${clientInfo}` },
 								{ name: `Interior Information:`, value: `${interiorInfo}` },
 								{ name: `Zone and Shift Information:`, value: `${zoneShiftInfo}` },
-								{ name: `Photo Links:`, value: `${gpsPropertyString}` }
+								{ name: `Photo Links:`, value: `${photosString}` }
 							)
 							.setColor('FFE169')];
 					}
 
-					var photosEmbed = photos.map(x => new EmbedBuilder().setColor('FFE169').setURL('https://echorp.net/').setImage(x));
-
+					var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('FFE169').setURL('https://echorp.net/').setImage(x));
 					embeds = embeds.concat(photosEmbed);
 
 					var personnelStats = await dbCmds.readPersStats(interaction.member.user.id);
@@ -2868,7 +2534,7 @@ function getPotentialWatchlistBtns() {
 };
 
 function strCleanup(str) {
-	let cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trimEnd().trimStart();
+	let cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trim().replace(/\s+/g, " ");
 	let shortAndClean = cleaned.substring(0, 1024);
 	return shortAndClean;
 };
@@ -2881,7 +2547,7 @@ function isValidUrl(str) {
 		return false;
 	}
 	return url.protocol === "http:" || url.protocol === "https:";
-}
+};
 
 function getAckAlertBtn() {
 	let row1 = new ActionRowBuilder().addComponents(
@@ -2916,4 +2582,49 @@ function getSaleBtns() {
 
 	let rows = [row1];
 	return rows;
+};
+
+function addreimbursementBtns() {
+	let row1 = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setCustomId('approveReimbursement')
+			.setLabel('Approve Reimbursement')
+			.setStyle(ButtonStyle.Success),
+
+		new ButtonBuilder()
+			.setCustomId('denyReimbursement')
+			.setLabel('Deny Reimbursement')
+			.setStyle(ButtonStyle.Danger),
+	);
+
+	let rows = [row1];
+	return rows;
+};
+
+async function processAndValidatePhotos(stringOfPhotos) {
+	var photosArray = [];
+	photosArray = stringOfPhotos.split(/\,|\;| |\|/);
+
+	photosArray = photosArray.filter(function (arrayItem) {
+		return arrayItem !== "";
+	});
+
+	for (let i = 0; i < photosArray.length; i++) {
+		var allowedValues = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+
+		if (!isValidUrl(photosArray[i])) { // validate photo url
+			return ({ status: `fail`, data: `\`${photosArray[i].trim()}\` is not a valid URL, please be sure to enter a URL including the \`http\:\/\/\` or \`https\:\/\/\` portion.` });
+		}
+
+		if (!RegExp(allowedValues.join('|')).test(photosArray[i].toLowerCase())) { // validate photo url ends in proper file format
+			return ({ status: `fail`, data: `\`${photosArray[i].trim()}\` is not a valid picture URL, please be sure to enter a URL that includes one of the following: \`.png\`, \`.jpg\`, \`.jpeg\`, \`.gif\`, \`.webp\`.` });
+		}
+
+	}
+
+	if (photosArray.length >= 10) { // check if more than 10 photos were included
+		return ({ status: `fail`, data: `You may only include a maximum of 9 photo links (\`${photosArray.length}\` detected).` });
+	} else { // if all of the above passed, return array of photos 
+		return ({ status: `pass`, data: photosArray });
+	}
 };
