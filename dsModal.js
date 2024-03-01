@@ -1345,10 +1345,6 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Reimbursement Requests!A:D", valueInputOption: "RAW", resource: { values: [[`${requestorName} (<@${interaction.user.id}>)`, refundReason, refundAmount, photosString]] }
 				});
 
-				if (refundProof) {
-
-				}
-
 				if (isNaN(refundAmount)) { // validate quantity of money
 					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('amountInput')}\` is not a valid number, please be sure to only enter numbers.`,
