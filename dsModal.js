@@ -1345,6 +1345,10 @@ module.exports.modalSubmit = async (interaction) => {
 					auth: interaction.client.sheetsAuth, spreadsheetId: process.env.BACKUP_DATA_SHEET_ID, range: "Reimbursement Requests!A:D", valueInputOption: "RAW", resource: { values: [[`${requestorName} (<@${interaction.user.id}>)`, refundReason, refundAmount, photosString]] }
 				});
 
+				if (refundProof) {
+
+				}
+
 				if (isNaN(refundAmount)) { // validate quantity of money
 					await interaction.editReply({
 						content: `:exclamation: \`${interaction.fields.getTextInputValue('amountInput')}\` is not a valid number, please be sure to only enter numbers.`,
@@ -1367,27 +1371,15 @@ module.exports.modalSubmit = async (interaction) => {
 
 				var embeds = [];
 
-				if (refundProof) {
-					embeds = [new EmbedBuilder()
-						.setTitle('A new reimbusement request has been submitted!')
-						.addFields(
-							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${requestDate}` },
-							{ name: `Reimbursement Reason:`, value: `${refundReason}`, inline: true },
-							{ name: `Amount Requested:`, value: `${formattedAmount}`, inline: true },
-						)
-						.setColor('DBB42C')];
-				} else {
-					embeds = [new EmbedBuilder()
-						.setTitle('A new reimbusement request has been submitted!')
-						.addFields(
-							{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
-							{ name: `Request Date:`, value: `${requestDate}` },
-							{ name: `Reimbursement Reason:`, value: `${refundReason}`, inline: true },
-							{ name: `Amount Requested:`, value: `${formattedAmount}`, inline: true },
-						)
-						.setColor('DBB42C')];
-				}
+				embeds = [new EmbedBuilder()
+					.setTitle('A new reimbusement request has been submitted!')
+					.addFields(
+						{ name: `Requestor Name:`, value: `${requestorName} (<@${interaction.user.id}>)` },
+						{ name: `Request Date:`, value: `${requestDate}` },
+						{ name: `Reimbursement Reason:`, value: `${refundReason}`, inline: true },
+						{ name: `Amount Requested:`, value: `${formattedAmount}`, inline: true },
+					)
+					.setColor('DBB42C')];
 
 				var photosEmbed = photosOutput.data.map(x => new EmbedBuilder().setColor('DBB42C').setURL('https://echorp.net/').setImage(x));
 				embeds = embeds.concat(photosEmbed);
@@ -2484,6 +2476,8 @@ module.exports.modalSubmit = async (interaction) => {
 				.addFields(
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
+					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
+					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
