@@ -125,7 +125,6 @@ module.exports.commissionReport = async (client, commandType) => {
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
@@ -196,7 +195,6 @@ module.exports.addWeeklyAssets = async (client) => {
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
@@ -283,7 +281,6 @@ module.exports.addCommission = async (client, from, addAmount, userId, reason) =
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
@@ -357,7 +354,6 @@ module.exports.removeCommission = async (client, from, removeAmount, userId, rea
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
@@ -430,7 +426,6 @@ module.exports.addMiscPay = async (client, from, addAmount, userId, reason) => {
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
@@ -504,7 +499,6 @@ module.exports.removeMiscPay = async (client, from, removeAmount, userId, reason
 					{ name: `Created by:`, value: `${interaction.member.nickname} (<@${interaction.user.id}>)`, inline: true },
 					{ name: `Error handled?`, value: `${errHandled}`, inline: true },
 					{ name: `Server name:`, value: `${interaction.member.guild.name}`, inline: true },
-					{ name: `Bot name:`, value: `${interaction.message.author.username}`, inline: true },
 				)
 				.setColor('B80600')
 				.setFooter({ text: `${errTime}` })];
