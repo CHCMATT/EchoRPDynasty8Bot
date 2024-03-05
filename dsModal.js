@@ -2524,7 +2524,8 @@ function getPotentialWatchlistBtns() {
 
 function strCleanup(str) {
 	let cleaned = str.replaceAll('`', '-').replaceAll('\\', '-').trim().replace(/\s+/g, " ");
-	let shortAndClean = cleaned.substring(0, 1024);
+	let formatted = cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+	let shortAndClean = formatted.substring(0, 1024);
 	return shortAndClean;
 };
 
