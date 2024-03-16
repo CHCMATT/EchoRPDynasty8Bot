@@ -73,45 +73,55 @@ module.exports.postMainEmbed = async (client) => {
 
 		let monthlyDescList = '';
 
+		let guild = await client.guilds.fetch(process.env.DISCORD_SERVER_ID);
+		let guildMembers = await guild.members.fetch();
+		let arrayOfMembers = [];
+
+		guildMembers.forEach((member) => {
+			arrayOfMembers.push(member.id)
+		});
+
 		for (let i = 0; i < employeeStats.length; i++) {
-			if (employeeStats[i].monthlyHousesSold > 0 ||
-				employeeStats[i].monthlyWarehousesSold > 0 ||
-				employeeStats[i].monthlyPropertiesQuoted > 0 ||
-				employeeStats[i].monthlyPropertiesRepod > 0 ||
-				employeeStats[i].monthlyActivityChecks > 0 ||
-				employeeStats[i].monthlyMiscSales > 0 ||
-				employeeStats[i].monthlyFinancialAgreements > 0 ||
-				employeeStats[i].monthlyQuotesReviewed > 0 ||
-				employeeStats[i].monthlyContactRequests > 0) {
+			if (arrayOfMembers.includes(employeeStats[i].discordId)) {
+				if (employeeStats[i].monthlyHousesSold > 0 ||
+					employeeStats[i].monthlyWarehousesSold > 0 ||
+					employeeStats[i].monthlyPropertiesQuoted > 0 ||
+					employeeStats[i].monthlyPropertiesRepod > 0 ||
+					employeeStats[i].monthlyActivityChecks > 0 ||
+					employeeStats[i].monthlyMiscSales > 0 ||
+					employeeStats[i].monthlyFinancialAgreements > 0 ||
+					employeeStats[i].monthlyQuotesReviewed > 0 ||
+					employeeStats[i].monthlyContactRequests > 0) {
 
-				monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
+					monthlyDescList = monthlyDescList.concat(`\n\n<@${employeeStats[i].discordId}>`);
 
-				if (employeeStats[i].monthlyHousesSold >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}`);
-				}
-				if (employeeStats[i].monthlyWarehousesSold >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}`);
-				}
-				if (employeeStats[i].monthlyPropertiesQuoted >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}`);
-				}
-				if (employeeStats[i].monthlyPropertiesRepod >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}`);
-				}
-				if (employeeStats[i].monthlyActivityChecks >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}`);
-				}
-				if (employeeStats[i].monthlyMiscSales >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}`);
-				}
-				if (employeeStats[i].monthlyFinancialAgreements >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
-				}
-				if (employeeStats[i].monthlyQuotesReviewed >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
-				}
-				if (employeeStats[i].monthlyContactRequests >= 1) {
-					monthlyDescList = monthlyDescList.concat(`\n• **Contact Requests Submitted:** ${employeeStats[i].monthlyContactRequests}`);
+					if (employeeStats[i].monthlyHousesSold >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Houses Sold:** ${employeeStats[i].monthlyHousesSold}`);
+					}
+					if (employeeStats[i].monthlyWarehousesSold >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Warehouses Sold:** ${employeeStats[i].monthlyWarehousesSold}`);
+					}
+					if (employeeStats[i].monthlyPropertiesQuoted >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Properties Quoted:** ${employeeStats[i].monthlyPropertiesQuoted}`);
+					}
+					if (employeeStats[i].monthlyPropertiesRepod >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Properties Repossessed:** ${employeeStats[i].monthlyPropertiesRepod}`);
+					}
+					if (employeeStats[i].monthlyActivityChecks >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Train Activities Checked:** ${employeeStats[i].monthlyActivityChecks}`);
+					}
+					if (employeeStats[i].monthlyMiscSales >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Misc. Sales Completed:** ${employeeStats[i].monthlyMiscSales}`);
+					}
+					if (employeeStats[i].monthlyFinancialAgreements >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Financial Agreements Filed:** ${employeeStats[i].monthlyFinancialAgreements}`);
+					}
+					if (employeeStats[i].monthlyQuotesReviewed >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Quotes Reviewed:** ${employeeStats[i].monthlyQuotesReviewed}`);
+					}
+					if (employeeStats[i].monthlyContactRequests >= 1) {
+						monthlyDescList = monthlyDescList.concat(`\n• **Contact Requests Submitted:** ${employeeStats[i].monthlyContactRequests}`);
+					}
 				}
 			}
 		}
