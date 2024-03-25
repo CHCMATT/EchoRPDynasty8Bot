@@ -44,7 +44,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include photos of GPS & front of house')
+						.setLabel('Include photos of ID, GPS & front of house')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/wgJiq13.jpg, https://i.imgur.com/hv6jVYT.jpg')
 						.setRequired(true);
@@ -88,7 +88,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include photos of GPS & front of warehouse')
+						.setLabel('Include photos of ID, GPS & front of warehouse')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/TBj8voN.jpg, https://i.imgur.com/gLGae7c.jpg')
 						.setRequired(true);
@@ -132,7 +132,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include photos of GPS & front of house')
+						.setLabel('Include photos of ID, GPS & front of property')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/MZB6ee6.jpeg, https://i.imgur.com/vTyUomL.png')
 						.setRequired(true);
@@ -203,7 +203,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(false);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include photos of GPS & front of house')
+						.setLabel('Include photos of GPS & front of property')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('Must have multiple photos of the property incl. several diff. sides. Links must be comma separated')
 						.setRequired(true);
@@ -285,7 +285,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(false);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include 1 photo of GPS & front of house')
+						.setLabel('Include 1 photo of GPS & front of property')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/D0IUm1C.jpg, https://i.imgur.com/Qo10LVH.jpg')
 						.setRequired(true);
