@@ -88,7 +88,7 @@ module.exports.stringSelectMenuSubmit = async (interaction) => {
 						.setRequired(true);
 					let photosInput = new TextInputBuilder()
 						.setCustomId('photosInput')
-						.setLabel('Include photos of ID, GPS & front of warehouse')
+						.setLabel('Include photos of ID, GPS & front of property')
 						.setStyle(TextInputStyle.Paragraph)
 						.setPlaceholder('https://i.imgur.com/TBj8voN.jpg, https://i.imgur.com/gLGae7c.jpg')
 						.setRequired(true);
